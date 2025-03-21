@@ -1,20 +1,43 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // React Router
+import { useNavigate } from "react-router-dom";
+import LoginModal from "./LoginModal";
 import "./Header.css";
 
 const Header = () => {
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태
-  const [showDialog, setShowDialog] = useState(null); // 다이얼로그 상태
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  const toggleDialog = (type) => {
-    setShowDialog(showDialog === type ? null : type);
+  const handleGoogleLogin = async (response) => {
+    console.log("Google login response:", response);
+    
+    // 구글 로그인에서 받은 정보 중 code 추출
+    const { credential } = response;
+    
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: credential }),
+      });
+
+      const data = await res.json();
+
+      if (data.accessToken) {
+        localStorage.setItem("accessToken", data.accessToken);
+        setIsLoggedIn(true);
+        setIsLoginModalOpen(false);
+        // 페이지 새로고침 (setItem이 적용되지 않는 문제 방지)
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("구글 로그인 처리 중 오류 발생:", error);
+    }
   };
 
   return (
     <header className="header">
       <div className="header-left">
-        {/* 로고 버튼 */}
         <button className="logo-btn" onClick={() => navigate("/")}>
           <img src="/BitOracle_Logo(demo).png" alt="BitOracle Logo" className="logo" />
         </button>
@@ -25,29 +48,17 @@ const Header = () => {
         </nav>
       </div>
       <div className="header-right">
-        {/* 알림 버튼 */}
-        <button className="icon-btn" onClick={() => toggleDialog("notification")}>🔔 알림</button>
-
-        {/* 포트폴리오 페이지 이동 버튼 */}
         <button className="icon-btn" onClick={() => navigate("/portfolio")}>📊 포트폴리오</button>
 
-        {/* 로그인 상태에 따라 버튼 표시 변경 */}
         {isLoggedIn ? (
-          <button className="icon-btn" onClick={() => toggleDialog("mypage")}>👤 마이페이지</button>
+          <button className="icon-btn">👤 마이페이지</button>
         ) : (
-          <button className="login-btn" onClick={() => toggleDialog("login")}>로그인</button>
+          <button className="login-btn" onClick={() => setIsLoginModalOpen(true)}>로그인</button>
         )}
       </div>
 
-      {/* 다이얼로그 창 */}
-      {showDialog === "notification" && <div className="dialog">🔔 알림 목록</div>}
-      {showDialog === "login" && (
-        <div className="dialog">
-          <h3>로그인</h3>
-          <button onClick={() => setIsLoggedIn(true)}>로그인 성공</button>
-        </div>
-      )}
-      {showDialog === "mypage" && <div className="dialog">👤 마이페이지 내용</div>}
+      {/* 로그인 모달 */}
+      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} handleGoogleLogin={handleGoogleLogin} />
     </header>
   );
 };
