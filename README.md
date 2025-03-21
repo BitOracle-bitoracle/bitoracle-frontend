@@ -1,70 +1,80 @@
-# Getting Started with Create React App
+**상대방이 먼저 push한 변경사항이 있는데, 너는 pull 안 하고 작업을 시작한 상태**인 경우? 이럴 땐 **로컬 변경사항을 보존하면서 상대방 변경사항을 가져오는 게 중요**해.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+아래 순서대로 처리하면 돼:
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+**✅ 1. 현재 상태 확인**
 
-### `npm start`
+```
+git status
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+로컬에서 수정한 파일이 있는지 확인. **커밋하지 않은 변경사항이 있다면**, 먼저 커밋하거나 stash 해두자.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+**✅ 2. 로컬 변경사항 임시 저장 (옵션)**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+변경사항이 커밋되지 않았다면:
 
-### `npm run build`
+```
+git stash
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+로컬 변경사항을 임시로 숨겨두는 명령이야.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+**✅ 3. 상대방의 변경사항 가져오기**
 
-### `npm run eject`
+```
+git pull --rebase
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+> --rebase 옵션을 쓰면 로컬 커밋을 상대방 변경사항 뒤에 깔끔하게 이어 붙여서 **히스토리가 더 정돈**돼.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+**✅ 4. stash 복원 (stash 했을 경우)**
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+git stash pop
+```
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**✅ 5. 충돌 해결 (있을 경우)**
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+만약 충돌이 생기면 Git이 알려줘. 그 파일들을 직접 열어서 수동으로 충돌을 해결한 뒤에:
 
-### Code Splitting
+```
+git add <충돌해결한파일>
+git rebase --continue
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+**✅ 6. 최종 push**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```
+git push
+```
 
-### Making a Progressive Web App
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+**한 줄 요약**
 
-### Advanced Configuration
+```
+git stash
+git pull --rebase
+git stash pop
+# 충돌 있을 경우:
+# git add .
+# git rebase --continue
+git push
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+필요하면 상황에 맞춰 내가 도와줄게! 지금 구체적인 상태 알려줘도 되고. 😎
