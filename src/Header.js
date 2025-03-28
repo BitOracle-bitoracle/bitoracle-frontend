@@ -48,6 +48,7 @@ const Header = () => {
         </nav>
       </div>
       <div className="header-right">
+        <button className="icon-btn">🔔 알림</button>
         <button className="icon-btn" onClick={() => navigate("/portfolio")}>📊 포트폴리오</button>
 
         {isLoggedIn ? (
