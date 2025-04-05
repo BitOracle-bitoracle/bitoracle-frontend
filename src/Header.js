@@ -8,9 +8,25 @@ const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   React.useEffect(() => {
-    const token = localStorage.getItem("access");
-    console.log("access_token from localStorage:", token); // ✅ Debug log
-    setIsLoggedIn(!!token);
+    fetch("https://api.bitoracle.shop/api/auth/init", {
+      method: "GET",
+      credentials: "include", // refresh 쿠키 전송
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.access) {
+          localStorage.setItem("access", data.access);
+          console.log("access_token from /api/auth/init:", data.access);
+          setIsLoggedIn(true);
+        } else {
+          console.log("⛔ 로그인되지 않음");
+          setIsLoggedIn(false);
+        }
+      })
+      .catch((err) => {
+        console.error("❌ /api/auth/init 요청 실패:", err);
+        setIsLoggedIn(false);
+      });
   }, []);
 
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
