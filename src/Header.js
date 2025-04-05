@@ -16,6 +16,7 @@ const Header = () => {
 
   React.useEffect(() => {
     const token = getCookie("access_token");
+    console.log("access_token from cookie:", token); // ✅ Debug log
     setIsLoggedIn(!!token);
   }, []);
 
