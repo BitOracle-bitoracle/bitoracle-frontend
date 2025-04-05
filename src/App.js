@@ -7,19 +7,22 @@ import axios from "axios";
 
 function App() {
   useEffect(() => {
-    axios.get("https://api.bitoracle.shop/token", {
-      withCredentials: true,
+    fetch("https://api.bitoracle.shop/api/auth/init", {
+      method: "GET",
+      credentials: "include", // ✅ 쿠키 자동 전송 (refresh token)
     })
-    .then((res) => {
-      const accessToken = res.data.access;
-      if (accessToken) {
-        localStorage.setItem("access", accessToken);
-        console.log("🔓 access 토큰 저장됨:", accessToken);
-      }
-    })
-    .catch((err) => {
-      console.error("❌ access 토큰 요청 실패:", err);
-    });
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.access) {
+          localStorage.setItem("access", data.access);
+          console.log("✅ 로그인 상태 access 토큰 저장됨:", data.access);
+        } else {
+          console.log("⛔ 로그인되지 않음");
+        }
+      })
+      .catch((err) => {
+        console.error("❌ /api/auth/init 요청 실패:", err);
+      });
   }, []);
 
   return (
