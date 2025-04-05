@@ -13,28 +13,33 @@
 
 .modal-content {
     background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 30px 20px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
     text-align: center;
-    min-width: 300px;
+    min-width: 320px;
+    position: relative;
 }
 
-.google-login-btn,
-.google-signup-btn {
+.login-button {
     display: block;
     width: 100%;
-    padding: 10px;
-    margin: 10px 0;
+    padding: 12px;
+    margin: 15px 0;
     border: none;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 16px;
+    color: white;
+    transition: background 0.3s ease;
 }
 
-.google-login-btn {
+.login-button.google {
     background: #4285F4;
-    color: white;
+}
+
+.login-button.google:hover {
+    background: #357ae8;
 }
 
 .google-signup-btn {
@@ -43,9 +48,11 @@
 }
 
 .close-btn {
-    background: #ddd;
-    padding: 8px 12px;
+    background: #eee;
+    padding: 8px 16px;
     border: none;
     cursor: pointer;
     border-radius: 5px;
+    margin-top: 20px;
+    font-size: 14px;
 }
