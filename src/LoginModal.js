@@ -2,6 +2,15 @@ import React from "react";
 import "./LoginModal.css";
 
 const LoginModal = ({ isOpen, onClose, handleGoogleLogin }) => {
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    if (token) {
+      localStorage.setItem("access_token", token);
+      window.location.href = "/";
+    }
+  }, []);
+
   if (!isOpen) return null;
 
   const redirectToGoogleLogin = () => {

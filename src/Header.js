@@ -5,7 +5,13 @@ import "./Header.css";
 
 const Header = () => {
   const navigate = useNavigate();
-  const [isLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  React.useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    setIsLoggedIn(!!token);
+  }, []);
+
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   return (
