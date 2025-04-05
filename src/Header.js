@@ -14,9 +14,10 @@ const Header = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.access) {
-          localStorage.setItem("access", data.access);
-          console.log("access_token from /api/auth/init:", data.access);
+        const token = data.access || data.accessToken;
+        if (token) {
+          localStorage.setItem("access", token);
+          console.log("✅ access_token from /api/auth/init:", token);
           setIsLoggedIn(true);
         } else {
           console.log("⛔ 로그인되지 않음");
