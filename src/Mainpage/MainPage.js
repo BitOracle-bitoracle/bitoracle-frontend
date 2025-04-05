@@ -1,14 +1,16 @@
 import React from "react";
-import IndicatorPanel from "./IndicatorPanel";import NewsSlider from "./NewsSlider";
+import NewsSlider from "./NewsSlider";
+// import IndicatorPanel from "../components/IndicatorPanel"; // 👈 임시로 주석 처리
+
 import "./MainPage.css";
 
 const MainPage = () => {
   return (
     <div className="main-container">
-      <div className="left-panel">
+      {/* <div className="indicator-panel">
         <IndicatorPanel />
-      </div>
-      <div className="right-panel">
+      </div> */}
+      <div className="news-panel">
         <NewsSlider />
       </div>
     </div>
