@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./Header";
 import MainPage from "./Mainpage/MainPage";
 import "./App.css";
-import axios from "axios";
 
 function App() {
   useEffect(() => {
