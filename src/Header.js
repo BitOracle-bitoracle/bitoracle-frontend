@@ -3,12 +3,19 @@ import { useNavigate } from "react-router-dom";
 import LoginModal from "./LoginModal";
 import "./Header.css";
 
+function getCookie(name) {
+  const matches = document.cookie.match(
+    new RegExp("(^| )" + name + "=([^;]+)")
+  );
+  return matches ? decodeURIComponent(matches[2]) : null;
+}
+
 const Header = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   React.useEffect(() => {
-    const token = localStorage.getItem("access_token");
+    const token = getCookie("access_token");
     setIsLoggedIn(!!token);
   }, []);
 
