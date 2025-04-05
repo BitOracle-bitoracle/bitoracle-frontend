@@ -5,7 +5,7 @@ const LoginModal = ({ isOpen, onClose, handleGoogleLogin }) => {
   if (!isOpen) return null;
 
   const redirectToGoogleLogin = () => {
-    window.location.href = "https://your-backend.com/oauth2/authorization/google";
+    window.location.href = "https://api.bitoracle.shop/oauth2/authorization/google";
   };
 
   return (
