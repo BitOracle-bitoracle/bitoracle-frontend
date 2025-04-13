@@ -18,9 +18,9 @@ function App() {
 
         console.log("✅ 응답 데이터:", res.data);
 
-        if (res.data.accessToken) {
-          localStorage.setItem("access", res.data.accessToken);
-          console.log("✅ access 토큰 저장 완료:", res.data.accessToken);
+        if (res.data.access) {
+          localStorage.setItem("access", res.data.access);
+          console.log("✅ access 토큰 저장 완료:", res.data.access);
         } else {
           console.warn("⚠️ access 토큰 없음!");
         }
