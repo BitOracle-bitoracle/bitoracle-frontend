@@ -6,7 +6,15 @@ import MainPage from "./Mainpage/MainPage";
 import "./App.css";
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
   useEffect(() => {
+    const token = localStorage.getItem("access");
+    if (token) {
+      setIsLoggedIn(true);
+      return; // Already logged in, skip token fetch
+    }
+
     const fetchAccessToken = async () => {
       const url = "https://api.bitoracle.shop/api/auth/init";
       console.log("✅ 요청 URL:", url);
@@ -20,6 +28,7 @@ function App() {
 
         if (res.data.access) {
           localStorage.setItem("access", res.data.access);
+          setIsLoggedIn(true);
           console.log("✅ access 토큰 저장 완료:", res.data.access);
         } else {
           console.warn("⚠️ access 토큰 없음!");
