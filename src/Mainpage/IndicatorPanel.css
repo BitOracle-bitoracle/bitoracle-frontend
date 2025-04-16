@@ -1,11 +1,11 @@
 .indicator-grid {
     width: 100%;
-    max-height: 400px;
+    max-height: 500px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
     gap: 20px;
-    padding : 0 20px;
+    align-items: stretch;
 }
 
 .indicator-card {
@@ -15,6 +15,9 @@
     padding: 20px;
     text-align: center;
     transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .indicator-card:hover {
