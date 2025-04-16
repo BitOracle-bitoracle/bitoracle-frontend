@@ -55,11 +55,20 @@ const Header = () => {
   }, []);
   */
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await fetch("https://api.bitoracle.shop/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (err) {
+      console.error("❌ Logout failed", err);
+    }
+
     localStorage.removeItem("access");
     setIsLoggedIn(false);
     setIsDropdownOpen(false);
-    window.location.reload();
+    window.location.href = "/";
   };
 
   const handleMouseEnter = () => {
