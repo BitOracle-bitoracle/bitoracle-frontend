@@ -82,3 +82,25 @@
     color: #555;
     justify-content: flex-end; /* 오른쪽 정렬 */
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .pagination li {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 6px;
+  }
+  
+  .pagination li.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+  }

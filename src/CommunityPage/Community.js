@@ -1,50 +1,30 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ReactPaginate from "react-paginate";
 import "./Community.css";
 import CategoryButtons from "./CategoryButtons";
 
+
 // dummy data
-const posts = [
-    {
-        id: 1,
-        title: "첫 번째 글의 제목은 매우 길어 생략이 발생합니다.첫 번째 글의 제목은 매우 길어 생략이 발생합니다.첫 번째 글의 제목은 매우 길어 생략이 발생합니다.첫 번째 글의 제목은 매우 길어 생략이 발생합니다.첫 번째 글의 제목은 매우 길어 생략이 발생합니다.",
-        author: "홍길동",
-        comments: 222223,
-        likes: 5,
-    },
-    { id: 2, title: "두 번째 글", author: "김철수", comments: 1, likes: 2 },
-    {
-        id: 3,
-        title: "세 번째 글",
-        author: "이영희",
-        comments: 7,
-        likes: 10,
-    },
-    {
-        id: 4,
-        title: "네 번째 글",
-        author: "이영희",
-        comments: 7,
-        likes: 10,
-    },
-    {
-        id: 5,
-        title: "다섯번째 글",
-        author: "이영희",
-        comments: 7,
-        likes: 10,
-    },
-    {
-        id: 6,
-        title: "여섯번째 글",
-        author: "이영희",
-        comments: 7,
-        likes: 10,
-    },
-];
+const dummyPosts = Array.from({length:50}, (_, i) => ({
+    id: i+1,
+    title: `글 제목${i+1}`,
+    likes: Math.floor(Math.random() * 100),
+    comments: Math.floor(Math.random() * 50),
+    author: `작성자 ${i+1}`,
+}));
+
+const POSTS_PER_PAGE = 5;
 
 const CommunityPage = () => {
     const navigate = useNavigate();
+    const [currentPage, setCurrentPage] = useState(0);
+    const offset = currentPage * POSTS_PER_PAGE;
+    const currentPosts = dummyPosts.slice(offset,  offset + POSTS_PER_PAGE);
+
+    const handlePageClick = ({selected}) => {
+        setCurrentPage(selected);
+    };
 
     return (
         <div className="community-container">
@@ -62,7 +42,7 @@ const CommunityPage = () => {
             <button className="write-button" onClick={() => navigate("/community/write")}>+</button>
 
             <div className="post-items">
-                {posts.map((post) => (
+                {currentPosts.map((post) => (
                     <div
                         key={post.id}
                         className="post-item"
@@ -75,6 +55,17 @@ const CommunityPage = () => {
                     </div>
                 ))}
             </div>
+
+            <ReactPaginate 
+            previousLabel={"<"}
+            nextLabel={">"}
+            pageCount={Math.ceil(dummyPosts.length / POSTS_PER_PAGE)}
+            onPageChange={handlePageClick}
+            containerClassName={"pagination"}
+            activeClassName={"active"}
+            pageRangeDisplayed={5}
+            marginPagesDisplayed={1}
+            />
         </div>
     );
 };
