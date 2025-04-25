@@ -1,11 +1,11 @@
-<<<<<<< HEAD
+25-04-25 main(master) commit log
+assets 추가, package.json, package-lock.json 수정됨. 정상 작동 확인함.
+
 25-04-11 Community commit log
 App.js 수정됨. CommunityPage에 의존성 있어서 기존 branch에 App.js만 따로 올리진 않고 Community branch에 한꺼번에 commit 했어.
 
 ---
 
-=======
->>>>>>> origin/main
 **상대방이 먼저 push한 변경사항이 있는데, 너는 pull 안 하고 작업을 시작한 상태**인 경우? 이럴 땐 **로컬 변경사항을 보존하면서 상대방 변경사항을 가져오는 게 중요**해.
 
 아래 순서대로 처리하면 돼:
