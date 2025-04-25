@@ -1,10 +1,25 @@
 .header {
+<<<<<<< HEAD
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
     background-color: white;
     border-bottom: 1px solid #ddd;
+=======
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 230px;
+    background-color: white;
+    border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
+>>>>>>> origin/main
 }
 
 .header-left {
@@ -22,7 +37,11 @@
 }
 
 .logo {
+<<<<<<< HEAD
     width: 150px;
+=======
+    width: 120px;
+>>>>>>> origin/main
     height: auto;
     object-fit: contain;
     /*margin-right: 20px;*/
@@ -38,6 +57,10 @@
 .header-right {
     display: flex;
     align-items: center;
+<<<<<<< HEAD
+=======
+    margin: 0;
+>>>>>>> origin/main
 }
 
 /* .search-bar {
@@ -74,4 +97,57 @@
     border-radius: 5px;
     z-index: 10;
     min-width: 150px;
+<<<<<<< HEAD
+=======
+}
+
+.mypage-dropdown {
+    position: absolute;
+    top: 60px;
+    right: 160px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    padding: 16px;
+    z-index: 1001;
+}
+
+.mypage-dropdown .profile-pic {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.mypage-dropdown .nickname {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.mypage-dropdown .points {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.mypage-dropdown .dropdown-btn {
+    width: 100%;
+    background-color: #f5f5f5;
+    border: none;
+    padding: 10px 12px;
+    margin-top: 6px;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.mypage-dropdown .dropdown-btn:hover {
+    background-color: #e5e5e5;
+>>>>>>> origin/main
 }

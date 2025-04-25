@@ -1,5 +1,9 @@
 .App {
   text-align: center;
+<<<<<<< HEAD
+=======
+  padding-top: 70px; /* Add space for fixed header */
+>>>>>>> origin/main
 }
 
 .App-logo {
@@ -15,7 +19,11 @@
 
 .App-header {
   background-color: #282c34;
+<<<<<<< HEAD
   min-height: 100vh;
+=======
+  min-height: calc(100vh - 70px); /* Adjusted for top padding */
+>>>>>>> origin/main
   display: flex;
   flex-direction: column;
   align-items: center;
