@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import React, { useState } from "react";
-=======
 import React, { useState, useEffect, useRef } from "react";
->>>>>>> origin/main
 import { useNavigate } from "react-router-dom";
 import LoginModal from "./LoginModal";
 import "./Header.css";
@@ -10,37 +6,6 @@ import "./Header.css";
 const Header = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-<<<<<<< HEAD
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-
-  const handleGoogleLogin = async (response) => {
-    console.log("Google login response:", response);
-    
-    // 구글 로그인에서 받은 정보 중 code 추출
-    const { credential } = response;
-    
-    try {
-      const res = await fetch("http://localhost:5000/api/auth/google", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: credential }),
-      });
-
-      const data = await res.json();
-
-      if (data.accessToken) {
-        localStorage.setItem("accessToken", data.accessToken);
-        setIsLoggedIn(true);
-        setIsLoginModalOpen(false);
-        // 페이지 새로고침 (setItem이 적용되지 않는 문제 방지)
-        window.location.reload();
-      }
-    } catch (error) {
-      console.error("구글 로그인 처리 중 오류 발생:", error);
-    }
-  };
-
-=======
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const closeTimeoutRef = useRef(null);
@@ -119,7 +84,6 @@ const Header = () => {
 
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
->>>>>>> origin/main
   return (
     <header className="header">
       <div className="header-left">
@@ -137,9 +101,6 @@ const Header = () => {
         <button className="icon-btn" onClick={() => navigate("/portfolio")}>📊 포트폴리오</button>
 
         {isLoggedIn ? (
-<<<<<<< HEAD
-          <button className="icon-btn">👤 마이페이지</button>
-=======
           <div
             className="mypage-container"
             ref={dropdownRef}
@@ -161,18 +122,13 @@ const Header = () => {
               </div>
             )}
           </div>
->>>>>>> origin/main
         ) : (
           <button className="login-btn" onClick={() => setIsLoginModalOpen(true)}>로그인</button>
         )}
       </div>
 
       {/* 로그인 모달 */}
-<<<<<<< HEAD
-      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} handleGoogleLogin={handleGoogleLogin} />
-=======
       <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
->>>>>>> origin/main
     </header>
   );
 };

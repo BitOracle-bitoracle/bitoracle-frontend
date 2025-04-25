@@ -1,24 +1,10 @@
 import React from "react";
-<<<<<<< HEAD
-import IndicatorPanel from "./IndicatorPanel";import NewsSlider from "./NewsSlider";
-=======
 import IndicatorPanel from "./IndicatorPanel";
 import NewsSlider from "./NewsSlider";
->>>>>>> origin/main
 import "./MainPage.css";
 
 const MainPage = () => {
   return (
-<<<<<<< HEAD
-    <div className="main-container">
-      <div className="left-panel">
-        <IndicatorPanel />
-      </div>
-      <div className="right-panel">
-        <NewsSlider />
-      </div>
-    </div>
-=======
     <>
       <div className="main-scroll-wrapper">
         <div className="main-content">
@@ -40,7 +26,6 @@ const MainPage = () => {
         </div>
       </div>
     </>
->>>>>>> origin/main
   );
 };
 

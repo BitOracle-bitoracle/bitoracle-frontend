@@ -3,6 +3,9 @@ import axios from "axios";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./Header";
 import MainPage from "./Mainpage/MainPage";
+import Community from "./CommunityPage/Community";
+import Post from "./CommunityPage/Post";
+import PostWrite from "./CommunityPage/PostWrite";
 import "./App.css";
 
 function App() {

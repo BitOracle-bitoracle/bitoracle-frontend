@@ -1,12 +1,4 @@
 .header {
-<<<<<<< HEAD
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: white;
-    border-bottom: 1px solid #ddd;
-=======
     position: fixed;
     top: 0;
     left: 0;
@@ -19,7 +11,6 @@
     background-color: white;
     border-bottom: 1px solid #ddd;
     box-sizing: border-box;
->>>>>>> origin/main
 }
 
 .header-left {
@@ -37,11 +28,7 @@
 }
 
 .logo {
-<<<<<<< HEAD
-    width: 150px;
-=======
     width: 120px;
->>>>>>> origin/main
     height: auto;
     object-fit: contain;
     /*margin-right: 20px;*/
@@ -57,10 +44,7 @@
 .header-right {
     display: flex;
     align-items: center;
-<<<<<<< HEAD
-=======
     margin: 0;
->>>>>>> origin/main
 }
 
 /* .search-bar {
@@ -97,8 +81,6 @@
     border-radius: 5px;
     z-index: 10;
     min-width: 150px;
-<<<<<<< HEAD
-=======
 }
 
 .mypage-dropdown {
@@ -149,5 +131,4 @@
 
 .mypage-dropdown .dropdown-btn:hover {
     background-color: #e5e5e5;
->>>>>>> origin/main
 }
