@@ -1,0 +1,26 @@
+.write-container {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: 0 auto;
+  }
+  
+  .title-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px;
+    font-size: 1.5rem;
+    border: 1px solid #ddd;
+  }
+  
+  .submit-btn {
+    align-self: flex-end;
+    margin-top: 16px;
+    padding: 8px 16px;
+    font-size: 24px;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
