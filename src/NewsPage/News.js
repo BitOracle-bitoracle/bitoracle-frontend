@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import "./News.css";
 
 // Dummy
 const goodNewsData = [
-    { id: 1, title: "비트코인 ETF 승인으로 가격 급등 기대" },
+    { id: 1, title: "비트코인 ETF 승인으로 가격 급등 기대", link:"https://www.naver.com/" },
     { id: 2, title: "이더리움 업그레이드 성공…속도·보안 향상" },
     { id: 3, title: "국제 투자은행, 암호화폐 시장 진출 선언" },
     { id: 4, title: "미국 CPI 둔화로 위험자산 선호 상승" },
@@ -51,6 +52,19 @@ const badNewsData = [
 
 const News = () => {
     const [topic, setTopic] = useState("bitcoin");
+    const [goodPage, setGoodPage] = useState(0);
+    const [badPage, setBadPage] = useState(0);
+    const ITEMS_PER_PAGE = 5;
+
+    const slicedGoodPage = goodNewsData.slice(
+        goodPage * ITEMS_PER_PAGE,
+        (goodPage + 1) * ITEMS_PER_PAGE
+    );
+
+    const slicedBadPage = badNewsData.slice(
+        badPage * ITEMS_PER_PAGE,
+        (badPage + 1) * ITEMS_PER_PAGE
+    );
 
     return (
         <div className="news-container">
@@ -60,22 +74,138 @@ const News = () => {
             </div>
 
             <div className="topic-bar">
-                <strong>AI가 뽑은 오늘의 토픽: </strong> {topic}
+                <span>AI가 뽑은 오늘의 토픽: </span>
+                <strong>{topic}</strong>
             </div>
 
             <div className="news-index">
-                <span className="index-good-text">호재</span>
-                <span className="index-bad-text">악재</span>
+                <span>호재</span>
+                <span>악재</span>
             </div>
 
             <div className="news-items">
                 <div className="good_news-items">
+                    {slicedGoodPage.map((news) => (
+                        <a
+                            key={news.id}
+                            className="news-item"
+                            href={news.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {news.title}
+                        </a>
+                    ))}
+                    <CustomPagination
+                        currentPage={goodPage}
+                        totalPages={Math.ceil(
+                            goodNewsData.length / ITEMS_PER_PAGE
+                        )}
+                        onPageChange={setGoodPage}
+                    />
                 </div>
 
                 <div className="bad_news-items">
+                    {slicedBadPage.map((news) => (
+                        <a
+                            key={news.id}
+                            className="news-item"
+                            href={news.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {news.title}
+                        </a>
+                    ))}
+                    <CustomPagination
+                        currentPage={badPage}
+                        totalPages={Math.ceil(
+                            badNewsData.length / ITEMS_PER_PAGE
+                        )}
+                        onPageChange={setBadPage}
+                    />
                 </div>
             </div>
         </div>
+    );
+};
+
+const CustomPagination = ({ currentPage, totalPages, onPageChange }) => {
+    const navigate = useNavigate();
+
+    const MAX_PAGE_DISPLAY = 5;
+
+    const handleClick = (page) => {
+        if (page !== currentPage && page >= 0 && page < totalPages) {
+            onPageChange(page);
+            navigate(`?page=${page + 1}`);
+        }
+    };
+
+    const getPageNumbers = () => {
+        let pages = [];
+
+        const startPage = Math.max(
+            0,
+            Math.min(currentPage - 2, totalPages - MAX_PAGE_DISPLAY)
+        );
+        const endPage = Math.min(
+            startPage + MAX_PAGE_DISPLAY - 1,
+            totalPages - 1
+        );
+
+        for (let i = startPage; i <= endPage; i++) {
+            pages.push(i);
+        }
+
+        return { pages, startPage };
+    };
+
+    const { pages, startPage } = getPageNumbers();
+
+    return (
+        <ul className="custom-pagination">
+            {/* 앞으로 */}
+            <li
+                className={`page-btn ${currentPage === 0 ? "disabled" : ""}`}
+                onClick={() => handleClick(currentPage - 1)}
+            >
+                {"<"}
+            </li>
+
+            {/* 1 ... 생략 */}
+            {startPage > 0 && (
+                <>
+                    <li className="page-btn" onClick={() => handleClick(0)}>
+                        1
+                    </li>
+                    <li className="page-ellipsis">...</li>
+                </>
+            )}
+
+            {/* 메인 페이지 번호들 */}
+            {pages.map((page) => (
+                <li
+                    key={page}
+                    className={`page-btn ${
+                        page === currentPage ? "active" : ""
+                    }`}
+                    onClick={() => handleClick(page)}
+                >
+                    {page + 1}
+                </li>
+            ))}
+
+            {/* 다음으로 */}
+            <li
+                className={`page-btn ${
+                    currentPage === totalPages - 1 ? "disabled" : ""
+                }`}
+                onClick={() => handleClick(currentPage + 1)}
+            >
+                {">"}
+            </li>
+        </ul>
     );
 };
 
