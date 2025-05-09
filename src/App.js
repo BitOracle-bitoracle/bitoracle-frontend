@@ -44,13 +44,12 @@ function App() {
 
     return (
         <Router>
-            <Header>
+            <Header />
                 <Routes>
                     <Route path="/" element={<MainPage />} />
                     <Route path="/cryptos" element={<h1>암호화폐 페이지</h1>} />
                     <Route path="/news" element={<News />} />
                 </Routes>
-            </Header>
         </Router>
     );
 }
