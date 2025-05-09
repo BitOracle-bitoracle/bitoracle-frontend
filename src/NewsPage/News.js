@@ -3,6 +3,10 @@ import { useNavigate } from "react-router-dom";
 
 import "./News.css";
 
+// 05-10
+// TODO 페이지네이션 위치 고정하기
+// TODO 요약글 대신 날짜 우측 정렬로 추가
+
 // Dummy
 const goodNewsData = [
     { id: 1, title: "비트코인 ETF 승인으로 가격 급등 기대", link:"https://www.naver.com/" },
