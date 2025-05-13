@@ -17,19 +17,19 @@ const PostWrite = () => {
     const [title, setTitle] = useState("");
 
     const handleImageUpload = async (blob, callback) => {
-        try {
-            const formData = new FormData();
-            formData.append("image", blob);
-            const response = await axios.post("/api/upload", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
-            const imageUrl = response.data.url; // 서버에서 반환한 이미지 URL
-            callback(imageUrl, ""); // 두 번째 인자는 alt 텍스트
-        } catch (error) {
-            console.error("Fail to upload an image: ", error);
-        }
+        // try {
+        //     const formData = new FormData();
+        //     formData.append("image", blob);
+        //     const response = await axios.post("/api/upload", formData, {
+        //         headers: {
+        //             "Content-Type": "multipart/form-data",
+        //         },
+        //     });
+        //     const imageUrl = response.data.url; // 서버에서 반환한 이미지 URL
+        //     callback(imageUrl, ""); // 두 번째 인자는 alt 텍스트
+        // } catch (error) {
+        //     console.error("Fail to upload an image: ", error);
+        // }
     };
 
     const handleSubmit = async () => {
@@ -46,8 +46,8 @@ const PostWrite = () => {
         }
 
         try {
-            const response = await axios.post("/api/posts", { title, content });
-            console.log("Success to post: ", response.data);
+            // const response = await axios.post("/api/posts", { title, content });
+            // console.log("Success to post: ", response.data);
             navigate("/community"); //TODO : 자기 글 id 획득해 자기 글 페이지로 가게 수정.
         } catch (error) {
             console.error("Fail to post: ", error);
@@ -73,9 +73,9 @@ const PostWrite = () => {
                 hideModeSwitch={true}
                 ref={editorRef}
                 plugins={[color]}
-                hooks={{
-                    addImageBlobHook: handleImageUpload,
-                }}
+                // hooks={{     // TODO: 활성화 시 image 업로드 안되는 현상 발생. axios POST 문제인지 hooks 자체의 문제인지 파악. 
+                //     addImageBlobHook: handleImageUpload,
+                // }}
             />
 
             <button onClick={handleSubmit} className="submit-btn">
