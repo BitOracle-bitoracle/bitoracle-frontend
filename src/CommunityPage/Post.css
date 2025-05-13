@@ -1,0 +1,75 @@
+.post-container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.top-main {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #ddd;
+}
+
+.title {
+    letter-spacing: -.05em;
+}
+
+.info-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.info-box span {
+    flex: 0.5;
+}
+
+.name-box {
+    flex: 7;
+    color: #555;
+}
+
+.post-content {
+    white-space: pre-line;
+    line-height: 1.5;
+    font-size: 1rem;
+    padding: 1rem 0;
+    /* word-break: break-all; 글자 넘침 방지 */
+}
+
+.comments-section {
+    margin-top: 2rem;
+}
+
+.comment-list {
+    list-style: none;
+    padding: 0;
+}
+
+.comment-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.comment-item strong {
+    margin-right: 1rem;
+}
+
+.comment-input-box {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+}
+
+.comment-input-box textarea {
+    resize: none;
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+.comment-input-box button {
+    align-self: flex-end;
+    margin-top: 0.5rem;
+    padding: 0.4rem 1rem;
+}
