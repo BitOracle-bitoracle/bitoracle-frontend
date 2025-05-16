@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import IndicatorPanel from "./IndicatorPanel";
 import NewsSlider from "./NewsSlider";
+import PredictionChart from "./PredictionChart";
+import { bitcoinHistory } from "../DummyData/bitcoinHistory";
 import "./MainPage.css";
 
 const MainPage = () => {
+  // 더미 비트코인 히스토리 데이터로 state 초기화
+  const [predictionData] = useState(bitcoinHistory);
+
   return (
     <>
       <div className="main-scroll-wrapper">
@@ -17,11 +22,9 @@ const MainPage = () => {
             </div>
           </div>
           <div className="section-divider" />
-          <div className="bottom-panel">
-            <div className="prediction-chart-placeholder">
-              <h2>📈 비트코인 가격 예측 차트</h2>
-              <p>예측 차트가 이 영역에 표시됩니다.</p>
-            </div>
+          <div className="prediction-section">
+            <h2>📈 비트코인 가격 예측 차트</h2>
+            <PredictionChart data={predictionData} />
           </div>
         </div>
       </div>

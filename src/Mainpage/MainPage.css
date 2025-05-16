@@ -1,18 +1,19 @@
 .main-container {
-    display: flex;
-    flex-direction: row;
-    padding: 20px 20px 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* 두 개 컬럼을 동일 비율로 분할 */
     gap: 20px;
-    height: calc(100vh - 400px);
+    /* 컬럼 간격 */
+    padding: 20px 20px 30px;
     box-sizing: border-box;
 }
 
 .panel {
-    flex: 1;
     display: flex;
     justify-content: center;
     align-items: stretch;
     padding: 0 0 30px;
+    /* height는 auto에 맡깁니다 */
 }
 
 .right-panel {
@@ -29,6 +30,18 @@
     height: 1px;
     background-color: #ccc;
     margin: 0;
+}
+
+.prediction-section {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.prediction-section h2 {
+    margin-bottom: 12px;
+    font-size: 1.25rem;
+    font-weight: bold;
 }
 
 /* Use .main-scroll-wrapper to wrap the main content for scrolling */ 

@@ -1,6 +1,7 @@
 .indicator-grid {
     width: 100%;
-    max-height: 500px;
+    height: 100%;   /* 부모(.panel) 높이를 꽉 채움 */
+    grid-auto-rows: 1fr;    /* 모든 행을 똑같은 높이로 강제 */
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
