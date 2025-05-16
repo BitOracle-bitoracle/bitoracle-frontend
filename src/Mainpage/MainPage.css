@@ -32,13 +32,15 @@
     margin: 0;
 }
 
-.prediction-section {
+.prediction-section,
+.coin-list-section {
     width: 100%;
     padding: 20px;
     box-sizing: border-box;
 }
 
-.prediction-section h2 {
+.prediction-section h2,
+.coin-list-section h2 {
     margin-bottom: 12px;
     font-size: 1.25rem;
     font-weight: bold;

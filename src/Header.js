@@ -87,18 +87,33 @@ const Header = () => {
   return (
     <header className="header">
       <div className="header-left">
-        <button className="logo-btn" onClick={() => navigate("/")}>
+        <button className="logo-btn" onClick={() => {
+          navigate("/");
+          window.scrollTo(0, 0);
+          window.location.reload();
+        }}>
           <img src="/BitOracle_Logo(demo).png" alt="BitOracle Logo" className="logo" />
         </button>
         <nav className="nav">
-          <a href="/cryptos">암호화폐</a>
+          <a
+            href="#coin-list-section"
+            onClick={(e) => {
+              e.preventDefault();
+              const section = document.getElementById("coin-list-section");
+              if (section) {
+                section.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
+          >
+            암호화폐
+          </a>
           <a href="/community">커뮤니티</a>
           <a href="/news">뉴스</a>
         </nav>
       </div>
-      <div className="header-right">
-        <button className="icon-btn">🔔 알림</button>
-        <button className="icon-btn" onClick={() => navigate("/portfolio")}>📊 포트폴리오</button>
+      <nav className="nav">
+        <a href="#" className="nav-link">알림</a>
+        <a href="/portfolio" className="nav-link">포트폴리오</a>
 
         {isLoggedIn ? (
           <div
@@ -107,7 +122,7 @@ const Header = () => {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
-            <button className="icon-btn">👤 마이페이지</button>
+            <a href="#" className="nav-link">마이페이지</a>
             {isDropdownOpen && (
               <div className="mypage-dropdown">
                 <img
@@ -123,9 +138,9 @@ const Header = () => {
             )}
           </div>
         ) : (
-          <button className="login-btn" onClick={() => setIsLoginModalOpen(true)}>로그인</button>
+          <a href="#" className="nav-link login-btn" onClick={() => setIsLoginModalOpen(true)}>로그인</a>
         )}
-      </div>
+      </nav>
 
       {/* 로그인 모달 */}
       <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />

@@ -1,0 +1,48 @@
+.coin-list-container {
+    width: 100%;
+    padding-top: 20px;
+    box-sizing: border-box;
+}
+
+.coin-list-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+}
+
+.coin-list-table thead th {
+    border-bottom: 2px solid #eee;
+    color: #555;
+    padding: 16px;
+    text-align: left;
+}
+
+.coin-list-table tbody td {
+    padding: 16px;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.coin-list-table tbody tr:hover {
+    background: #fafafa;
+}
+
+.symbol {
+    margin-left: 6px;
+    color: #888;
+    font-size: 0.9em;
+}
+
+.positive {
+    color: #2ecc71;
+}
+
+.negative {
+    color: #e74c3c;
+}
+
+.coin-icon {
+    width: 1.6em;
+    height: 1.6em;
+    vertical-align: middle;
+    margin-right: 0.5em;
+}

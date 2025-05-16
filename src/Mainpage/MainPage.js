@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import IndicatorPanel from "./IndicatorPanel";
 import NewsSlider from "./NewsSlider";
 import PredictionChart from "./PredictionChart";
+import CoinList from "./CoinList";
 import { bitcoinHistory } from "../DummyData/bitcoinHistory";
 import "./MainPage.css";
 
@@ -23,8 +24,12 @@ const MainPage = () => {
           </div>
           <div className="section-divider" />
           <div className="prediction-section">
-            <h2>📈 비트코인 가격 예측 차트</h2>
             <PredictionChart data={predictionData} />
+          </div>
+          <div className="section-divider" />
+          <div className="coin-list-section" id="coin-list-section">
+            <h2>코인 리스트</h2>
+            <CoinList />
           </div>
         </div>
       </div>
