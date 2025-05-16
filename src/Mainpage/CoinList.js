@@ -10,6 +10,9 @@ const CoinList = () => {
 
   return (
     <div className="coin-list-container">
+      <h2 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.25rem', fontWeight: 'bold' }}>
+        코인 리스트
+      </h2>
       <table className="coin-list-table">
         <thead>
           <tr>

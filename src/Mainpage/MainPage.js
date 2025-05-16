@@ -28,7 +28,6 @@ const MainPage = () => {
           </div>
           <div className="section-divider" />
           <div className="coin-list-section" id="coin-list-section">
-            <h2>코인 리스트</h2>
             <CoinList />
           </div>
         </div>
