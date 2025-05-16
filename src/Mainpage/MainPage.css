@@ -40,7 +40,7 @@
 }
 
 .prediction-section h2,
-.coin-list-section h2 {
+.coin-list-section {
     margin-bottom: 12px;
     font-size: 1.25rem;
     font-weight: bold;
@@ -48,10 +48,11 @@
 
 /* Use .main-scroll-wrapper to wrap the main content for scrolling */ 
 .main-scroll-wrapper {
-    margin-top: 80px; /* adjust if header height is different */
+    margin-top: 0;
 }
 
 .main-content {
-    padding: 0 250px;
+    width: 67%;
+    margin: 0 auto;
     box-sizing: border-box;
 }

@@ -8,6 +8,8 @@ import Post from "./CommunityPage/Post";
 import PostWrite from "./CommunityPage/PostWrite";
 import "./App.css";
 
+import Layout from "./Layout";
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
@@ -46,15 +48,16 @@ function App() {
 
   return (
     <Router>
-      <Header />
-      <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/cryptos" element={<h1>암호화폐 페이지</h1>} />
-        <Route path="/community" element={<Community />} />
-        <Route path="/community/write" element={<PostWrite />} />
-        <Route path="/community/post/:id" element={<Post />} />
-        <Route path="/news" element={<h1>뉴스 페이지</h1>} />
-      </Routes>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/cryptos" element={<h1>암호화폐 페이지</h1>} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/community/write" element={<PostWrite />} />
+          <Route path="/community/post/:id" element={<Post />} />
+          <Route path="/news" element={<h1>뉴스 페이지</h1>} />
+        </Routes>
+      </Layout>
     </Router>
   );
 }

@@ -1,10 +1,7 @@
 /* 전체 페이지 스타일 */
 .community-container {
-    padding-top: 72px;
-    padding-left: 250px;
-    padding-right: 250px;
-    width: 100%;
-    box-sizing: border-box;
+    width: 67%;
+    margin: 0 auto;
 }
 
 /* 상단 바 */
