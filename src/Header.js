@@ -114,6 +114,7 @@ const Header = () => {
       <nav className="nav">
         <a href="#" className="nav-link">알림</a>
         <a href="/portfolio" className="nav-link">포트폴리오</a>
+        <a href="/proto" className="nav-link">차트예측</a>
 
         {isLoggedIn ? (
           <div
