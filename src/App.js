@@ -7,6 +7,7 @@ import Community from "./CommunityPage/Community";
 import Post from "./CommunityPage/Post";
 import PostWrite from "./CommunityPage/PostWrite";
 import News from "./NewsPage/News";
+import Proto from "./ProtoPage/Proto";
 import "./App.css";
 
 import Layout from "./Layout";
@@ -37,6 +38,7 @@ function App() {
           <Route path="/community/write" element={<PostWrite />} />
           <Route path="/community/post/:id" element={<Post />} />
           <Route path="/news" element={<News />} />
+          <Route path="/proto" element={<Proto />} />
         </Routes>
       </Layout>
     </Router>
