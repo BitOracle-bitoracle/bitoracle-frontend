@@ -56,7 +56,7 @@ const Post = () => {
 const Likes = () => {
 
     //TODO 서버에 좋아요 수 POST. 새 정보는 WebSocket 연결로 GET.
-
+    return null;
 }
 
 const Comments = () => {
