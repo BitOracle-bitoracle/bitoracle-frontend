@@ -96,13 +96,16 @@ const Header = () => {
         </button>
         <nav className="nav">
           <a
-            href="#coin-list-section"
+            href="/"
             onClick={(e) => {
               e.preventDefault();
-              const section = document.getElementById("coin-list-section");
-              if (section) {
-                section.scrollIntoView({ behavior: "smooth" });
-              }
+              navigate("/");
+              setTimeout(() => {
+                const section = document.getElementById("coin-list-section");
+                if (section) {
+                  section.scrollIntoView({ behavior: "smooth" });
+                }
+              }, 200); // short delay to ensure page has navigated
             }}
           >
             암호화폐

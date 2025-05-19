@@ -1,0 +1,40 @@
+/* Portfolio summary panel styles (moved back to this file) */
+.portfolio-summary {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    font-size: 18px;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* 균일한 위/아래 여백 */
+.portfolio-summary div + div {
+    margin-top: 16px;
+}
+.portfolio-summary div:first-child {
+    margin-top: 16px;
+}
+.portfolio-summary div:last-child {
+    margin-bottom: 16px;
+}
+
+/* 숫자 값을 볼드체로 */
+.portfolio-summary .value {
+    font-weight: 600;
+}
+
+/* Profit/Loss colors */
+.portfolio-summary .profit {
+    color: #4caf50;
+}
+.portfolio-summary .loss {
+    color: #f44336;
+}
+.portfolio-summary .red {
+    color: #e53935;
+}
+.portfolio-summary .green {
+    color: #43a047;
+}

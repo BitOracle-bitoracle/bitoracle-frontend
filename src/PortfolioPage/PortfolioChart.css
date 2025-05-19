@@ -1,0 +1,10 @@
+/* 파일명: PortfolioChart.css */
+.overview-right {
+    background: #fff;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

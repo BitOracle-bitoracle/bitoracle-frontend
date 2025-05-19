@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./Header";
 import MainPage from "./Mainpage/MainPage";
 import Community from "./CommunityPage/Community";
+import Portifolio from "./PortfolioPage/PortfolioPage"
 import Post from "./CommunityPage/Post";
 import PostWrite from "./CommunityPage/PostWrite";
 import News from "./NewsPage/News";
@@ -39,6 +40,7 @@ function App() {
           <Route path="/community/post/:id" element={<Post />} />
           <Route path="/news" element={<News />} />
           <Route path="/proto" element={<Proto />} />
+          <Route path="/portfolio" element={<Portifolio />} />
         </Routes>
       </Layout>
     </Router>
