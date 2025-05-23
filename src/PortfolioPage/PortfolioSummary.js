@@ -1,7 +1,7 @@
 import React from "react";
 import "./PortfolioSummary.css";
 
-const PortfolioSummary = () => {
+const PortfolioSummary = ({ summary, totalRate }) => {
   return (
     <div className="overview-left">
       <div className="portfolio-summary">
