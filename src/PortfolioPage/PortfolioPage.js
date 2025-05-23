@@ -28,6 +28,11 @@ const PortfolioPage = () => {
     setHoldings([...holdings, { coin: "BTC", amount: 0, avgPrice: 0 }]);
   };
 
+  const removeRow = (index) => {
+    const updated = holdings.filter((_, i) => i !== index);
+    setHoldings(updated);
+  };
+
   const calculate = (item) => {
     const buy = item.amount * item.avgPrice;
     const now = item.amount * (dummyPrices[item.coin] || 0);
@@ -45,8 +50,13 @@ const PortfolioPage = () => {
         <PortfolioChart holdings={holdings} dummyPrices={dummyPrices} />
       </div>
       <div className="portfolio-controls">
-        <button onClick={() => setEditMode(!editMode)}>수정</button>
-        {editMode && <button onClick={addNewRow}>+</button>}
+        <a href="#" className="edit-toggle-button" onClick={(e) => {
+          e.preventDefault();
+          setEditMode(!editMode);
+        }}>
+          {editMode ? "수정 완료" : "수정"}
+        </a>
+        {/* "+" moved to inside table */}
       </div>
       <table className="portfolio-table">
         <thead>
@@ -57,6 +67,7 @@ const PortfolioPage = () => {
             <th>매수금액</th>
             <th>평가금액</th>
             <th>평가손익</th>
+            {editMode && <th>삭제</th>}
           </tr>
         </thead>
         <tbody>
@@ -64,7 +75,23 @@ const PortfolioPage = () => {
             const calc = calculate(item);
             return (
               <tr key={i}>
-                <td>{item.coin}</td>
+                <td>
+                  {editMode ? (
+                    <select
+                      value={item.coin}
+                      onChange={(e) =>
+                        handleInputChange(i, "coin", e.target.value)
+                      }
+                      className="coin-select"
+                    >
+                      <option value="BTC">BTC</option>
+                      <option value="ETH">ETH</option>
+                      <option value="XRP">XRP</option>
+                    </select>
+                  ) : (
+                    item.coin
+                  )}
+                </td>
                 <td>
                   <input
                     type="number"
@@ -90,9 +117,41 @@ const PortfolioPage = () => {
                 <td className={calc.profit >= 0 ? "profit" : "loss"}>
                   {calc.rate}%<br />{calc.profit.toLocaleString()}￦
                 </td>
+                {editMode && (
+                  <td>
+                    <button
+                      className="edit-toggle-button"
+                      onClick={() => removeRow(i)}
+                    >
+                      삭제
+                    </button>
+                  </td>
+                )}
               </tr>
             );
           })}
+          {editMode && (
+            <tr>
+              <td colSpan="7">
+                <a
+                  href="#"
+                  className="edit-toggle-button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    addNewRow();
+                  }}
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    textAlign: "center",
+                    padding: "12px 0"
+                  }}
+                >
+                  +
+                </a>
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>

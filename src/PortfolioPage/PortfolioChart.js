@@ -20,7 +20,8 @@ const PortfolioChart = ({ holdings, dummyPrices }) => {
             cy="50%"
             outerRadius={80}
             fill="#8884d8"
-            label
+            label={false}
+            labelLine={false}
           >
             {holdings.map((_, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
