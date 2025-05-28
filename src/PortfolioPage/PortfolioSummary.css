@@ -33,8 +33,8 @@
     color: #f44336;
 }
 .portfolio-summary .red {
-    color: #e53935;
+    color: #e53935; /* red for positive */
 }
-.portfolio-summary .green {
-    color: #43a047;
+.portfolio-summary .blue {
+    color: #1e88e5; /* blue for negative */
 }

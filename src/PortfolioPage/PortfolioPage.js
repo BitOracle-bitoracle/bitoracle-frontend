@@ -42,11 +42,26 @@ const PortfolioPage = () => {
     return { buy, now, profit, rate, chartData };
   };
 
+  // Compute summary before rendering
+  const summary = holdings.reduce(
+    (acc, item) => {
+      const buy = item.amount * item.avgPrice;
+      const now = item.amount * (dummyPrices[item.coin] || 0);
+      const profit = now - buy;
+      acc.totalBuy += buy;
+      acc.totalNow += now;
+      acc.totalProfit += profit;
+      return acc;
+    },
+    { totalBuy: 0, totalNow: 0, totalProfit: 0 }
+  );
+  summary.totalRate = summary.totalBuy === 0 ? 0 : (summary.totalProfit / summary.totalBuy) * 100;
+
   return (
     <div className="portfolio-page">
       <h2>나의 포트폴리오</h2>
       <div className="portfolio-overview">
-        <PortfolioSummary />
+        <PortfolioSummary summary={summary} />
         <PortfolioChart holdings={holdings} dummyPrices={dummyPrices} />
       </div>
       <div className="portfolio-controls">
@@ -114,7 +129,7 @@ const PortfolioPage = () => {
                 </td>
                 <td>{calc.buy.toLocaleString()}￦</td>
                 <td>{calc.now.toLocaleString()}￦</td>
-                <td className={calc.profit >= 0 ? "profit" : "loss"}>
+                <td className={calc.profit >= 0 ? "red" : "blue"}>
                   {calc.rate}%<br />{calc.profit.toLocaleString()}￦
                 </td>
                 {editMode && (

@@ -109,3 +109,11 @@
 .portfolio-controls {
   margin-bottom: 8px;
 }
+
+.red {
+  color: #e53935; /* 빨간색 (수익) */
+}
+
+.blue {
+  color: #1e88e5; /* 파란색 (손실) */
+}
