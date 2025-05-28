@@ -1,0 +1,123 @@
+.site-footer {
+    background: #1a1a1a;
+    color: #ddd;
+    font-size: 14px;
+    position: relative;
+    padding: 32px 20px 20px;
+    margin-top: 4rem;
+}
+
+/* 상단 링크 */
+.footer-top {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 36px;
+}
+
+.footer-section {
+    flex: 1;
+}
+
+.footer-section strong {
+    display: block;
+    color: #fff;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-section li+li {
+    margin-top: 6px;
+}
+
+.footer-section a {
+    color: #ccc;
+    text-decoration: none;
+}
+
+.footer-section a:hover {
+    text-decoration: underline;
+}
+
+.footer-btn {
+  display: inline-block;
+  background-color: #3b82f6;
+  color: white;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-weight: 600;
+  border: none;
+  transition: background-color 0.2s;
+}
+.footer-btn:hover {
+  background-color: #2563eb;
+}
+
+/* 컨테이너 너비 중앙 정렬 */
+.footer-container {
+  width: 67%;
+  margin: 0 auto;
+}
+
+/* 하단 회사 정보 */
+.footer-bottom {
+    border-top: 1px solid #333;
+    padding-top: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.company-info p {
+    margin: 2px 0;
+    line-height: 1.5;
+}
+
+.related-site {
+    color: #aaa;
+}
+
+.related-site a {
+    margin-left: 8px;
+    color: #ccc;
+    text-decoration: none;
+}
+
+.related-site a:hover {
+    text-decoration: underline;
+}
+
+/* 오른쪽 하단 아이콘 버튼 */
+.footer-btn-icon {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    background: #333;
+    border: none;
+    color: #fff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-left: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-btn-icon:hover {
+    background: #444;
+}
+
+/* Top button size increase */
+.footer-btn-icon.top-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+}
