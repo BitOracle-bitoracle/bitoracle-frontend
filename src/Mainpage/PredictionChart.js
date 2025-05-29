@@ -80,7 +80,7 @@ const PredictionChart = ({ data = sampleData }) => {
         filteredData[filteredData.length - 1].timestamp,
       ]);
     }
-  }, [range, filteredData]);
+  }, [range]);
 
   return (
     <div className="prediction-chart-wrapper" style={{ position: 'relative' }}>
