@@ -68,7 +68,8 @@ const Header = () => {
     localStorage.removeItem("access");
     setIsLoggedIn(false);
     setIsDropdownOpen(false);
-    window.location.href = "/";
+    navigate("/");
+    window.scrollTo(0, 0);
   };
 
   const handleMouseEnter = () => {
@@ -119,24 +120,28 @@ const Header = () => {
         <a href="/proto" className="nav-link">차트예측</a>
 
         {isLoggedIn ? (
-          <div className="nav-link-container">
-            <div className="nav-link nav-mypage-wrapper" ref={dropdownRef} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-              <span>마이페이지</span>
-              {isDropdownOpen && (
-                <div className="mypage-dropdown">
-                  <img
-                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo.name)}&background=random`}
-                    alt="프로필"
-                    className="profile-pic"
-                  />
-                  <p className="nickname">{userInfo.name}</p>
-                  <p className="points">포인트: 90pt</p>
-                  <button className="dropdown-btn">작성글 목록</button>
-                  <button className="dropdown-btn" onClick={handleLogout}>로그아웃</button>
-                </div>
-              )}
-            </div>
-          </div>
+          <a
+            href="#"
+            className="nav-link"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            ref={dropdownRef}
+          >
+            마이페이지
+            {isDropdownOpen && (
+              <div className="mypage-dropdown">
+                <img
+                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo.name)}&background=random`}
+                  alt="프로필"
+                  className="profile-pic"
+                />
+                <p className="nickname">{userInfo.name}</p>
+                <p className="points">포인트: 90pt</p>
+                <button className="dropdown-btn">작성글 목록</button>
+                <button className="dropdown-btn" onClick={handleLogout}>로그아웃</button>
+              </div>
+            )}
+          </a>
         ) : (
           <a href="#" className="nav-link login-btn" onClick={() => setIsLoginModalOpen(true)}>로그인</a>
         )}
