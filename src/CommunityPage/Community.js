@@ -69,11 +69,10 @@ const CommunityPage = () => {
     // Get current page number from URL.
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
-        const page = parseInt(queryParams.get('page'), 10);
+        const page = parseInt(queryParams.get("page"), 10);
         if (page && page >= 1 && page <= numOfTotalPages) {
             setIndexOfCurrentPage(page - 1);
-        }
-        else {
+        } else {
             setIndexOfCurrentPage(0);
         }
     }, [location, numOfTotalPages]);
@@ -102,34 +101,39 @@ const CommunityPage = () => {
                 <h1>커뮤니티 페이지</h1>
                 <h4>당신의 생각을 공유해보세요.</h4>
             </div>
+
             <div className="top-bar">
+                <div className="left-placeholder" />
                 <CategoryButtons
                     current={category}
                     categories={categories}
                     onCategoryChange={setCategory}
                 />
-                <input
-                    type="text"
-                    className="search-input"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                            console.log("Search: ", e.target.value);
-                            fetchSearchedPosts();
-                        }
-                    }}
-                    placeholder="검색"
-                />
-                <select
-                    className="search-select"
-                    value={searchOption}
-                    onChange={(e) => setSearchOption(e.target.value)}
-                >
-                    <option value="title">제목</option>
-                    <option value="author">작성자</option>
-                </select>
+                <div className="search-box">
+                    <input
+                        className="search-input"
+                        type="text"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                console.log("Search: ", e.target.value);
+                                fetchSearchedPosts();
+                            }
+                        }}
+                        placeholder="검색"
+                    />
+                    <select
+                        className="search-select"
+                        value={searchOption}
+                        onChange={(e) => setSearchOption(e.target.value)}
+                    >
+                        <option value="title">제목</option>
+                        <option value="author">작성자</option>
+                    </select>
+                </div>
             </div>
+
             <button
                 className="write-button"
                 onClick={() => navigate("/community/write")}
@@ -137,6 +141,7 @@ const CommunityPage = () => {
                 +
             </button>
 
+            {/* Posts */}
             {category === categories[2] ? (
                 <div className="post-cards">
                     {slicedPosts.map((post) => (
@@ -152,8 +157,12 @@ const CommunityPage = () => {
                                 alt="thumbnail"
                                 className="post-card-thumbnail"
                             />
-                            <span className="post-card-title">{post.title}</span>
-                            <span className="post-card-other">{post.author}</span>
+                            <span className="post-card-title">
+                                {post.title}
+                            </span>
+                            <span className="post-card-other">
+                                {post.author}
+                            </span>
                         </div>
                     ))}
                 </div>
