@@ -7,6 +7,7 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const closeTimeoutRef = useRef(null);
@@ -41,8 +42,11 @@ const Header = () => {
       .catch((err) => {
         console.error("❌ /api/auth/init 요청 실패:", err);
         setIsLoggedIn(false);
+      })
+      .finally(() => {
+        setAuthChecked(true);
       });
-  }, [location.pathname]);
+  }, []);
 
   /*
   useEffect(() => {
@@ -117,31 +121,33 @@ const Header = () => {
         <a href="/portfolio" className="nav-link">포트폴리오</a>
         <a href="/proto" className="nav-link">차트예측</a>
 
-        {isLoggedIn ? (
-          <a
-            href="#"
-            className="nav-link"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            ref={dropdownRef}
-          >
-            마이페이지
-            {isDropdownOpen && (
-              <div className="mypage-dropdown">
-                <img
-                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo.name)}&background=random`}
-                  alt="프로필"
-                  className="profile-pic"
-                />
-                <p className="nickname">{userInfo.name}</p>
-                <p className="points">포인트: 90pt</p>
-                <button className="dropdown-btn">작성글 목록</button>
-                <button className="dropdown-btn" onClick={handleLogout}>로그아웃</button>
-              </div>
-            )}
-          </a>
-        ) : (
-          <a href="#" className="nav-link login-btn" onClick={() => setIsLoginModalOpen(true)}>로그인</a>
+        {authChecked && (
+          isLoggedIn ? (
+            <a
+              href="#"
+              className="nav-link"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              ref={dropdownRef}
+            >
+              마이페이지
+              {isDropdownOpen && (
+                <div className="mypage-dropdown">
+                  <img
+                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo.name)}&background=random`}
+                    alt="프로필"
+                    className="profile-pic"
+                  />
+                  <p className="nickname">{userInfo.name}</p>
+                  <p className="points">포인트: 90pt</p>
+                  <button className="dropdown-btn">작성글 목록</button>
+                  <button className="dropdown-btn" onClick={handleLogout}>로그아웃</button>
+                </div>
+              )}
+            </a>
+          ) : (
+            <a href="#" className="nav-link login-btn" onClick={() => setIsLoginModalOpen(true)}>로그인</a>
+          )
         )}
       </nav>
 
