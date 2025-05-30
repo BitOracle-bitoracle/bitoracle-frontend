@@ -115,31 +115,27 @@ const Header = () => {
         </nav>
       </div>
       <nav className="nav">
-        <a href="#" className="nav-link">알림</a>
         <a href="/portfolio" className="nav-link">포트폴리오</a>
         <a href="/proto" className="nav-link">차트예측</a>
 
         {isLoggedIn ? (
-          <div
-            className="mypage-container"
-            ref={dropdownRef}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            <a href="#" className="nav-link">마이페이지</a>
-            {isDropdownOpen && (
-              <div className="mypage-dropdown">
-                <img
-                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo.name)}&background=random`}
-                  alt="프로필"
-                  className="profile-pic"
-                />
-                <p className="nickname">{userInfo.name}</p>
-                <p className="points">포인트: 90pt</p>
-                <button className="dropdown-btn">작성글 목록</button>
-                <button className="dropdown-btn" onClick={handleLogout}>로그아웃</button>
-              </div>
-            )}
+          <div className="nav-link-container">
+            <div className="nav-link nav-mypage-wrapper" ref={dropdownRef} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+              <span>마이페이지</span>
+              {isDropdownOpen && (
+                <div className="mypage-dropdown">
+                  <img
+                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo.name)}&background=random`}
+                    alt="프로필"
+                    className="profile-pic"
+                  />
+                  <p className="nickname">{userInfo.name}</p>
+                  <p className="points">포인트: 90pt</p>
+                  <button className="dropdown-btn">작성글 목록</button>
+                  <button className="dropdown-btn" onClick={handleLogout}>로그아웃</button>
+                </div>
+              )}
+            </div>
           </div>
         ) : (
           <a href="#" className="nav-link login-btn" onClick={() => setIsLoginModalOpen(true)}>로그인</a>
