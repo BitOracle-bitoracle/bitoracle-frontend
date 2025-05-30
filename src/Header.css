@@ -130,3 +130,16 @@
 .mypage-dropdown .dropdown-btn:hover {
     background-color: #e5e5e5;
 }
+.nav-mypage-wrapper {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    position: relative;
+}
+.nav-mypage-wrapper:hover {
+    color: #1976d2;
+}
