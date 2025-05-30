@@ -57,7 +57,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch("https://api.bitoracle.shop/api/auth/logout", {
+      await fetch("https://api.bitoracle.shop/api/logout", {
         method: "POST",
         credentials: "include",
       });
