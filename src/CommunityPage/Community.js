@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-// import axios from "axios";
+import axios from "axios";
 
 import "./Community.css";
 
@@ -29,72 +29,61 @@ const dummyColumn = Array.from({ length: 50 }, (_, i) => ({
     author: `작성자 ${i + 1}`,
 }));
 
+const CATEGORIES = ["전체글", "인기글", "칼럼"];
+const POSTS_PER_PAGE = 4;
+const BASE_URL = "https://api.bitoracle.shop/api/community";
+
+/*
+    Re-rendering must happen on each steps.
+    1. get axios by category.
+    2. sort by cur page.
+    3. if searching words, get axios.
+*/
 const CommunityPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
     // Category
-    const categories = ["전체글", "인기글", "칼럼"];
-    const [category, setCategory] = useState(categories[0]);
+    const [category, setCategory] = useState(CATEGORIES[0]);
 
     // Pagination
-    const [indexOfCurrentPage, setIndexOfCurrentPage] = useState(0);
-    const [numOfTotalPages, setnumOfTotalPages] = useState(0);
-    const POSTS_PER_PAGE = 4;
-    const [posts, setPosts] = useState(dummyPosts); // Information array of posts on current page.
-    const slicedPosts = posts.slice(
-        indexOfCurrentPage * POSTS_PER_PAGE,
-        indexOfCurrentPage * POSTS_PER_PAGE + POSTS_PER_PAGE
-    ); // TEST
+    const [currentPage, setCurrentPage] = useState(0);
+    const [numOfTotalPages, setNumOfTotalPages] = useState(0);
+    const [posts, setPosts] = useState([]); // Information array of posts on current page.
 
     // Search
     const [searchTerm, setSearchTerm] = useState("");
     const [searchOption, setSearchOption] = useState("title");
     const fetchSearchedPosts = async () => {
-        // try {
-        //     const res = await axios.get("", {
-        //         params: {
-        //             option: searchOption,
-        //             keyword: searchTerm,
-        //         },
-        //     });
-        //         setPosts(res.data);
-        //         setIndexOfCurrentPage(0);
-        //         setnumOfTotalPages(Math.ceil(res.data.length / POSTS_PER_PAGE));
-        //     } catch (err) {
-        //         console.error("Fail to search, ", err);
-        //     }
+        try {
+            const res = await axios.get(`${BASE_URL}/search`, {
+                params: {
+                    page: currentPage,
+                    option: searchOption,
+                    keyword: searchTerm,
+                }
+            });
+            } catch (error) {
+                console.error("Fail to search.\n", error);
+            }
     };
 
-    // Get current page number from URL.
+    // Get the current page index from URL(it`s so helpful for SEO).
     useEffect(() => {
-        const queryParams = new URLSearchParams(location.search);
-        const page = parseInt(queryParams.get('page'), 10);
-        if (page && page >= 1 && page <= numOfTotalPages) {
-            setIndexOfCurrentPage(page - 1);
-        }
-        else {
-            setIndexOfCurrentPage(0);
-        }
+        getCurrentPageByUrl(location.search, numOfTotalPages, setCurrentPage);
     }, [location, numOfTotalPages]);
 
     // Get posts against each category.
     useEffect(() => {
-        let data;
-
-        // TODO: 이곳에 axios code 추가해 글 목록 서버에서 가져오기, dummy 삭제하기.
-        if (category === categories[0]) {
-            data = dummyPosts;
-        } else if (category === categories[1]) {
-            data = dummyPopular;
-        } else {
-            data = dummyColumn;
-        }
-
-        setPosts(data);
-        setIndexOfCurrentPage(0);
-        setnumOfTotalPages(Math.ceil(data.length / POSTS_PER_PAGE));
-    }, [category]);
+        const res = getPosts(category, {
+            page: currentPage,
+            size: POSTS_PER_PAGE,
+        });
+        console.log(res);
+        setCurrentPage(0);
+        setPosts(res.data);
+        setNumOfTotalPages(res?.data?.totalPages ?? 0); // ISSUE: response.totalPages is valid value?
+    }, [category, currentPage]);
 
     return (
         <div className="community-container">
@@ -102,10 +91,11 @@ const CommunityPage = () => {
                 <h1>커뮤니티 페이지</h1>
                 <h4>당신의 생각을 공유해보세요.</h4>
             </div>
+
             <div className="top-bar">
                 <CategoryButtons
                     current={category}
-                    categories={categories}
+                    categories={CATEGORIES}
                     onCategoryChange={setCategory}
                 />
                 <input
@@ -130,6 +120,7 @@ const CommunityPage = () => {
                     <option value="author">작성자</option>
                 </select>
             </div>
+
             <button
                 className="write-button"
                 onClick={() => navigate("/community/write")}
@@ -137,9 +128,9 @@ const CommunityPage = () => {
                 +
             </button>
 
-            {category === categories[2] ? (
+            {category === CATEGORIES[2] ? (
                 <div className="post-cards">
-                    {slicedPosts.map((post) => (
+                    {posts?.map((post) => (
                         <div
                             key={post.id}
                             className="post-card"
@@ -152,8 +143,12 @@ const CommunityPage = () => {
                                 alt="thumbnail"
                                 className="post-card-thumbnail"
                             />
-                            <span className="post-card-title">{post.title}</span>
-                            <span className="post-card-other">{post.author}</span>
+                            <span className="post-card-title">
+                                {post.title}
+                            </span>
+                            <span className="post-card-other">
+                                {post.author}
+                            </span>
                         </div>
                     ))}
                 </div>
@@ -165,7 +160,7 @@ const CommunityPage = () => {
                         <span className="post-list-other">댓글</span>
                         <span className="post-list-other">작성자</span>
                     </div>
-                    {slicedPosts.map((post) => (
+                    {posts?.map((post) => (
                         <div
                             key={post.id}
                             className="post-list"
@@ -191,13 +186,49 @@ const CommunityPage = () => {
             )}
 
             <CustomPagination
-                currentPage={indexOfCurrentPage}
+                currentPage={currentPage}
                 totalPages={numOfTotalPages}
-                onPageChange={setIndexOfCurrentPage}
+                onPageChange={setCurrentPage}
             />
         </div>
     );
 };
+
+function getCurrentPageByUrl(locationSearch, numOfTotalPages, setCurrentPage) {
+    const queryParams = new URLSearchParams(locationSearch);
+    const page = parseInt(queryParams.get("page"), 10);
+    if (page && page >= 1 && page <= numOfTotalPages) {
+        setCurrentPage(page - 1);
+    } else {
+        setCurrentPage(0);
+    }
+}
+
+async function getPosts(category, params) {
+    let res;
+
+    try {
+        switch (category) {
+            case CATEGORIES[0]:
+                res = await axios.get(`${BASE_URL}`, { params });
+                break;
+            case CATEGORIES[1]:
+                res = await axios.get(`${BASE_URL}/popular`, { params });
+                break;
+            case CATEGORIES[2]:
+                res = await axios.get(`${BASE_URL}/column`, { params });
+                break;
+            default:
+                res = await axios.get(`${BASE_URL}`, { params });
+        }
+
+        return res;
+    } catch (error) {
+        console.error("Fail to get posts.\n", error);
+    }
+
+    return null;
+}
 
 const CategoryButtons = ({ current, categories, onCategoryChange }) => {
     return (

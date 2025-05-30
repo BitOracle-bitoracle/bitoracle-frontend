@@ -10,30 +10,37 @@ import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-sy
 
 import "./PostWrite.css";
 
+const BASE_URL = "https://api.bitoracle.shop/api/community";
+
 const PostWrite = () => {
     const navigate = useNavigate();
     const editorRef = useRef(null);
 
     const [title, setTitle] = useState("");
 
-    const handleImageUpload = async (blob, callback) => {
-        // try {
-        //     const formData = new FormData();
-        //     formData.append("image", blob);
-        //     const response = await axios.post("/api/upload", formData, {
-        //         headers: {
-        //             "Content-Type": "multipart/form-data",
-        //         },
-        //     });
-        //     const imageUrl = response.data.url; // 서버에서 반환한 이미지 URL
-        //     callback(imageUrl, ""); // 두 번째 인자는 alt 텍스트
-        // } catch (error) {
-        //     console.error("Fail to upload an image: ", error);
-        // }
-    };
+    // const handleImageUpload = async (blob, callback) => {
+    //     try {
+    //         const formData = new FormData();
+    //         formData.append("image", blob);
+    //         const response = await axios.post("/api/upload", formData, {
+    //             headers: {
+    //                 "Content-Type": "multipart/form-data",
+    //             },
+    //         });
+    //         const imageUrl = response.data.url; // 서버에서 반환한 이미지 URL
+    //         callback(imageUrl, ""); // 두 번째 인자는 alt 텍스트
+    //     } catch (error) {
+    //         console.error("Fail to upload an image: ", error);
+    //     }
+    // };
 
     const handleSubmit = async () => {
-        const content = editorRef.current.getInstance().getMarkdown(); // Can exchange with getHTML().
+        const content = editorRef.current.getInstance().getHTML();
+        const postData = {
+            title: title,
+            content: content, // 또는 getMarkdown()
+            postType: "NORMAL",
+        };
 
         if (title.trim().length < 5) {
             alert("제목을 다섯 자 이상 작성해주세요.");
@@ -45,13 +52,15 @@ const PostWrite = () => {
             return;
         }
 
+        const formData = new FormData();
+        formData.append("postSaveDto", new Blob([JSON.stringify(postData)], {type: "application/json"}));
+
         try {
-            // const response = await axios.post("/api/posts", { title, content });
-            // console.log("Success to post: ", response.data);
-            navigate("/community"); //TODO : 자기 글 id 획득해 자기 글 페이지로 가게 수정.
+            const res = await axios.post(`${BASE_URL}/post`, formData);
+            console.log("Success to post: ", res.data);
+            navigate(`/community/post/${res.data.id}`);
         } catch (error) {
-            console.error("Fail to post: ", error);
-            console.log("data: ", { title, content });
+            console.error(`Fail to post: ${postData}\n`, error);
         }
     };
 
@@ -73,7 +82,7 @@ const PostWrite = () => {
                 hideModeSwitch={true}
                 ref={editorRef}
                 plugins={[color]}
-                // hooks={{     // TODO: 활성화 시 image 업로드 안되는 현상 발생. axios POST 문제인지 hooks 자체의 문제인지 파악. 
+                // hooks={{     // TODO: 활성화 시 image 업로드 안되는 현상 발생. axios POST 문제인지 hooks 자체의 문제인지 파악.
                 //     addImageBlobHook: handleImageUpload,
                 // }}
             />
