@@ -68,8 +68,7 @@ const Header = () => {
     localStorage.removeItem("access");
     setIsLoggedIn(false);
     setIsDropdownOpen(false);
-    navigate("/");
-    window.scrollTo(0, 0);
+    window.location.href = "/";
   };
 
   const handleMouseEnter = () => {
