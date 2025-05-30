@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import LoginModal from "./LoginModal";
 import "./Header.css";
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -24,18 +25,16 @@ const Header = () => {
         const token = data.access || data.accessToken;
         if (token) {
           localStorage.setItem("access", token);
-          console.log("✅ access_token from /api/auth/init:", token);
           setIsLoggedIn(true);
 
           // 사용자 정보 저장
           if (data.user) {
             setUserInfo({
               email: data.user.email,
-              name: data.user.name || data.user.email.split("@")[0],
+              name: data.user.nickname || data.user.name || data.user.email.split("@")[0],
             });
           }
         } else {
-          console.log("⛔ 로그인되지 않음");
           setIsLoggedIn(false);
         }
       })
@@ -43,7 +42,7 @@ const Header = () => {
         console.error("❌ /api/auth/init 요청 실패:", err);
         setIsLoggedIn(false);
       });
-  }, []);
+  }, [location.pathname]);
 
   /*
   useEffect(() => {
