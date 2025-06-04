@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-// import axios from "axios";
+import axios from "axios";
 
 import "./Post.css";
 
@@ -23,11 +23,12 @@ const Post = () => {
     const { id } = useParams();
     const [post, setPost] = useState(null);
 
-    useEffect(() => {
-        // axios.get('')
-        // .then()
-        // .catch()
+    const handleAddLike = async () => {
+        // 클릭 시 서버에서 like:true or false 반환. 즉 클릭 시 현재 값의 역 값을 전달하면 됨.
+        await axios.post();
+    };
 
+    useEffect(() => {
         // test
         const found = dummyPosts.find((p) => p.id === id);
         setPost(found);
@@ -41,72 +42,121 @@ const Post = () => {
                 <h1 className="title">{post.title}</h1>
                 <div className="info-box">
                     <strong className="name-box">{post.author}</strong>
-                    <span>❤️ {post.likes}</span>
+                    <span onClick={handleAddLike}>❤️ {post.likes}</span>
                     <span>💬 {post.comments}</span>
                 </div>
             </div>
             <p className="post-content">{post.content}</p>
 
-            <Likes />
             <Comments />
         </div>
     );
 };
 
-const Likes = () => {
-
-    //TODO 서버에 좋아요 수 POST. 새 정보는 WebSocket 연결로 GET.
-    return null;
-}
-
 const Comments = () => {
-    const [comments, setComments] = useState(dummyComments);
-    const [newComment, setNewComment] = useState("");
+  const [comments, setComments] = useState([
+    {
+      id: 1,
+      author: "사용자1",
+      content: "첫 댓글입니다.",
+      replies: []
+    }
+  ]);
+  const [newComment, setNewComment] = useState("");
+  const [replyInputs, setReplyInputs] = useState({}); // {1: "대댓글1", 2: "대댓글2"}
 
-    //TODO 서버에 새 댓글, 댓글 수 POST. 새 정보는 WebSocket 연결로 GET.
+  const handleCommentChange = (e) => setNewComment(e.target.value);
 
-    const handleCommentChange = (e) => {
-        setNewComment(e.target.value);
+  const handleAddComment = () => {
+    if (newComment.trim() === "") return;
+
+    const newId = Date.now();
+    const newCommentObj = {
+      id: newId,
+      author: "현재 사용자",
+      content: newComment,
+      replies: []
     };
 
-    const handleAddComment = () => {
-        if (newComment.trim() === "") return;
+    setComments([...comments, newCommentObj]);
+    setNewComment("");
+  };
 
-        const newId = comments.length + 1;
-        const newCommentObj = {
-            id: newId,
-            author: "현재 사용자",
-            content: newComment,
-        };
+  const handleReplyChange = (commentId, value) => {
+    setReplyInputs({ ...replyInputs, [commentId]: value });
+  };
 
-        setComments([...comments, newCommentObj]);
-        setNewComment("");
+  const handleAddReply = (commentId) => {
+    const replyText = replyInputs[commentId];
+    if (!replyText || replyText.trim() === "") return;
+
+    const newReply = {
+      id: Date.now(),
+      author: "현재 사용자",
+      content: replyText
     };
 
-    return (
-        <div className="comments-section">
-            <h3>댓글 {comments.length}</h3>
+    setComments((prevComments) =>
+      prevComments.map((comment) =>
+        comment.id === commentId
+          ? { ...comment, replies: [...comment.replies, newReply] }
+          : comment
+      )
+    );
 
-            <div className="comment-input-box">
-                <textarea
-                    value={newComment}
-                    onChange={handleCommentChange}
-                    placeholder="댓글을 입력하세요"
-                    rows={3}
-                />
-                <button onClick={handleAddComment}>등록</button>
+    setReplyInputs({ ...replyInputs, [commentId]: "" });
+  };
+
+  return (
+    <div className="comments-section">
+      <h3>댓글 {comments.length}</h3>
+
+      <div className="comment-input-box">
+        <textarea
+          value={newComment}
+          onChange={handleCommentChange}
+          placeholder="댓글을 입력하세요"
+          rows={3}
+        />
+        <button onClick={handleAddComment}>등록</button>
+      </div>
+
+      <ul className="comment-list">
+        {comments.map((comment) => (
+          <li key={comment.id} className="comment-item">
+            <strong>{comment.author}</strong>
+            <p>{comment.content}</p>
+
+            {/* 대댓글 입력 */}
+            <div className="reply-input-box">
+              <textarea
+                value={replyInputs[comment.id] || ""}
+                onChange={(e) =>
+                  handleReplyChange(comment.id, e.target.value)
+                }
+                placeholder="대댓글 입력"
+                rows={2}
+              />
+              <button onClick={() => handleAddReply(comment.id)}>답글</button>
             </div>
 
-            <ul className="comment-list">
-                {comments.map((comment) => (
-                    <li key={comment.id} className="comment-item">
-                        <strong>{comment.author}</strong>
-                        <span>{comment.content}</span>
-                    </li>
+            {/* 대댓글 리스트 */}
+            {comment.replies.length > 0 && (
+              <ul className="reply-list">
+                {comment.replies.map((reply) => (
+                  <li key={reply.id} className="reply-item">
+                    <strong>{reply.author}</strong>
+                    <p>{reply.content}</p>
+                  </li>
                 ))}
-            </ul>
-        </div>
-    );
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 };
+
 
 export default Post;

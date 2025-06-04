@@ -18,28 +18,29 @@ const PostWrite = () => {
 
     const [title, setTitle] = useState("");
 
-    // const handleImageUpload = async (blob, callback) => {
-    //     try {
-    //         const formData = new FormData();
-    //         formData.append("image", blob);
-    //         const response = await axios.post("/api/upload", formData, {
-    //             headers: {
-    //                 "Content-Type": "multipart/form-data",
-    //             },
-    //         });
-    //         const imageUrl = response.data.url; // 서버에서 반환한 이미지 URL
-    //         callback(imageUrl, ""); // 두 번째 인자는 alt 텍스트
-    //     } catch (error) {
-    //         console.error("Fail to upload an image: ", error);
-    //     }
-    // };
+    const handleImageUpload = async (blob, callback) => {
+        try {
+            const formData = new FormData();
+            formData.append("image", blob);
+            const response = await axios.post(`${BASE_URL}/post/image/upload`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            const imageUrl = response.data.url; // 서버에서 반환한 이미지 URL
+            callback(imageUrl, ""); // 두 번째 인자는 alt 텍스트
+        } catch (error) {
+            console.error("Fail to upload an image: ", error);
+        }
+    };
 
     const handleSubmit = async () => {
-        const content = editorRef.current.getInstance().getHTML();
+        const content = editorRef.current.getInstance().getMarkdown();
+        const formData = new FormData();
         const postData = {
             title: title,
-            content: content, // 또는 getMarkdown()
-            postType: "NORMAL",
+            content: content,
+            postType: "COLUMN",
         };
 
         if (title.trim().length < 5) {
@@ -52,15 +53,25 @@ const PostWrite = () => {
             return;
         }
 
-        const formData = new FormData();
-        formData.append("postSaveDto", new Blob([JSON.stringify(postData)], {type: "application/json"}));
-
         try {
-            const res = await axios.post(`${BASE_URL}/post`, formData);
-            console.log("Success to post: ", res.data);
-            navigate(`/community/post/${res.data.id}`);
+            formData.append(
+                "post",
+                new Blob([JSON.stringify(postData)], {
+                    type: "application/json",
+                })
+            );
+
+            const res = await axios.post(`${BASE_URL}/post`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+                withCredentials: true,
+            });
+
+            console.log("Success to post: ", formData);
+            // navigate(`/community/post/${res.data.id}`);
         } catch (error) {
-            console.error(`Fail to post: ${postData}\n`, error);
+            console.error("Fail to post: ", formData, "\n", error);
         }
     };
 
@@ -82,9 +93,9 @@ const PostWrite = () => {
                 hideModeSwitch={true}
                 ref={editorRef}
                 plugins={[color]}
-                // hooks={{     // TODO: 활성화 시 image 업로드 안되는 현상 발생. axios POST 문제인지 hooks 자체의 문제인지 파악.
-                //     addImageBlobHook: handleImageUpload,
-                // }}
+                hooks={{
+                    addImageBlobHook: handleImageUpload,
+                }}
             />
 
             <button onClick={handleSubmit} className="submit-btn">
