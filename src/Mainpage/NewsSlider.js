@@ -80,11 +80,23 @@ const NewsSlider = () => {
         {extendedSlides.map((news, idx) => (
           <div
             key={idx}
-            className="news-slide"
-            style={{ backgroundImage: `url(${news.image_url || "/BitOracle_Logo_News.png"})` }}
+            className={`news-slide ${news.news_type === "GOOD" ? "good" : "bad"}`}
+            style={{
+              backgroundImage:
+                news.image_url && typeof news.image_url === "string"
+                  ? `url(${news.image_url})`
+                  : `url(/BitOracle_Logo_News.png)`,
+            }}
           >
             <div className="overlay">
-              <h2>{news.news_title}</h2>
+              <h2>
+                {news.news_type === "GOOD" ? (
+                  <span style={{ color: "#A3E635", marginRight: "4px" }}>[호재]</span>
+                ) : (
+                  <span style={{ color: "#F05650", marginRight: "4px" }}>[악재]</span>
+                )}
+                {news.news_title}
+              </h2>
               <p>{news.news_content}</p>
             </div>
           </div>
