@@ -21,7 +21,13 @@ const Header = () => {
       method: "GET",
       credentials: "include", // refresh 쿠키 전송
     })
-      .then((res) => res.json())
+      .then(async (res) => {
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text);
+        }
+        return res.json();
+      })
       .then((data) => {
         const token = data.access || data.accessToken;
         if (token) {
@@ -40,8 +46,12 @@ const Header = () => {
         }
       })
       .catch((err) => {
-        console.error("❌ /api/auth/init 요청 실패:", err);
-        setIsLoggedIn(false);
+        if (err.message && err.message.includes("Refresh token mismatch")) {
+          setIsLoggedIn(false);
+        } else {
+          console.error("❌ /api/auth/init 요청 실패:", err);
+          setIsLoggedIn(false);
+        }
       })
       .finally(() => {
         setAuthChecked(true);
@@ -95,7 +105,7 @@ const Header = () => {
           window.scrollTo(0, 0);
           window.location.reload();
         }}>
-          <img src="/BitOracle_Logo(demo).png" alt="BitOracle Logo" className="logo" />
+          <img src="/BitOracle_Logo_demo.png" alt="BitOracle Logo" className="logo" />
         </button>
         <nav className="nav">
           <a

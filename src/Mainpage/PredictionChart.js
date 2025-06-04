@@ -52,25 +52,25 @@ const PredictionChart = ({ data = sampleData }) => {
   ]);
   const containerRef = useRef(null);
 
-  // 휠로 Zoom in/out 처리
-  const onWheel = e => {
-    e.preventDefault();
-    const [start, end] = domain;
-    const delta = (end - start) * 0.1; // 10% zoom
-    if (e.deltaY < 0) {
-      // zoom in
-      setDomain([
-        start + delta,
-        end - delta,
-      ]);
-    } else {
-      // zoom out
-      setDomain([
-        Math.max(filteredData[0]?.timestamp ?? start, start - delta),
-        Math.min(filteredData[filteredData.length - 1]?.timestamp ?? end, end + delta),
-      ]);
-    }
-  };
+  // // 휠로 Zoom in/out 처리
+  // const onWheel = e => {
+  //   e.preventDefault();
+  //   const [start, end] = domain;
+  //   const delta = (end - start) * 0.1; // 10% zoom
+  //   if (e.deltaY < 0) {
+  //     // zoom in
+  //     setDomain([
+  //       start + delta,
+  //       end - delta,
+  //     ]);
+  //   } else {
+  //     // zoom out
+  //     setDomain([
+  //       Math.max(filteredData[0]?.timestamp ?? start, start - delta),
+  //       Math.min(filteredData[filteredData.length - 1]?.timestamp ?? end, end + delta),
+  //     ]);
+  //   }
+  // };
 
   // domain 초기화 (range 바뀔 때)
   useEffect(() => {
@@ -94,7 +94,6 @@ const PredictionChart = ({ data = sampleData }) => {
             cursor: 'default',
             userSelect: 'none',
           }}
-          onWheel={onWheel}
         >
           {/* chart title */}
           <div className="prediction-header">
