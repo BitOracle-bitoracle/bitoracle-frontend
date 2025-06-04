@@ -31,7 +31,6 @@ const IndicatorPanel = () => {
     // metrics - 시가총액, 도미넌스, 김치프리미엄 포함
     axiosInstance.get("/api/metrics")
       .then(res => {
-        console.log("metrics 응답:", res.data); // 여기 확인
         const { marketCap, btcDominance, kimchiPremium } = res.data;
         setData(prev => ({
           ...prev,
@@ -45,13 +44,41 @@ const IndicatorPanel = () => {
     // fear-greed 지수
     axiosInstance.get("/api/metrics/fear-greed")
       .then(res => {
-        console.log("fear-greed 응답:", res.data); // 여기 확인
         setData(prev => ({
           ...prev,
           fearGreed: res.data.data.value, // 예시 필드명, 백엔드 응답 구조에 따라 수정
         }));
       })
       .catch(err => console.error("fear-greed API 오류:", err));
+
+    const ws = new WebSocket("wss://api.bitoracle.shop/sub/metrics");
+
+    ws.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data);
+        setData(prev => ({
+          ...prev,
+          ...message, // assumes message contains updated metric fields
+        }));
+      } catch (err) {
+        console.error("WebSocket metrics JSON 파싱 오류:", err);
+      }
+    };
+
+    ws.onerror = (err) => {
+      console.error("WebSocket metrics 연결 오류:", err);
+    };
+
+    const interval = setInterval(() => {
+      if (ws.readyState === WebSocket.CLOSED || ws.readyState === WebSocket.CLOSING) {
+        // reconnect if needed (optional enhancement)
+      }
+    }, 5000);
+
+    return () => {
+      ws.close();
+      clearInterval(interval);
+    };
   }, []);
 
   const getFearGreedLabel = (value) => {
