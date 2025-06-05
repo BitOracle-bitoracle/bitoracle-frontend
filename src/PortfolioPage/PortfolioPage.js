@@ -24,7 +24,6 @@ const PortfolioPage = () => {
       credentials: "include",                // 쿠키 전송
       headers: {
         "Content-Type": "application/json",
-        // Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({}),
     })
@@ -126,7 +125,6 @@ const PortfolioPage = () => {
       credentials: "include",                // 쿠키 전송
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(payload),
     })
@@ -202,7 +200,6 @@ const PortfolioPage = () => {
                     credentials: "include",    // 쿠키 전송
                     headers: {
                       "Content-Type": "application/json",
-                      Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify(payload),
                   });
