@@ -27,7 +27,8 @@ const PortfolioPage = () => {
         stompClient.subscribe("/user/queue/portfolio", (message) => {
           const data = JSON.parse(message.body);
           console.log("PortfolioPage - STOMP message data:", data);
-          if (Array.isArray(data)) {
+          // 데이터가 빈 배열([])인 경우에는 기존 holdings 유지
+          if (Array.isArray(data) && data.length > 0) {
             setHoldings(
               data.map((item) => ({
                 coin: item.coin,
