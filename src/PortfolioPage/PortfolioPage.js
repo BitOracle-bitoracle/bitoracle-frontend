@@ -6,60 +6,86 @@ import "./PortfolioPage.css";
 import PortfolioSummary from './PortfolioSummary';
 import PortfolioChart from './PortfolioChart';
 
-const dummyPrices = {
-  BTC: 72000000,
-  ETH: 3800000,
-  XRP: 850,
-};
-
 const COLORS = ["#4CAF50", "#2196F3", "#9C27B0", "#FFC107"];
 
 const PortfolioPage = () => {
   const [editMode, setEditMode] = useState(false);
-  const [holdings, setHoldings] = useState([
-    { coin: "BTC", amount: 0.1, avgPrice: 56000000 },
-  ]);
+  // holdings: [{ coin, amount, avgPrice, currentPrice }]
+  const [holdings, setHoldings] = useState([]);
 
-useEffect(() => {
-  const token = localStorage.getItem("access");
-  if (!token) return;
+  // -------------------------------
+  // 1. 페이지 진입 시 포트폴리오 생성
+  // -------------------------------
+  useEffect(() => {
+    const token = localStorage.getItem("access");
+    if (!token) return;
+    fetch("https://api.bitoracle.shop/api/portfolio/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }).catch((err) => {
+      console.error("❌ 포트폴리오 생성 오류:", err);
+    });
+  }, []);
 
-  const socket = new SockJS("https://api.bitoracle.shop/ws-upbit");
+   // -------------------------------
+   // 2. STOMP 연결: "/ws-portfolio" → 구독 "/user/queue/portfolio"
+   // -------------------------------
+  useEffect(() => {
+    const token = localStorage.getItem("access");
+    if (!token) return;
 
-  const stompClient = new Client({
-    webSocketFactory: () => socket,
-    connectHeaders: {
-      Authorization: `Bearer ${token}`,
-    },
-    onConnect: () => {
-      console.log("✅ STOMP 연결 성공");
+    const socket = new SockJS("https://api.bitoracle.shop/ws-portfolio");
+    const stompClient = new Client({
+      webSocketFactory: () => socket,
+      connectHeaders: {
+        Authorization: `Bearer ${token}`,
+      },
+      onConnect: () => {
+        console.log("✅ STOMP 연결 성공");
 
-      stompClient.subscribe("/sub/trade", (message) => {
-        const data = JSON.parse(message.body);
-        console.log("📥 실시간 거래 데이터:", data);
-        // 필요 시 setHoldings 또는 다른 상태 업데이트 구현
-      });
-    },
-    onStompError: (frame) => {
-      console.error("❌ STOMP 오류:", frame);
-    },
-  });
 
-  stompClient.activate();
+        stompClient.subscribe("/user/queue/portfolio", (message) => {
+          const data = JSON.parse(message.body);
+          console.log("📥 실시간 포트폴리오 데이터:", data);
+          // data: [{ coin, amount, avgPrice, currentPrice }]
+          if (Array.isArray(data)) {
+            // Map incoming data to our holdings shape
+            setHoldings(
+              data.map((item) => ({
+                coin: item.coin,
+                amount: item.amount,
+                avgPrice: item.avgPrice,
+                currentPrice: item.currentPrice,
+              }))
+            );
+          }
+        });
+      },
+      onStompError: (frame) => {
+        console.error("❌ STOMP 오류:", frame);
+      },
+    });
 
-  return () => {
-    stompClient.deactivate();
-  };
-}, []);
+    stompClient.activate();
 
+    return () => {
+      stompClient.deactivate();
+    };
+  }, []);
   const handleInputChange = (index, field, value) => {
     const updated = [...holdings];
-    updated[index][field] = value;
+    updated[index] = { ...updated[index], [field]: value };
     setHoldings(updated);
   };
 
   const addNewRow = () => {
-    setHoldings([...holdings, { coin: "BTC", amount: 0, avgPrice: 0 }]);
+    setHoldings([
+      ...holdings,
+      { coin: "BTC", amount: 0, avgPrice: 0, currentPrice: 0 }
+    ]);
   };
 
   const removeRow = (index) => {
@@ -73,16 +99,25 @@ useEffect(() => {
       return;
     }
 
-    fetch("https://api.bitoracle.shop/api/portfolio/remove", {
+    // -------------------------------
+    // 3. 코인 삭제: DELETE 대신 POST "/api/portfolio/sell" (backend spec)
+    // -------------------------------
+    // 백엔드가 기대하는 필드명: coinName, quantity, price
+    const payload = {
+      coinName: `KRW-${removedItem.coin}`,
+      quantity: removedItem.amount,
+      price: removedItem.avgPrice || undefined,
+    };
+    fetch("https://api.bitoracle.shop/api/portfolio/sell", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(removedItem),
+      body: JSON.stringify(payload),
     })
       .then((res) => {
-        if (!res.ok) throw new Error("포트폴리오 삭제 실패");
+        if (!res.ok) throw new Error("코인 매도 실패");
         return res.json();
       })
       .then(() => {
@@ -95,7 +130,7 @@ useEffect(() => {
 
   const calculate = (item) => {
     const buy = item.amount * item.avgPrice;
-    const now = item.amount * (dummyPrices[item.coin] || 0);
+    const now = item.amount * (item.currentPrice || 0);
     const profit = now - buy;
     const rate = buy === 0 ? 0 : ((profit / buy) * 100).toFixed(2);
     const chartData = { coin: item.coin, value: now };
@@ -106,7 +141,7 @@ useEffect(() => {
   const summary = holdings.reduce(
     (acc, item) => {
       const buy = item.amount * item.avgPrice;
-      const now = item.amount * (dummyPrices[item.coin] || 0);
+      const now = item.amount * (item.currentPrice || 0);
       const profit = now - buy;
       acc.totalBuy += buy;
       acc.totalNow += now;
@@ -120,46 +155,59 @@ useEffect(() => {
   return (
     <div className="portfolio-page">
       <h2>나의 포트폴리오</h2>
-      <div className="portfolio-overview">
-        <PortfolioSummary summary={summary} />
-        <PortfolioChart holdings={holdings} dummyPrices={dummyPrices} />
-      </div>
-      <div className="portfolio-controls">
-        <a href="#" className="edit-toggle-button" onClick={async (e) => {
-          e.preventDefault();
-          if (editMode) {
-            // 수정 완료 → 서버에 저장
+       <div className="portfolio-overview">
+         <PortfolioSummary summary={summary} />
+         <PortfolioChart holdings={holdings} />
+       </div>
+       <div className="portfolio-controls">
+        {/* -------------------------------
+            4. 편집 완료 시: holdings 배열을 순회하며 각각 buy API 호출
+        ------------------------------- */}
+        <a
+          href="#"
+          className="edit-toggle-button"
+          onClick={async (e) => {
+            e.preventDefault();
             const token = localStorage.getItem("access");
             if (!token) {
               alert("로그인이 필요합니다.");
               return;
             }
-            fetch("https://api.bitoracle.shop/api/portfolio/buy", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify(holdings),
-            })
-              .then((res) => {
-                if (!res.ok) throw new Error("포트폴리오 저장 실패");
-                return res.json();
-              })
-              .then(() => {
-                console.log("✅ 포트폴리오 저장 완료");
+
+            if (editMode) {
+              // 수정 완료 모드 → 각 항목별 매수 API 호출
+              try {
+                for (const item of holdings) {
+                  const payload = {
+                    coinName: `KRW-${item.coin}`,
+                    quantity: item.amount,
+                    // avgPrice가 0이거나 null이면 undefined로 보내면 backend에서 현재가로 처리
+                    price: item.avgPrice || undefined,
+                  };
+                  const res = await fetch("https://api.bitoracle.shop/api/portfolio/buy", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(payload),
+                  });
+                  if (!res.ok) {
+                    throw new Error(`매수 API 오류(coin=${item.coin})`);
+                  }
+                }
+                console.log("✅ 포트폴리오 저장(매수) 완료");
                 setEditMode(false);
-              })
-              .catch((err) => {
+              } catch (err) {
                 console.error("❌ 저장 중 오류:", err);
-              });
-          } else {
-            setEditMode(true);
-          }
-        }}>
+              }
+            } else {
+             setEditMode(true);
+            }
+          }}
+        >
           {editMode ? "수정 완료" : "수정"}
         </a>
-        {/* "+" moved to inside table */}
       </div>
       <table className="portfolio-table">
         <thead>
