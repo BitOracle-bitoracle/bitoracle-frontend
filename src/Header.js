@@ -32,6 +32,7 @@ const Header = () => {
         const token = data.access || data.accessToken;
         if (token) {
           localStorage.setItem("access", token);
+          document.cookie = `access=${token}; path=/;`;
           setIsLoggedIn(true);
 
           // 사용자 정보 저장
