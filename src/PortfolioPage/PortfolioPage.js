@@ -24,8 +24,9 @@ const PortfolioPage = () => {
       credentials: "include",                // 쿠키 전송
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        // Authorization: `Bearer ${token}`,
       },
+      body: JSON.stringify({}),
     })
       .then((res) => {
         console.log("PortfolioPage - CREATE response status:", res.status); //디버깅
