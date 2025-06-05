@@ -4,7 +4,7 @@ import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recha
 
 const COLORS = ["#4CAF50", "#2196F3", "#9C27B0", "#FFC107"];
 
-const PortfolioChart = ({ holdings, dummyPrices }) => {
+const PortfolioChart = ({ holdings = [] }) => {
   return (
     <div className="overview-right">
       <ResponsiveContainer width={240} height={240}>
@@ -12,7 +12,7 @@ const PortfolioChart = ({ holdings, dummyPrices }) => {
           <Pie
             data={holdings.map(item => ({
               name: item.coin,
-              value: item.amount * (dummyPrices[item.coin] || 0)
+              value: item.amount * (item.currentPrice || 0)
             }))}
             dataKey="value"
             nameKey="name"

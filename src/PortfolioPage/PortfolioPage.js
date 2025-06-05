@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
-import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
 import "./PortfolioPage.css";
 import PortfolioSummary from './PortfolioSummary';
 import PortfolioChart from './PortfolioChart';
-
-const COLORS = ["#4CAF50", "#2196F3", "#9C27B0", "#FFC107"];
 
 const PortfolioPage = () => {
   const [editMode, setEditMode] = useState(false);
@@ -21,13 +18,19 @@ const PortfolioPage = () => {
     if (!token) return;
     fetch("https://api.bitoracle.shop/api/portfolio/create", {
       method: "POST",
+      credentials: "include",                // 쿠키 전송
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-    }).catch((err) => {
-      console.error("❌ 포트폴리오 생성 오류:", err);
-    });
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("포트폴리오 생성 실패");
+        return res.json();
+      })
+      .catch((err) => {
+        console.error("❌ 포트폴리오 생성 오류:", err);
+      });
   }, []);
 
    // -------------------------------
@@ -37,7 +40,9 @@ const PortfolioPage = () => {
     const token = localStorage.getItem("access");
     if (!token) return;
 
-    const socket = new SockJS("https://api.bitoracle.shop/ws-portfolio");
+    const socket = new SockJS("https://api.bitoracle.shop/ws-portfolio", null, {
+      withCredentials: true,               // 쿠키 전송
+    });
     const stompClient = new Client({
       webSocketFactory: () => socket,
       connectHeaders: {
@@ -84,7 +89,7 @@ const PortfolioPage = () => {
   const addNewRow = () => {
     setHoldings([
       ...holdings,
-      { coin: "BTC", amount: 0, avgPrice: 0, currentPrice: 0 }
+      { coin: "BTC", amount: 0, avgPrice: 0, currentPrice: 0 },
     ]);
   };
 
@@ -110,6 +115,7 @@ const PortfolioPage = () => {
     };
     fetch("https://api.bitoracle.shop/api/portfolio/sell", {
       method: "POST",
+      credentials: "include",                // 쿠키 전송
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -160,14 +166,11 @@ const PortfolioPage = () => {
          <PortfolioChart holdings={holdings} />
        </div>
        <div className="portfolio-controls">
-        {/* -------------------------------
-            4. 편집 완료 시: holdings 배열을 순회하며 각각 buy API 호출
-        ------------------------------- */}
-        <a
-          href="#"
+        {/* 편집 완료 시: holdings 배열을 순회하며 각각 buy API 호출 */}
+        <button
+          type="button"
           className="edit-toggle-button"
-          onClick={async (e) => {
-            e.preventDefault();
+          onClick={async () => {
             const token = localStorage.getItem("access");
             if (!token) {
               alert("로그인이 필요합니다.");
@@ -181,11 +184,11 @@ const PortfolioPage = () => {
                   const payload = {
                     coinName: `KRW-${item.coin}`,
                     quantity: item.amount,
-                    // avgPrice가 0이거나 null이면 undefined로 보내면 backend에서 현재가로 처리
                     price: item.avgPrice || undefined,
                   };
                   const res = await fetch("https://api.bitoracle.shop/api/portfolio/buy", {
                     method: "POST",
+                    credentials: "include",    // 쿠키 전송
                     headers: {
                       "Content-Type": "application/json",
                       Authorization: `Bearer ${token}`,
@@ -202,12 +205,12 @@ const PortfolioPage = () => {
                 console.error("❌ 저장 중 오류:", err);
               }
             } else {
-             setEditMode(true);
+              setEditMode(true);
             }
           }}
         >
           {editMode ? "수정 완료" : "수정"}
-        </a>
+        </button>
       </div>
       <table className="portfolio-table">
         <thead>
@@ -271,6 +274,7 @@ const PortfolioPage = () => {
                 {editMode && (
                   <td>
                     <button
+                      type="button"
                       className="edit-toggle-button"
                       onClick={() => removeRow(i)}
                     >
@@ -284,22 +288,19 @@ const PortfolioPage = () => {
           {editMode && (
             <tr>
               <td colSpan="7">
-                <a
-                  href="#"
+                <button
+                  type="button"
                   className="edit-toggle-button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    addNewRow();
-                  }}
+                  onClick={() => addNewRow()}
                   style={{
                     display: "block",
                     width: "100%",
                     textAlign: "center",
-                    padding: "12px 0"
+                    padding: "12px 0",
                   }}
                 >
                   +
-                </a>
+                </button>
               </td>
             </tr>
           )}
