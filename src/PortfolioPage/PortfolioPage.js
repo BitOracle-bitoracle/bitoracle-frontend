@@ -15,7 +15,9 @@ const PortfolioPage = () => {
   // -------------------------------
   useEffect(() => {
     const token = localStorage.getItem("access");
+    console.log("PortfolioPage - CREATE token:", token); //디버깅
     if (!token) return;
+    console.log("PortfolioPage - CREATE request about to be sent"); //디버깅
     fetch("https://api.bitoracle.shop/api/portfolio/create", {
       method: "POST",
       mode: "cors",
@@ -26,11 +28,12 @@ const PortfolioPage = () => {
       },
     })
       .then((res) => {
+        console.log("PortfolioPage - CREATE response status:", res.status); //디버깅
         if (!res.ok) throw new Error("포트폴리오 생성 실패");
         return res.json();
       })
       .catch((err) => {
-        console.error("❌ 포트폴리오 생성 오류:", err);
+        console.error("PortfolioPage - CREATE error:", err);
       });
   }, []);
 
@@ -39,6 +42,7 @@ const PortfolioPage = () => {
    // -------------------------------
   useEffect(() => {
     const token = localStorage.getItem("access");
+    console.log("PortfolioPage - STOMP token:", token); //디버깅
     if (!token) return;
 
     const socket = new SockJS("https://api.bitoracle.shop/ws-portfolio", null, {
@@ -50,12 +54,11 @@ const PortfolioPage = () => {
         Authorization: `Bearer ${token}`,
       },
       onConnect: () => {
-        console.log("✅ STOMP 연결 성공");
-
+        console.log("PortfolioPage - STOMP connected, subscribing...");
 
         stompClient.subscribe("/user/queue/portfolio", (message) => {
           const data = JSON.parse(message.body);
-          console.log("📥 실시간 포트폴리오 데이터:", data);
+          console.log("PortfolioPage - STOMP message data:", data);
           // data: [{ coin, amount, avgPrice, currentPrice }]
           if (Array.isArray(data)) {
             // Map incoming data to our holdings shape
@@ -95,11 +98,13 @@ const PortfolioPage = () => {
   };
 
   const removeRow = (index) => {
+    console.log("PortfolioPage - removeRow index:", index); //디버깅
     const removedItem = holdings[index];
     const updated = holdings.filter((_, i) => i !== index);
     setHoldings(updated);
 
     const token = localStorage.getItem("access");
+    console.log("PortfolioPage - removeRow token:", token); //디버깅
     if (!token) {
       alert("로그인이 필요합니다.");
       return;
@@ -114,6 +119,7 @@ const PortfolioPage = () => {
       quantity: removedItem.amount,
       price: removedItem.avgPrice || undefined,
     };
+    console.log("PortfolioPage - removeRow payload:", payload); //디버깅
     fetch("https://api.bitoracle.shop/api/portfolio/sell", {
       method: "POST",
       credentials: "include",                // 쿠키 전송
@@ -124,6 +130,7 @@ const PortfolioPage = () => {
       body: JSON.stringify(payload),
     })
       .then((res) => {
+        console.log("PortfolioPage - SELL response status:", res.status); //디버깅
         if (!res.ok) throw new Error("코인 매도 실패");
         return res.json();
       })
@@ -131,7 +138,7 @@ const PortfolioPage = () => {
         console.log("✅ 포트폴리오 항목 삭제 완료");
       })
       .catch((err) => {
-        console.error("❌ 삭제 중 오류:", err);
+        console.error("PortfolioPage - SELL error:", err);
       });
   };
 
@@ -173,6 +180,7 @@ const PortfolioPage = () => {
           className="edit-toggle-button"
           onClick={async () => {
             const token = localStorage.getItem("access");
+            console.log("PortfolioPage - BUY loop token:", token); //디버깅
             if (!token) {
               alert("로그인이 필요합니다.");
               return;
@@ -187,6 +195,7 @@ const PortfolioPage = () => {
                     quantity: item.amount,
                     price: item.avgPrice || undefined,
                   };
+                  console.log("PortfolioPage - BUY payload:", payload); //디버깅
                   const res = await fetch("https://api.bitoracle.shop/api/portfolio/buy", {
                     method: "POST",
                     credentials: "include",    // 쿠키 전송
@@ -196,6 +205,7 @@ const PortfolioPage = () => {
                     },
                     body: JSON.stringify(payload),
                   });
+                  console.log(`PortfolioPage - BUY response for ${item.coin}:`, res.status); //디버깅
                   if (!res.ok) {
                     throw new Error(`매수 API 오류(coin=${item.coin})`);
                   }
@@ -203,7 +213,7 @@ const PortfolioPage = () => {
                 console.log("✅ 포트폴리오 저장(매수) 완료");
                 setEditMode(false);
               } catch (err) {
-                console.error("❌ 저장 중 오류:", err);
+                console.error("PortfolioPage - BUY error:", err);
               }
             } else {
               setEditMode(true);

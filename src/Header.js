@@ -128,8 +128,30 @@ const Header = () => {
         </nav>
       </div>
       <nav className="nav">
-        <a href="/portfolio" className="nav-link">포트폴리오</a>
-        <a href="/proto" className="nav-link">차트예측</a>
+        <a href="#" className="nav-link" onClick={(e) => {
+          e.preventDefault();
+          const token = localStorage.getItem("access");
+          if (!token) {
+            alert("로그인이 필요합니다.");
+            setIsLoginModalOpen(true);
+          } else {
+            navigate("/portfolio");
+          }
+        }}>
+          포트폴리오
+        </a>
+        <a href="#" className="nav-link" onClick={(e) => {
+          e.preventDefault();
+          const token = localStorage.getItem("access");
+          if (!token) {
+            alert("로그인이 필요합니다.");
+            setIsLoginModalOpen(true);
+          } else {
+            navigate("/proto");
+          }
+        }}>
+          차트예측
+        </a>
 
         {authChecked && (
           isLoggedIn ? (
