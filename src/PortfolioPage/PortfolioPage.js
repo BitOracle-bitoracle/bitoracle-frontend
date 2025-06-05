@@ -19,23 +19,24 @@ const PortfolioPage = () => {
     console.log("PortfolioPage - STOMP token:", token); //디버깅
     if (!token) return;
 
-    const socket = new SockJS("https://api.bitoracle.shop/ws-portfolio", null, {
-      withCredentials: true,               // 쿠키 전송
-    });
+    // STOMP connection via SockJS with token in URL
+    const socket = new SockJS(
+      `https://api.bitoracle.shop/ws-portfolio?token=Bearer ${token}`,
+      null,
+      {
+        withCredentials: true, // refresh token 쿠키 전송
+      }
+    );
     const stompClient = new Client({
       webSocketFactory: () => socket,
-      connectHeaders: {
-        Authorization: `Bearer ${token}`,
-      },
+      // 헤더 대신 URL 쿼리로 토큰 전달 (백엔드가 헤더를 읽지 않으므로)
       onConnect: () => {
         console.log("PortfolioPage - STOMP connected, subscribing...");
 
         stompClient.subscribe("/user/queue/portfolio", (message) => {
           const data = JSON.parse(message.body);
           console.log("PortfolioPage - STOMP message data:", data);
-          // data: [{ coin, amount, avgPrice, currentPrice }]
           if (Array.isArray(data)) {
-            // Map incoming data to our holdings shape
             setHoldings(
               data.map((item) => ({
                 coin: item.coin,
