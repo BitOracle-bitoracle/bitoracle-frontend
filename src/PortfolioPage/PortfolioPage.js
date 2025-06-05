@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import "./PortfolioPage.css";
 import PortfolioSummary from './PortfolioSummary';
@@ -19,20 +18,12 @@ const PortfolioPage = () => {
     console.log("PortfolioPage - STOMP token:", token); //디버깅
     if (!token) return;
 
-    // STOMP connection via SockJS with token in URL
-    const socket = new SockJS(
-      `https://api.bitoracle.shop/ws-portfolio?token=Bearer ${token}`,
-      null,
-      {
-        withCredentials: true, // refresh token 쿠키 전송
-      }
-    );
+    // STOMP connection via WebSocket only, no SockJS/JSONP fallback
     const stompClient = new Client({
-      webSocketFactory: () => socket,
-      // 헤더 대신 URL 쿼리로 토큰 전달 (백엔드가 헤더를 읽지 않으므로)
+      brokerURL: `wss://api.bitoracle.shop/ws-portfolio/websocket?token=Bearer ${token}`,
+      reconnectDelay: 5000,
       onConnect: () => {
         console.log("PortfolioPage - STOMP connected, subscribing...");
-
         stompClient.subscribe("/user/queue/portfolio", (message) => {
           const data = JSON.parse(message.body);
           console.log("PortfolioPage - STOMP message data:", data);
