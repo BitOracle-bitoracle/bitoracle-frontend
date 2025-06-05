@@ -10,33 +10,6 @@ const PortfolioPage = () => {
   // holdings: [{ coin, amount, avgPrice, currentPrice }]
   const [holdings, setHoldings] = useState([]);
 
-  // -------------------------------
-  // 1. 페이지 진입 시 포트폴리오 생성
-  // -------------------------------
-  useEffect(() => {
-    const token = localStorage.getItem("access");
-    console.log("PortfolioPage - CREATE token:", token); //디버깅
-    if (!token) return;
-    console.log("PortfolioPage - CREATE request about to be sent"); //디버깅
-    fetch("https://api.bitoracle.shop/api/portfolio/create", {
-      method: "POST",
-      mode: "cors",
-      credentials: "include",                // 쿠키 전송
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({}),
-    })
-      .then((res) => {
-        console.log("PortfolioPage - CREATE response status:", res.status); //디버깅
-        if (!res.ok) throw new Error("포트폴리오 생성 실패");
-        return res.json();
-      })
-      .catch((err) => {
-        console.error("PortfolioPage - CREATE error:", err);
-      });
-  }, []);
 
    // -------------------------------
    // 2. STOMP 연결: "/ws-portfolio" → 구독 "/user/queue/portfolio"
