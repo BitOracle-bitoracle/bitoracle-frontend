@@ -57,7 +57,7 @@ const PredictionChart = () => {
       } catch (authErr) {
         // 인증 실패 시: 403 또는 "Refresh token mismatch" 메시지
         if (
-          (authErr.response && authErr.response.status === 403) ||
+          (authErr.response && (authErr.response.status === 401 || authErr.response.status === 403)) ||
           (authErr.response && typeof authErr.response.data === 'string' && authErr.response.data.includes('Refresh token mismatch')) ||
           (authErr.message && authErr.message.includes('Network Error'))
         ) {
