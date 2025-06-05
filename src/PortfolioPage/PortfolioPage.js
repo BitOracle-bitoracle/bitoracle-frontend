@@ -18,6 +18,7 @@ const PortfolioPage = () => {
     if (!token) return;
     fetch("https://api.bitoracle.shop/api/portfolio/create", {
       method: "POST",
+      mode: "cors",
       credentials: "include",                // 쿠키 전송
       headers: {
         "Content-Type": "application/json",
