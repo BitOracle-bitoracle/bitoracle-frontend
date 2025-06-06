@@ -29,10 +29,11 @@ const Post = () => {
     };
 
     useEffect(() => {
-        // test
         const found = dummyPosts.find((p) => p.id === id);
         setPost(found);
     }, [id]);
+
+
 
     if (!post) return <div>게시글을 찾을 수 없습니다.</div>;
 
@@ -54,14 +55,7 @@ const Post = () => {
 };
 
 const Comments = () => {
-  const [comments, setComments] = useState([
-    {
-      id: 1,
-      author: "사용자1",
-      content: "첫 댓글입니다.",
-      replies: []
-    }
-  ]);
+  const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [replyInputs, setReplyInputs] = useState({}); // {1: "대댓글1", 2: "대댓글2"}
 
@@ -127,6 +121,18 @@ const Comments = () => {
             <strong>{comment.author}</strong>
             <p>{comment.content}</p>
 
+            {/* 대댓글 리스트 */}
+            {comment.replies.length > 0 && (
+              <ul className="reply-list">
+                {comment.replies.map((reply) => (
+                  <li key={reply.id} className="reply-item">
+                    <strong>{reply.author}</strong>
+                    <p>{reply.content}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
+
             {/* 대댓글 입력 */}
             <div className="reply-input-box">
               <textarea
@@ -139,18 +145,6 @@ const Comments = () => {
               />
               <button onClick={() => handleAddReply(comment.id)}>답글</button>
             </div>
-
-            {/* 대댓글 리스트 */}
-            {comment.replies.length > 0 && (
-              <ul className="reply-list">
-                {comment.replies.map((reply) => (
-                  <li key={reply.id} className="reply-item">
-                    <strong>{reply.author}</strong>
-                    <p>{reply.content}</p>
-                  </li>
-                ))}
-              </ul>
-            )}
           </li>
         ))}
       </ul>

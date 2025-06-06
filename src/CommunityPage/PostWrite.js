@@ -17,30 +17,34 @@ const PostWrite = () => {
     const editorRef = useRef(null);
 
     const [title, setTitle] = useState("");
+    const [imageFileList, setImageFileList] = useState([]);
 
-    const handleImageUpload = async (blob, callback) => {
-        try {
-            const formData = new FormData();
-            formData.append("image", blob);
-            const response = await axios.post(`${BASE_URL}/post/image/upload`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
-            const imageUrl = response.data.url; // 서버에서 반환한 이미지 URL
-            callback(imageUrl, ""); // 두 번째 인자는 alt 텍스트
-        } catch (error) {
-            console.error("Fail to upload an image: ", error);
-        }
-    };
+    // const handleImageUpload = async (blob, callback) => {
+    //     try {
+    //         const formData = new FormData();
+    //         formData.append("image", blob);
+    //         const response = await axios.post(
+    //             `${BASE_URL}/post/image/upload`,
+    //             formData,
+    //             {
+    //                 headers: {
+    //                     "Content-Type": "multipart/form-data",
+    //                 },
+    //             }
+    //         );
+    //         const imageUrl = response.data.url; // 서버에서 반환한 이미지 URL
+    //         callback(imageUrl, ""); // 두 번째 인자는 alt 텍스트
+    //     } catch (error) {
+    //         console.error("Fail to upload an image: ", error);
+    //     }
+    // };
 
     const handleSubmit = async () => {
-        const content = editorRef.current.getInstance().getMarkdown();
+        const content = editorRef.current.getInstance().getHTML();
         const formData = new FormData();
         const postData = {
             title: title,
             content: content,
-            postType: "COLUMN",
         };
 
         if (title.trim().length < 5) {
@@ -60,14 +64,13 @@ const PostWrite = () => {
                     type: "application/json",
                 })
             );
-
-            const res = await axios.post(`${BASE_URL}/post`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-                withCredentials: true,
+            imageFileList.forEach((file) => {
+                formData.append("images", file);
             });
 
+            await axios.post(`${BASE_URL}/post`, formData, {
+                withCredentials: true,
+            });
             console.log("Success to post: ", formData);
             // navigate(`/community/post/${res.data.id}`);
         } catch (error) {
@@ -93,9 +96,9 @@ const PostWrite = () => {
                 hideModeSwitch={true}
                 ref={editorRef}
                 plugins={[color]}
-                hooks={{
-                    addImageBlobHook: handleImageUpload,
-                }}
+                // hooks={{
+                //     addImageBlobHook: handleImageUpload,
+                // }}
             />
 
             <button onClick={handleSubmit} className="submit-btn">
