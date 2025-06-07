@@ -41,6 +41,7 @@ const IndicatorPanel = () => {
           dominance: btcDominance,
           kimchiPremium,
         }));
+        setLastUpdate(new Date());
       })
       .catch(err => console.error("metrics API 오류:", err));
 
@@ -51,6 +52,7 @@ const IndicatorPanel = () => {
           ...prev,
           fearGreed: res.data.data.value, // 예시 필드명, 백엔드 응답 구조에 따라 수정
         }));
+        setLastUpdate(new Date());
       })
       .catch(err => console.error("fear-greed API 오류:", err));
 
