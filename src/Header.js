@@ -59,6 +59,8 @@ const Header = () => {
             setUserInfo({
               email: data.user.email,
               name: data.user.nickname || data.user.name || data.user.email.split("@")[0],
+              user_type: data.user.user_type,
+              point: data.user.point,
             });
           }
         } else {
@@ -191,7 +193,8 @@ const Header = () => {
                     className="profile-pic"
                   />
                   <p className="nickname">{userInfo.name}</p>
-                  <p className="points">포인트: 90pt</p>
+                  <p className="user-type">타입: {userInfo.user_type}</p>
+                  <p className="points">포인트: {userInfo.point.toLocaleString()}pt</p>
                   <button className="dropdown-btn" onClick={handleFetchPosts}>작성글 목록</button>
                   <button className="dropdown-btn" onClick={handleLogout}>로그아웃</button>
                   {showPosts && (
