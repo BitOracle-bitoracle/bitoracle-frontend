@@ -51,7 +51,7 @@ const IndicatorPanel = () => {
       })
       .catch(err => console.error("fear-greed API 오류:", err));
 
-    const ws = new WebSocket("wss://api.bitoracle.shop/sub/metrics");
+    const ws = new WebSocket("wss://api.bitoracle.shop/ws-metrics");
 
     ws.onmessage = (event) => {
       try {
