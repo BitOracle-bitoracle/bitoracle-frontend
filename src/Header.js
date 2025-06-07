@@ -20,6 +20,12 @@ const Header = () => {
   const [myPosts, setMyPosts] = useState([]);
   const [showPosts, setShowPosts] = useState(false);
   const handleFetchPosts = async () => {
+    if (showPosts) {
+      // 이미 열려 있으면 닫기
+      setShowPosts(false);
+      return;
+    }
+    // 열려 있지 않으면 API 호출
     try {
       const res = await fetch("https://api.bitoracle.shop/api/community/my-posts", {
         method: "GET",
@@ -82,6 +88,37 @@ const Header = () => {
         setAuthChecked(true);
       });
   }, []);
+
+  // Fetch detailed user info after auth checked and login
+  useEffect(() => {
+    if (!authChecked || !isLoggedIn) return;
+    fetch("https://api.bitoracle.shop/api/mypage/userinfo", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access")}`
+      },
+      credentials: "include"
+    })
+      .then(async res => {
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text);
+        }
+        return res.json();
+      })
+      .then(json => {
+        const info = json.data;
+        setUserInfo(prev => ({
+          ...prev,
+          point: info.point,
+          user_type: info.user_type,
+          name: info.nickname // update nickname if desired
+        }));
+      })
+      .catch(err => {
+        console.error("❌ /api/mypage/userinfo 오류:", err);
+      });
+  }, [authChecked, isLoggedIn]);
 
   /*
   useEffect(() => {
@@ -201,9 +238,13 @@ const Header = () => {
                   <button className="dropdown-btn" onClick={handleLogout}>로그아웃</button>
                   {showPosts && (
                     <ul className="mypage-posts">
-                      {myPosts.map(post => (
-                        <li key={post.id}>{post.title}</li>
-                      ))}
+                      {myPosts.length === 0 ? (
+                        <li className="no-posts">작성한 글이 없습니다.</li>
+                      ) : (
+                        myPosts.map(post => (
+                          <li key={post.id}>{post.title}</li>
+                        ))
+                      )}
                     </ul>
                   )}
                 </div>
