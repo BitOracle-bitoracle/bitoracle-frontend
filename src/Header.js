@@ -14,6 +14,8 @@ const Header = () => {
   const [userInfo, setUserInfo] = useState({
     email: "",
     name: "",
+    point: 0,
+    user_type: ""
   });
   const [myPosts, setMyPosts] = useState([]);
   const [showPosts, setShowPosts] = useState(false);
@@ -56,12 +58,13 @@ const Header = () => {
 
           // 사용자 정보 저장
           if (data.user) {
-            setUserInfo({
+            setUserInfo(prev => ({
+              ...prev,
               email: data.user.email,
               name: data.user.nickname || data.user.name || data.user.email.split("@")[0],
               user_type: data.user.user_type,
-              point: data.user.point,
-            });
+              point: data.user.point
+            }));
           }
         } else {
           setIsLoggedIn(false);
@@ -193,7 +196,6 @@ const Header = () => {
                     className="profile-pic"
                   />
                   <p className="nickname">{userInfo.name}</p>
-                  <p className="user-type">타입: {userInfo.user_type}</p>
                   <p className="points">포인트: {userInfo.point.toLocaleString()}pt</p>
                   <button className="dropdown-btn" onClick={handleFetchPosts}>작성글 목록</button>
                   <button className="dropdown-btn" onClick={handleLogout}>로그아웃</button>
