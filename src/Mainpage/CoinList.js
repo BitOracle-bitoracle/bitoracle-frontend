@@ -36,10 +36,10 @@ const CoinList = () => {
               const payload = JSON.parse(message.body);
               // STOMP sends a single trade object per message
               const update = payload;
-              console.log('Received trade update:', update.code, update);
-              if (update.code.endsWith('-XRP')) {
-                console.log('XRP update details:', update);
-              }
+              // console.log('Received trade update:', update.code, update);
+              // if (update.code.endsWith('-XRP')) {
+              //   console.log('XRP update details:', update);
+              // }
               // Update only the matching coin, keep others unchanged
               setCoins(prevCoins =>
                 prevCoins.map(c => {

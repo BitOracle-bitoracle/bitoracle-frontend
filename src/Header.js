@@ -15,6 +15,25 @@ const Header = () => {
     email: "",
     name: "",
   });
+  const [myPosts, setMyPosts] = useState([]);
+  const [showPosts, setShowPosts] = useState(false);
+  const handleFetchPosts = async () => {
+    try {
+      const res = await fetch("https://api.bitoracle.shop/api/community/my-posts", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`
+        },
+        credentials: "include"
+      });
+      if (!res.ok) throw new Error("작성글 목록 조회 실패");
+      const data = await res.json();
+      setMyPosts(data);
+      setShowPosts(true);
+    } catch (err) {
+      console.error("❌ /api/community/my-posts 오류:", err);
+    }
+  };
 
   React.useEffect(() => {
     fetch("https://api.bitoracle.shop/api/auth/init", {
@@ -173,8 +192,15 @@ const Header = () => {
                   />
                   <p className="nickname">{userInfo.name}</p>
                   <p className="points">포인트: 90pt</p>
-                  <button className="dropdown-btn">작성글 목록</button>
+                  <button className="dropdown-btn" onClick={handleFetchPosts}>작성글 목록</button>
                   <button className="dropdown-btn" onClick={handleLogout}>로그아웃</button>
+                  {showPosts && (
+                    <ul className="mypage-posts">
+                      {myPosts.map(post => (
+                        <li key={post.id}>{post.title}</li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               )}
             </a>
