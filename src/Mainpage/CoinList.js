@@ -106,7 +106,7 @@ const CoinList = () => {
                 <span className="coin-name">{c.name}</span>
                 <span className="symbol">{c.symbol}</span>
               </td>
-              <td>{c.price ? `${Number(c.price).toLocaleString()}₩` : '–'}</td>
+              <td>{c.price ? `₩${Number(c.price).toLocaleString()}` : '–'}</td>
               <td>{c.volume24h ? `${Number(c.volume24h).toLocaleString()}₩` : '–'}</td>
               <td className={c.change24h >= 0 ? 'positive' : 'negative'}>
                 {c.change24h
