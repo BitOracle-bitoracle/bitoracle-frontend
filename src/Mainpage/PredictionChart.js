@@ -222,7 +222,7 @@ const PredictionChart = () => {
               <ResponsiveContainer>
                 <ComposedChart
                   data={chartData}
-                  margin={{ top: 40, right: 50, bottom: 20, left: 5 }}
+                  margin={{ top: 40, right: 50, bottom: 20, left: 20 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
