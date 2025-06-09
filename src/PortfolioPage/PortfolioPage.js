@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import "./PortfolioPage.css";
@@ -7,8 +7,13 @@ import PortfolioChart from './PortfolioChart';
 
 const PortfolioPage = () => {
   const [editMode, setEditMode] = useState(false);
+  const editModeRef = useRef(editMode);
+  useEffect(() => {
+    editModeRef.current = editMode;
+  }, [editMode]);
   // holdings: [{ coin, amount, avgPrice, currentPrice }]
   const [holdings, setHoldings] = useState([]);
+  const [originalHoldings, setOriginalHoldings] = useState([]);
 
 
    // -------------------------------
@@ -39,7 +44,7 @@ const PortfolioPage = () => {
           // 데이터가 빈 배열([])인 경우에는 기존 holdings 유지
           // editMode일 때는 holdings를 덮어쓰지 않음
           if (
-            !editMode &&
+            !editModeRef.current &&
             Array.isArray(data) &&
             data.length > 0
           ) {
@@ -170,20 +175,38 @@ const PortfolioPage = () => {
               // 수정 완료 모드 → 각 항목별 매수 API 호출
               try {
                 for (const item of holdings) {
-                  const payload = {
+                  // First, sell the previous amount (assuming it's stored in originalHoldings)
+                  const previous = originalHoldings.find(h => h.coin === item.coin);
+                  if (previous) {
+                    const sellPayload = {
+                      coinName: `KRW-${item.coin}`,
+                      quantity: previous.amount,
+                      ...(previous.avgPrice && !isNaN(previous.avgPrice) && previous.avgPrice > 0 && { price: previous.avgPrice }),
+                    };
+                    await fetch("https://api.bitoracle.shop/api/portfolio/sell", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                      },
+                      body: JSON.stringify(sellPayload),
+                    });
+                  }
+
+                  // Then, buy the updated amount
+                  const buyPayload = {
                     coinName: `KRW-${item.coin}`,
                     quantity: item.amount,
                     ...(item.avgPrice && !isNaN(item.avgPrice) && item.avgPrice > 0 && { price: item.avgPrice }),
                   };
-                  console.log("PortfolioPage - BUY payload:", payload); //디버깅
+                  console.log("PortfolioPage - BUY payload:", buyPayload); //디버깅
                   const res = await fetch("https://api.bitoracle.shop/api/portfolio/buy", {
                     method: "POST",
-                    // credentials: "include",    // 쿠키 전송
                     headers: {
                       "Content-Type": "application/json",
                       Authorization: `Bearer ${token}`,
                     },
-                    body: JSON.stringify(payload),
+                    body: JSON.stringify(buyPayload),
                   });
                   console.log(`PortfolioPage - BUY response for ${item.coin}:`, res.status); //디버깅
                   if (!res.ok) {
@@ -192,10 +215,14 @@ const PortfolioPage = () => {
                 }
                 console.log("✅ 포트폴리오 저장(매수) 완료");
                 setEditMode(false);
+                setTimeout(() => {
+                  editModeRef.current = false;
+                }, 1500);
               } catch (err) {
                 console.error("PortfolioPage - BUY error:", err);
               }
             } else {
+              setOriginalHoldings(holdings.map(h => ({ ...h })));
               setEditMode(true);
             }
           }}
