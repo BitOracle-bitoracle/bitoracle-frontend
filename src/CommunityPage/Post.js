@@ -76,6 +76,8 @@ const Likes = () => {
 const Comments = ({ comments: initialComments }) => {
     const [comments, setComments] = useState(initialComments || []);
     const [newComment, setNewComment] = useState("");
+    const [replyInputs, setReplyInputs] = useState({}); // replyId -> 대댓글 입력 값
+    const [openReplyBoxId, setOpenReplyBoxId] = useState(null); // 열려 있는 댓글의 ID
 
     const handleCommentChange = (e) => {
         setNewComment(e.target.value);
@@ -97,63 +99,97 @@ const Comments = ({ comments: initialComments }) => {
         setNewComment(""); // 입력창 비우기
     };
 
-    const toggleInputBox = () => {
-        // ???????????????????????????????????????????????????????
+    const handleReplyInputChange = (id, value) => {
+        setReplyInputs((prev) => ({ ...prev, [id]: value }));
+    };
+
+    const handleAddRecomment = (parentId) => {
+        const content = replyInputs[parentId];
+        if (!content?.trim()) return;
+
+        const newReComment = {
+            reCommentId: Date.now(),
+            content,
+            writerDto: { nickName: "임시대댓글유저" },
+            removed: false,
+        };
+
+        setComments((prev) =>
+            prev.map((comment) =>
+                comment.replyId === parentId
+                    ? {
+                          ...comment,
+                          re_ReplyListDtoList: [
+                              ...comment.re_ReplyListDtoList,
+                              newReComment,
+                          ],
+                      }
+                    : comment
+            )
+        );
+
+        setReplyInputs((prev) => ({ ...prev, [parentId]: "" }));
+        setOpenReplyBoxId(null);
+    };
+
+    const toggleInputBox = (id) => {
+        setOpenReplyBoxId((prev) => (prev === id ? null : id));
     };
 
     return (
-        <div className="comments-section">
-            <h3>댓글 {comments.length}</h3>
+        <div></div>
+        // <div className="comments-section">
+        //     <h3>댓글 {comments.length}</h3>
 
-            <div className="comment-input-box">
-                <textarea
-                    value={newComment}
-                    onChange={handleCommentChange}
-                    placeholder="댓글을 입력하세요"
-                    rows={3}
-                />
-                <button onClick={handleAddComment}>등록</button>
-            </div>
+        //     <div className="comment-input-box">
+        //         <textarea
+        //             value={newComment}
+        //             onChange={handleCommentChange}
+        //             placeholder="댓글을 입력하세요"
+        //             rows={3}
+        //         />
+        //         <button onClick={handleAddComment}>등록</button>
+        //     </div>
 
-            <ul className="comment-list">
-                {comments.map((comment) => (
-                    <li key={comment.id} className="comment-item">
-                        <strong>{comment.author}</strong>
-                        <p>{comment.content}</p>
+        //     <ul className="comment-list">
+        //         {comments.map((comment) => (
+        //             <li key={comment.id} className="comment-item" onClick={() => toggleInputBox(comment.id)}>
+        //                 <strong>{comment.author}</strong>
+        //                 <p>{comment.content}</p>
 
-                        {/* 대댓글 리스트 */}
-                        {comment.replies.length > 0 && (
-                            <ul className="reply-list">
-                                {comment.replies.map((reply) => (
-                                    <li key={reply.id} className="reply-item">
-                                        <strong>{reply.author}</strong>
-                                        <p>{reply.content}</p>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
+        //                 {/* 대댓글 리스트 */}
+        //                 {comment.replies.length > 0 && (
+        //                     <ul className="reply-list">
+        //                         {comment.replies.map((reply) => (
+        //                             <li key={reply.id} className="reply-item">
+        //                                 <strong>{reply.author}</strong>
+        //                                 <p>{reply.content}</p>
+        //                             </li>
+        //                         ))}
+        //                     </ul>
+        //                 )}
 
-                        {/* 대댓글 입력 */}
-                        <div className="reply-input-box">
-                            <textarea
-                                value={replyInputs[comment.id] || ""}
-                                onChange={(e) =>
-                                    handleReplyChange(
-                                        comment.id,
-                                        e.target.value
-                                    )
-                                }
-                                placeholder="대댓글 입력"
-                                rows={2}
-                            />
-                            <button onClick={() => handleAddReply(comment.id)}>
-                                답글
-                            </button>
-                        </div>
-                    </li>
-                ))}
-            </ul>
-        </div>
+        //                 {/* 대댓글 입력 */}
+        //                 <div className="reply-input-box">
+        //                     <textarea
+        //                         value={replyInputs[comment.id] || ""}
+        //                         onChange={(e) =>
+        //                             handleReplyChange(
+        //                                 comment.id,
+        //                                 e.target.value
+        //                             )
+        //                         }
+        //                         placeholder="대댓글 입력"
+        //                         rows={2}
+        //                     />
+        //                     <button onClick={() => handleAddReply(comment.id)}>
+        //                         답글
+        //                     </button>
+        //                 </div>
+        //             </li>
+        //         ))}
+        //     </ul>
+        // </div>
     );
 };
 
