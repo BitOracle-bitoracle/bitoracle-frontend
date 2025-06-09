@@ -146,6 +146,12 @@ const PredictionChart = () => {
     fetchData();
   }, [range]);
 
+  // Compute min/max y values for dynamic YAxis domain
+  const filtered = chartData;
+  const yValues = filtered.flatMap(d => [d.actual ?? null, d.predicted ?? null]).filter(v => v !== null);
+  const minY = yValues.length > 0 ? Math.min(...yValues) : 0;
+  const maxY = yValues.length > 0 ? Math.max(...yValues) : 0;
+
   return (
     <div className="prediction-chart-wrapper" style={{ position: 'relative' }}>
       <div style={{ position: 'relative' }}>
@@ -216,7 +222,7 @@ const PredictionChart = () => {
               <ResponsiveContainer>
                 <ComposedChart
                   data={chartData}
-                  margin={{ top: 40, right: 50, bottom: 20, left: 0 }}
+                  margin={{ top: 40, right: 50, bottom: 20, left: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis
@@ -226,7 +232,8 @@ const PredictionChart = () => {
                     tickFormatter={(ts) => moment(ts).format('YYYY-MM-DD')}
                   />
                   <YAxis
-                    tickFormatter={(val) => `${(val / 1e6).toFixed(0)}M`}
+                    domain={[minY, maxY]}
+                    tickFormatter={(val) => `₩${(val / 1e6).toFixed(0)}M`}
                     interval="preserveStartEnd"
                   />
                   <Tooltip
