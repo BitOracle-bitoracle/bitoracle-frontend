@@ -32,7 +32,7 @@ const Header = () => {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access")}`
         },
-        credentials: "include"
+        // credentials: "include"
       });
       if (!res.ok) throw new Error("작성글 목록 조회 실패");
       const data = await res.json();
@@ -59,7 +59,7 @@ const Header = () => {
         const token = data.access || data.accessToken;
         if (token) {
           localStorage.setItem("access", token);
-          document.cookie = `access=${token}; path=/;`;
+          // document.cookie = `access=${token}; path=/;`;
           setIsLoggedIn(true);
 
           // 사용자 정보 저장
@@ -95,9 +95,9 @@ const Header = () => {
     fetch("https://api.bitoracle.shop/api/mypage/userinfo", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("access")}`
-      },
-      credentials: "include"
+        Authorization: `Bearer ${localStorage.getItem("access")}`,
+        "Content-Type": "application/json"
+      }
     })
       .then(async res => {
         if (!res.ok) {
@@ -141,6 +141,7 @@ const Header = () => {
     }
 
     localStorage.removeItem("access");
+    document.cookie = "access=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"; // ← 추가
     setIsLoggedIn(false);
     setIsDropdownOpen(false);
     window.location.href = "/";

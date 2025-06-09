@@ -97,7 +97,7 @@ const PortfolioPage = () => {
     console.log("PortfolioPage - removeRow payload:", payload); //디버깅
     fetch("https://api.bitoracle.shop/api/portfolio/sell", {
       method: "POST",
-      credentials: "include",                // 쿠키 전송
+      // credentials: "include",                // 쿠키 전송
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -173,7 +173,7 @@ const PortfolioPage = () => {
                   console.log("PortfolioPage - BUY payload:", payload); //디버깅
                   const res = await fetch("https://api.bitoracle.shop/api/portfolio/buy", {
                     method: "POST",
-                    credentials: "include",    // 쿠키 전송
+                    // credentials: "include",    // 쿠키 전송
                     headers: {
                       "Content-Type": "application/json",
                       Authorization: `Bearer ${token}`,
