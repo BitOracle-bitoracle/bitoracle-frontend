@@ -37,7 +37,12 @@ const PortfolioPage = () => {
           const data = JSON.parse(message.body);
           console.log("PortfolioPage - STOMP message data:", data);
           // 데이터가 빈 배열([])인 경우에는 기존 holdings 유지
-          if (Array.isArray(data) && data.length > 0) {
+          // editMode일 때는 holdings를 덮어쓰지 않음
+          if (
+            !editMode &&
+            Array.isArray(data) &&
+            data.length > 0
+          ) {
             setHoldings(
               data.map((item) => ({
                 coin: item.coinName.replace("KRW-", ""),
