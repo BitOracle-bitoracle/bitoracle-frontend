@@ -61,9 +61,9 @@ const IndicatorPanel = () => {
     const client = Stomp.over(ws);
 
     client.connect({}, (frame) => {
-      console.log("STOMP 연결 성공:", frame);
+      // console.log("STOMP 연결 성공:", frame);
       client.subscribe("/sub/metrics", (message) => {
-        console.log("STOMP 메시지 수신:", message);
+        // console.log("STOMP 메시지 수신:", message);
         try {
           const payload = JSON.parse(message.body);
           setData(prev => ({ ...prev, ...payload }));
