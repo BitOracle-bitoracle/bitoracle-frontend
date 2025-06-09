@@ -135,7 +135,7 @@ const CommunityPage = () => {
                         <span className="post-list-other">댓글</span>
                         <span className="post-list-other">작성자</span>
                     </div>
-                    {dummyPosts?.map((post) => (
+                    {posts?.map((post) => (
                         <div
                             key={post.id}
                             className="post-list"
