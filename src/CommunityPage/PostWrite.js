@@ -19,65 +19,6 @@ const PostWrite = () => {
     const [title, setTitle] = useState("");
     const [imageFileList, setImageFileList] = useState([]);
 
-    // const handleImageUpload = async (blob, callback) => {
-    //     try {
-    //         const formData = new FormData();
-    //         formData.append("image", blob);
-    //         const response = await axios.post(
-    //             `${BASE_URL}/post/image/upload`,
-    //             formData,
-    //             {
-    //                 headers: {
-    //                     "Content-Type": "multipart/form-data",
-    //                 },
-    //             }
-    //         );
-    //         const imageUrl = response.data.url; // 서버에서 반환한 이미지 URL
-    //         callback(imageUrl, ""); // 두 번째 인자는 alt 텍스트
-    //     } catch (error) {
-    //         console.error("Fail to upload an image: ", error);
-    //     }
-    // };
-
-    const handleSubmit = async () => {
-        const content = editorRef.current.getInstance().getHTML();
-        const formData = new FormData();
-        const postData = {
-            title: title,
-            content: content,
-        };
-
-        if (title.trim().length < 5) {
-            alert("제목을 다섯 자 이상 작성해주세요.");
-            return;
-        }
-
-        if (content.trim().length < 5) {
-            alert("본문을 다섯 자 이상 작성해주세요.");
-            return;
-        }
-
-        try {
-            formData.append(
-                "post",
-                new Blob([JSON.stringify(postData)], {
-                    type: "application/json",
-                })
-            );
-            imageFileList.forEach((file) => {
-                formData.append("images", file);
-            });
-
-            await axios.post(`${BASE_URL}/post`, formData, {
-                withCredentials: true,
-            });
-            console.log("Success to post: ", formData);
-            // navigate(`/community/post/${res.data.id}`);
-        } catch (error) {
-            console.error("Fail to post: ", formData, "\n", error);
-        }
-    };
-
     return (
         <div className="write-container">
             <input
@@ -96,16 +37,98 @@ const PostWrite = () => {
                 hideModeSwitch={true}
                 ref={editorRef}
                 plugins={[color]}
-                // hooks={{
-                //     addImageBlobHook: handleImageUpload,
-                // }}
+                hooks={{
+                    addImageBlobHook: handleImageUpload,
+                }}
             />
 
-            <button onClick={handleSubmit} className="submit-btn">
+            <button
+                onClick={() => handleSubmitBtnClick(navigate, editorRef, title)}
+                className="submit-btn"
+            >
                 작성 완료
             </button>
         </div>
     );
 };
+
+async function handleImageUpload(blob, callback) {
+    const token = localStorage.getItem("access");
+
+    if (!token) {
+        alert("로그인이 필요합니다.");
+        return;
+    }
+
+    try {
+        const formData = new FormData();
+        formData.append("image", blob);
+        const res = await axios.post(
+            `${BASE_URL}/post/image/upload`,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    Authorization: `Bearer ${token}`, // Access token을 header로 전달함.
+                },
+                withCredentials: true, // Cookie 전달함.
+            }
+        );
+
+        console.log("Sucess to post image: ", res.data.data);
+        const imageUrl = res.data.data;
+        callback(imageUrl, "");  // Second parameter is alt.
+    } catch (error) {
+        console.error("Fail to upload an image: ", error.response.data);
+    }
+}
+
+async function handleSubmitBtnClick(navigate, editorRef, title) {
+    const token = localStorage.getItem("access");
+    const content = editorRef.current.getInstance().getMarkdown();
+    const postData = {
+        title: title,
+        content: content,
+    };
+    const formData = new FormData();
+
+    if (title.trim().length < 5) {
+        alert("제목을 다섯 자 이상 작성해주세요.");
+        return;
+    }
+
+    if (content.trim().length < 5) {
+        alert("본문을 다섯 자 이상 작성해주세요.");
+        return;
+    }
+
+    if (!token) {
+        alert("로그인이 필요합니다.");
+        return;
+    }
+
+    formData.append(
+        "post",
+        new Blob([JSON.stringify(postData)], { type: "application/json" }),
+        "post.json"
+    );
+    console.log("Trying to post...\n", postData);
+
+    try {
+        const res = await axios.post(`${BASE_URL}/post`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${token}`, // Access token을 header로 전달함.
+            },
+            withCredentials: true, // Cookie 전달함.
+        });
+
+        alert("게시글이 등록되었습니다.");
+        console.log("Success to post: ", res.data);
+        navigate(`/community/post/${res.data.data.id}`);
+    } catch (error) {
+        console.error("Fail to post\n", error.response.data);
+    }
+}
 
 export default PostWrite;
