@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import './CoinList.css';
 
@@ -21,38 +20,48 @@ const CoinList = () => {
   );
 
   useEffect(() => {
-    // 1) SockJS 핸드쉐이킹 엔드포인트
-    const sock = new SockJS('https://api.bitoracle.shop/ws-upbit');
-
-    // 2) STOMP 클라이언트 생성
+    // STOMP 클라이언트 생성 (WebSocket 직접 연결)
     const stompClient = new Client({
-      webSocketFactory: () => sock,
+      brokerURL: 'wss://api.bitoracle.shop/ws-upbit',
       reconnectDelay: 5000 // 재연결 시도 간격 (ms)
     });
 
     // 3) 연결이 열리면 '/sub/trade' 구독
     stompClient.onConnect = (frame) => {
-      console.log('STOMP 연결 성공:', frame);
-      stompClient.subscribe('/sub/trade', (message) => {
-        if (message.body) {
-          try {
-            const dataArray = JSON.parse(message.body);
-            const merged = staticCoins.map(coin => {
-              const match = dataArray.find(item => item.symbol === coin.symbol);
-              return {
-                ...coin,
-                price: match?.price ?? 0,
-                volume24h: match?.volume24h ?? 0,
-                change24h: match?.change24h ?? 0,
-                marketCap: match?.marketCap ?? 0
-              };
-            });
-            setCoins(merged);
-          } catch (err) {
-            console.error('STOMP 메시지 JSON 파싱 오류:', err);
+      stompClient.subscribe(
+        '/sub/trade',
+        (message) => {
+          if (message.body) {
+            try {
+              const payload = JSON.parse(message.body);
+              // STOMP sends a single trade object per message
+              const update = payload;
+              // console.log('Received trade update:', update.code, update);
+              // if (update.code.endsWith('-XRP')) {
+              //   console.log('XRP update details:', update);
+              // }
+              // Update only the matching coin, keep others unchanged
+              setCoins(prevCoins =>
+                prevCoins.map(c => {
+                  if (!update.code || !update.code.endsWith(`-${c.symbol}`)) {
+                    return c;
+                  }
+                  return {
+                    ...c,
+                    price: update.price ?? c.price,
+                    volume24h: update.volume_24h ?? c.volume24h,
+                    change24h: update.change_rate_24h ? update.change_rate_24h * 100 : c.change24h,
+                    // marketCap remains unchanged here or use update.market_cap if provided
+                    marketCap: c.marketCap
+                  };
+                })
+              );
+            } catch (err) {
+              console.error('STOMP 메시지 JSON 파싱 오류:', err);
+            }
           }
         }
-      });
+      );
     };
 
     // 4) 연결 오류 처리
@@ -80,7 +89,6 @@ const CoinList = () => {
             <th>#</th>
             <th>이름</th>
             <th>가격</th>
-            <th>시가총액</th>
             <th>24시간 거래량</th>
             <th>24시간 변화량</th>
           </tr>
@@ -98,9 +106,8 @@ const CoinList = () => {
                 <span className="coin-name">{c.name}</span>
                 <span className="symbol">{c.symbol}</span>
               </td>
-              <td>{c.price ? `${Number(c.price).toLocaleString()}₩` : '–'}</td>
-              <td>{c.marketCap ? `${Number(c.marketCap).toLocaleString()}₩` : '–'}</td>
-              <td>{c.volume24h ? `${Number(c.volume24h).toLocaleString()}₩` : '–'}</td>
+              <td>{c.price ? `₩${Number(c.price).toLocaleString()}` : '–'}</td>
+              <td>{c.volume24h ? `₩${Number(c.volume24h).toLocaleString()}` : '–'}</td>
               <td className={c.change24h >= 0 ? 'positive' : 'negative'}>
                 {c.change24h
                   ? (c.change24h >= 0 ? `▲ ${c.change24h.toFixed(2)}%` : `▼ ${Math.abs(c.change24h).toFixed(2)}%`)

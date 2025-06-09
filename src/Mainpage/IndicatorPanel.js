@@ -1,3 +1,4 @@
+import { Stomp } from "@stomp/stompjs";
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../api/axiosInstance";
 import "./IndicatorPanel.css";
@@ -27,6 +28,8 @@ const IndicatorPanel = () => {
     kimchiPremium: null,
   });
 
+  const [lastUpdate, setLastUpdate] = useState(null);
+
   useEffect(() => {
     // metrics - 시가총액, 도미넌스, 김치프리미엄 포함
     axiosInstance.get("/api/metrics")
@@ -38,6 +41,7 @@ const IndicatorPanel = () => {
           dominance: btcDominance,
           kimchiPremium,
         }));
+        setLastUpdate(new Date());
       })
       .catch(err => console.error("metrics API 오류:", err));
 
@@ -48,36 +52,32 @@ const IndicatorPanel = () => {
           ...prev,
           fearGreed: res.data.data.value, // 예시 필드명, 백엔드 응답 구조에 따라 수정
         }));
+        setLastUpdate(new Date());
       })
       .catch(err => console.error("fear-greed API 오류:", err));
 
-    const ws = new WebSocket("wss://api.bitoracle.shop/sub/metrics");
+    // STOMP over WebSocket
+    const ws = new WebSocket("wss://api.bitoracle.shop/ws-metrics");
+    const client = Stomp.over(ws);
 
-    ws.onmessage = (event) => {
-      try {
-        const message = JSON.parse(event.data);
-        setData(prev => ({
-          ...prev,
-          ...message, // assumes message contains updated metric fields
-        }));
-      } catch (err) {
-        console.error("WebSocket metrics JSON 파싱 오류:", err);
-      }
-    };
-
-    ws.onerror = (err) => {
-      console.error("WebSocket metrics 연결 오류:", err);
-    };
-
-    const interval = setInterval(() => {
-      if (ws.readyState === WebSocket.CLOSED || ws.readyState === WebSocket.CLOSING) {
-        // reconnect if needed (optional enhancement)
-      }
-    }, 5000);
+    client.connect({}, (frame) => {
+      // console.log("STOMP 연결 성공:", frame);
+      client.subscribe("/sub/metrics", (message) => {
+        // console.log("STOMP 메시지 수신:", message);
+        try {
+          const payload = JSON.parse(message.body);
+          setData(prev => ({ ...prev, ...payload }));
+          setLastUpdate(new Date());
+        } catch (err) {
+          console.error("메시지 JSON 파싱 오류:", err);
+        }
+      });
+    }, (err) => {
+      console.error("STOMP 연결 오류:", err);
+    });
 
     return () => {
-      ws.close();
-      clearInterval(interval);
+      client.disconnect();
     };
   }, []);
 
@@ -107,48 +107,55 @@ const IndicatorPanel = () => {
   ];
 
   return (
-    <div className="indicator-grid">
-      {indicators.map((item, index) => (
-        <div key={index} className="indicator-card">
-          <h3 className={item.title === "공포와 탐욕 지수" ? "indicator-title fear-greed-title" : "indicator-title"}>
-            {item.title}
-          </h3>
-          {item.title === "공포와 탐욕 지수" && item.value !== "Loading..." ? (
-            <div className="fear-greed-chart-wrapper">
-              <RadialBarChart
-                width={130}
-                height={130}
-                innerRadius="70%"
-                outerRadius="100%"
-                data={[{ name: "FearGreed", value: Number(item.value), fill: getFearGreedColor(item.value) }]}
-                startAngle={180}
-                endAngle={0}
-              >
-                <PolarAngleAxis
-                  type="number"
-                  domain={[0, 100]}
-                  angleAxisId={0}
-                  tick={false}
-                />
-                <RadialBar
-                  minAngle={15}
-                  background
-                  clockWise
-                  dataKey="value"
-                  cornerRadius={10}
-                />
-              </RadialBarChart>
-              <div className="fear-greed-center">
-                <p>{item.value}</p>
-                <p>{getFearGreedLabel(item.value)}</p>
+    <>
+      {lastUpdate && (
+        <p className="last-update">
+          마지막 업데이트: {lastUpdate.toLocaleTimeString()}
+        </p>
+      )}
+      <div className="indicator-grid">
+        {indicators.map((item, index) => (
+          <div key={index} className="indicator-card">
+            <h3 className={item.title === "공포와 탐욕 지수" ? "indicator-title fear-greed-title" : "indicator-title"}>
+              {item.title}
+            </h3>
+            {item.title === "공포와 탐욕 지수" && item.value !== "Loading..." ? (
+              <div className="fear-greed-chart-wrapper">
+                <RadialBarChart
+                  width={130}
+                  height={130}
+                  innerRadius="70%"
+                  outerRadius="100%"
+                  data={[{ name: "FearGreed", value: Number(item.value), fill: getFearGreedColor(item.value) }]}
+                  startAngle={180}
+                  endAngle={0}
+                >
+                  <PolarAngleAxis
+                    type="number"
+                    domain={[0, 100]}
+                    angleAxisId={0}
+                    tick={false}
+                  />
+                  <RadialBar
+                    minAngle={15}
+                    background
+                    clockWise
+                    dataKey="value"
+                    cornerRadius={10}
+                  />
+                </RadialBarChart>
+                <div className="fear-greed-center">
+                  <p>{item.value}</p>
+                  <p>{getFearGreedLabel(item.value)}</p>
+                </div>
               </div>
-            </div>
-          ) : (
-            <p>{item.value}</p>
-          )}
-        </div>
-      ))}
-    </div>
+            ) : (
+              <p>{item.value}</p>
+            )}
+          </div>
+        ))}
+      </div>
+    </>
   );
 };
 

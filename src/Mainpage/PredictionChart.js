@@ -51,32 +51,11 @@ const PredictionChart = () => {
       }
       // ─────────────────────────────────────────────────────────
 
-      // (A) 인증 상태 확인
-      try {
-        await axiosInstance.get('/api/auth/init');
-      } catch (authErr) {
-        // 인증 실패 시: 403 또는 "Refresh token mismatch" 메시지
-        if (
-          (authErr.response && (authErr.response.status === 401 || authErr.response.status === 403)) ||
-          (authErr.response && typeof authErr.response.data === 'string' && authErr.response.data.includes('Refresh token mismatch')) ||
-          (authErr.message && authErr.message.includes('Network Error'))
-        ) {
-          setLoading(false);
-          return;
-        }
-        // 기타 인증 오류는 기존대로 에러 처리
-        setError(authErr);
-        setLoading(false);
-        setChartData([]);
-        return;
-      }
 
       try {
         let actualRaw = [];
         try {
-          const realRes = await axiosInstance.get('/api/price/chart', {
-            params: { startDate: start_date, endDate: end_date },
-          });
+          const realRes = await axiosInstance.get('/api/price/chart');
           actualRaw = Array.isArray(realRes.data)
             ? realRes.data
             : realRes.data.data || [];
@@ -92,10 +71,11 @@ const PredictionChart = () => {
           // 기타 오류는 빈 배열
           actualRaw = [];
         }
+        console.log("✅ 실제 가격 데이터:", actualRaw);
 
         let predictRaw = [];
         try {
-          const predictRes = await axiosInstance.post('/predict-now', {});
+          const predictRes = await axiosInstance.get('/api/predict/chart');
           predictRaw = Array.isArray(predictRes.data)
             ? predictRes.data
             : predictRes.data.data || [];
@@ -111,6 +91,7 @@ const PredictionChart = () => {
           // 기타 오류는 빈 배열
           predictRaw = [];
         }
+        console.log("📈 예측 가격 데이터:", predictRaw);
 
         const actualMap = {};
         actualRaw.forEach((row) => {
@@ -119,21 +100,29 @@ const PredictionChart = () => {
 
         const merged = predictRaw.map((row) => {
           const dateStr = row.date;
-          const actualValue =
-            typeof row.actual === 'number'
-              ? row.actual
-              : actualMap[dateStr] ?? 0;
+          const ts = new Date(dateStr).getTime();
+          const today = moment().endOf('day').valueOf();
+          const actualValue = ts > today ? undefined : actualMap[dateStr];
           return {
             date: dateStr,
-            timestamp: new Date(dateStr).getTime(),
+            timestamp: ts,
             actual: actualValue,
             predicted: row.predicted,
           };
         });
 
-        setChartData(merged);
-        if (merged.length > 0) {
-          setDomain([merged[0].timestamp, merged[merged.length - 1].timestamp]);
+        const startTs = new Date(start_date).getTime();
+        // 미래 데이터도 예측은 보임, 실제 데이터는 오늘까지만, 날짜 필터는 시작 기준만 적용 (끝은 예측 포함을 위해 무제한)
+        // timestamp가 undefined 아닌 값만 포함
+        const filtered = merged.filter(row => {
+          if (!row.timestamp) return false;
+          return row.timestamp >= startTs;
+        });
+
+        setChartData(filtered);
+        console.log("📊 통합된 차트 데이터:", filtered);
+        if (filtered.length > 0) {
+          setDomain([filtered[0].timestamp, filtered[filtered.length - 1].timestamp]);
         } else {
           const nowTs = Date.now();
           setDomain([nowTs, nowTs]);
@@ -236,13 +225,18 @@ const PredictionChart = () => {
                     type="number"
                     tickFormatter={(ts) => moment(ts).format('YYYY-MM-DD')}
                   />
-                  <YAxis tickFormatter={(val) => `${(val / 1e6).toFixed(1)}M`} />
+                  <YAxis
+                    tickFormatter={(val) => `${(val / 1e6).toFixed(0)}M`}
+                    interval="preserveStartEnd"
+                  />
                   <Tooltip
                     labelFormatter={(label) => moment(label).format('YYYY-MM-DD')}
-                    formatter={(value, name) => [
-                      value.toLocaleString(),
-                      name === 'actual' ? '실제 BTC' : '예측 BTC',
-                    ]}
+                    formatter={(value, name) => {
+                      const formatted = `₩${value.toLocaleString()}`;
+                      if (name === 'actual') return [formatted, '실제 BTC'];
+                      if (name === 'predicted') return [formatted, '예측 BTC'];
+                      return [formatted, name];
+                    }}
                   />
                   <Legend verticalAlign="top" height={36} />
 

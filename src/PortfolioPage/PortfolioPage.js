@@ -40,9 +40,9 @@ const PortfolioPage = () => {
           if (Array.isArray(data) && data.length > 0) {
             setHoldings(
               data.map((item) => ({
-                coin: item.coin,
-                amount: item.amount,
-                avgPrice: item.avgPrice,
+                coin: item.coinName.replace("KRW-", ""),
+                amount: item.quantity,
+                avgPrice: item.averageBuyPrice,
                 currentPrice: item.currentPrice,
               }))
             );
@@ -92,12 +92,12 @@ const PortfolioPage = () => {
     const payload = {
       coinName: `KRW-${removedItem.coin}`,
       quantity: removedItem.amount,
-      price: removedItem.avgPrice || undefined,
+      ...(removedItem.avgPrice && !isNaN(removedItem.avgPrice) && removedItem.avgPrice > 0 && { price: removedItem.avgPrice }),
     };
     console.log("PortfolioPage - removeRow payload:", payload); //디버깅
     fetch("https://api.bitoracle.shop/api/portfolio/sell", {
       method: "POST",
-      credentials: "include",                // 쿠키 전송
+      // credentials: "include",                // 쿠키 전송
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -168,12 +168,12 @@ const PortfolioPage = () => {
                   const payload = {
                     coinName: `KRW-${item.coin}`,
                     quantity: item.amount,
-                    price: item.avgPrice || undefined,
+                    ...(item.avgPrice && !isNaN(item.avgPrice) && item.avgPrice > 0 && { price: item.avgPrice }),
                   };
                   console.log("PortfolioPage - BUY payload:", payload); //디버깅
                   const res = await fetch("https://api.bitoracle.shop/api/portfolio/buy", {
                     method: "POST",
-                    credentials: "include",    // 쿠키 전송
+                    // credentials: "include",    // 쿠키 전송
                     headers: {
                       "Content-Type": "application/json",
                       Authorization: `Bearer ${token}`,
