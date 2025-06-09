@@ -172,6 +172,11 @@ const PortfolioPage = () => {
             }
 
             if (editMode) {
+              const duplicateCoins = holdings.map(h => h.coin).filter((v, i, a) => a.indexOf(v) !== i);
+              if (duplicateCoins.length > 0) {
+                alert("동일한 코인을 여러 개 추가할 수 없습니다.");
+                return;
+              }
               // 수정 완료 모드 → 각 항목별 매수 API 호출
               try {
                 for (const item of holdings) {
