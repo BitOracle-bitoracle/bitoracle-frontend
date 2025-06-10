@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./Header";
+import Footer from "./Footer"
 import MainPage from "./Mainpage/MainPage";
 import Community from "./CommunityPage/Community";
 import Portifolio from "./PortfolioPage/PortfolioPage"
@@ -42,6 +43,7 @@ function App() {
           <Route path="/proto" element={<Proto />} />
           <Route path="/portfolio" element={<Portifolio />} />
         </Routes>
+        <Footer />
       </Layout>
     </Router>
   );

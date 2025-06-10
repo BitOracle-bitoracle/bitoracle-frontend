@@ -1,35 +1,34 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
+import axiosInstance from "../api/axiosInstance";
 import "./NewsSlider.css";
 
-const mockNews = [
-  {
-    title: "비트코인 가격 급등, 기관 투자자 유입 가속화",
-    summary: "최근 비트코인 가격이 10% 이상 상승하며 기관 자금의 유입이 확인되고 있습니다.",
-    image: "/news1.jpeg",
-  },
-  {
-    title: "미국 SEC, 이더리움 ETF 승인 여부 다음 주 발표 예정",
-    summary: "이더리움 현물 ETF에 대한 규제기관의 판단이 시장에 큰 영향을 줄 것으로 보입니다.",
-    image: "/news2.jpg",
-  },
-  {
-    title: "김치프리미엄 확대, 국내 투자 심리 과열 주의",
-    summary: "한국 암호화폐 시장에서 김치프리미엄이 다시 상승세를 보이고 있어 주의가 요구됩니다.",
-    image: "/news3.jpg",
-  },
-];
-
 const NewsSlider = () => {
+  const [newsData, setNewsData] = useState([]);
   const [current, setCurrent] = useState(1); // 처음 시작은 index 1 (첫 번째 실제 슬라이드)
   const [transition, setTransition] = useState(true);
-  const totalSlides = mockNews.length;
-  const sliderRef = useRef(null);
 
-  const extendedSlides = [
-    mockNews[totalSlides - 1], // 마지막 → 앞에 복제
-    ...mockNews,
-    mockNews[0],               // 첫 번째 → 뒤에 복제
-  ];
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const response = await axiosInstance.get("/api/news/main");
+        console.log("📥 뉴스 API 응답 전체:", response.data);      // ← 여기 추가
+        setNewsData(response.data.data);
+      } catch (error) {
+        console.error("뉴스 가져오기 실패", error);
+      }
+    };
+
+    fetchNews();
+  }, []);
+
+  const totalSlides = newsData.length;
+  const extendedSlides = totalSlides > 0 ? [
+    newsData[totalSlides - 1], // 마지막 → 앞에 복제
+    ...newsData,
+    newsData[0],               // 첫 번째 → 뒤에 복제
+  ] : [];
+
+  const sliderRef = useRef(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -81,12 +80,24 @@ const NewsSlider = () => {
         {extendedSlides.map((news, idx) => (
           <div
             key={idx}
-            className="news-slide"
-            style={{ backgroundImage: `url(${news.image})` }}
+            className={`news-slide ${news.news_type === "GOOD" ? "good" : "bad"}`}
+            style={{
+              backgroundImage:
+                news.image_url && typeof news.image_url === "string"
+                  ? `url(${news.image_url})`
+                  : `url(/BitOracle_Logo_News.png)`,
+            }}
           >
             <div className="overlay">
-              <h2>{news.title}</h2>
-              <p>{news.summary}</p>
+              <h2>
+                {news.news_type === "GOOD" ? (
+                  <span style={{ color: "#A3E635", marginRight: "4px" }}>[호재]</span>
+                ) : (
+                  <span style={{ color: "#F05650", marginRight: "4px" }}>[악재]</span>
+                )}
+                {news.news_title}
+              </h2>
+              <p>{news.news_content}</p>
             </div>
           </div>
         ))}
@@ -95,7 +106,7 @@ const NewsSlider = () => {
       <div className="slider-controls">
         <button onClick={() => setCurrent((prev) => prev - 1)}>〈</button>
         <div style={{ display: "flex", gap: "6px", alignItems: "center", margin: "0 16px" }}>
-          {mockNews.map((_, idx) => {
+          {newsData.map((_, idx) => {
             const realIndex = current === 0 ? totalSlides - 1 : current === totalSlides + 1 ? 0 : current - 1;
             return (
               <span

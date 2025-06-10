@@ -11,6 +11,7 @@
     background-color: white;
     border-bottom: 1px solid #ddd;
     box-sizing: border-box;
+    flex-wrap: wrap;
 }
 
 .header-left,
@@ -82,7 +83,7 @@
 }
 
 .mypage-dropdown {
-    position: absolute;
+    position: fixed;
     top: 60px;
     right: 160px;
     background-color: #fff;
@@ -92,6 +93,9 @@
     width: 200px;
     padding: 16px;
     z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .mypage-dropdown .profile-pic {
@@ -129,4 +133,41 @@
 
 .mypage-dropdown .dropdown-btn:hover {
     background-color: #e5e5e5;
+}
+
+.nav-scroll-wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  white-space: nowrap;
+  width: 100%;
+  scrollbar-width: none;
+}
+.nav-scroll-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .header {
+    padding: 10px 40px;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  .nav {
+    display: flex;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+
+  .nav a {
+    margin: 5px 10px;
+    font-size: 14px;
+  }
+
+  .logo {
+    width: 100px;
+  }
 }
