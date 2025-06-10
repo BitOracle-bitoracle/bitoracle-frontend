@@ -159,7 +159,7 @@ const PredictionChart = () => {
           ref={containerRef}
           style={{
             width: '100%',
-            height: 400,
+            height: 600,
             position: 'relative',
             cursor: 'default',
             userSelect: 'none',
