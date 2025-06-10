@@ -27,14 +27,20 @@ const CommunityPage = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [searchOption, setSearchOption] = useState("title");
     const fetchSearchedPosts = async () => {
+        //ISSUE: 가져오는 글 like 0, 백엔드 문제.
         try {
             const res = await axios.get(`${BASE_URL}/search`, {
                 params: {
-                    page: currentPage,
-                    option: searchOption,
-                    keyword: searchTerm,
+                    page: 0,
+                    size: POSTS_PER_PAGE,
+                    // author: searchTerm,
+                    title: searchTerm,
                 },
             });
+            // TODO: 검색 시 navigate() -> urlSearchParams() -> query 작성해서 get 날리기. 
+            setPosts(res?.data?.data?.simpleLectureDtoList ?? []);
+            setTotalPages(res?.data?.data?.totalPages ?? 0);
+            console.log(`Sucess to get posts.`, res.data.data.simpleLectureDtoList);
         } catch (error) {
             console.error("Fail to search.\n", error);
         }
@@ -80,20 +86,20 @@ const CommunityPage = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onKeyDown={(e) => {
                         if (e.key === "Enter") {
-                            console.log("Search: ", e.target.value);
-                            // fetchSearchedPosts();
+                            console.log("Search Term: ", e.target.value);
+                            fetchSearchedPosts();
                         }
                     }}
                     placeholder="검색"
                 />
-                <select
+                {/* <select
                     className="search-select"
                     value={searchOption}
                     onChange={(e) => setSearchOption(e.target.value)}
                 >
                     <option value="title">제목</option>
                     <option value="author">작성자</option>
-                </select>
+                </select> */}
             </div>
 
             <button
@@ -132,7 +138,7 @@ const CommunityPage = () => {
                     <div className="post-index">
                         <span className="post-list-title">제목</span>
                         <span className="post-list-other">좋아요</span>
-                        <span className="post-list-other">댓글</span>
+                        {/* <span className="post-list-other">댓글</span> */}
                         <span className="post-list-other">작성자</span>
                     </div>
                     {posts?.map((post) => (
@@ -149,9 +155,9 @@ const CommunityPage = () => {
                             <span className="post-list-other">
                                 {post.likeCount}
                             </span>
-                            <span className="post-list-other">
+                            {/* <span className="post-list-other">
                                 {post.replyCount}
-                            </span>
+                            </span> */}
                             <span className="post-list-other">
                                 {post.writer}
                             </span>

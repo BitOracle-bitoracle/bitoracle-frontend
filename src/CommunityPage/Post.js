@@ -11,14 +11,18 @@ const Post = () => {
     const { id } = useParams();
     const [post, setPost] = useState(null);
 
-    useEffect(async () => {
-        try {
-            const res = await axios.get(`${BASE_URL}/post/${id}`);
-            setPost(res.data?.data);
-            console.log("Success to get the post.", res.data?.data);
-        } catch (error) {
-            console.error("Fail to load the post.", error.response.data);
-        }
+    useEffect(() => {
+        const fetchPost = async () => {
+            try {
+                const res = await axios.get(`${BASE_URL}/post/${id}`);
+                setPost(res.data.data);
+                console.log("Success to get the post.", res.data?.data);
+            } catch (error) {
+                console.error("Fail to load the post.", error.response.data);
+            }
+        };
+
+        fetchPost();
     }, [id]);
 
     if (!post) return <div>게시글을 찾을 수 없습니다.</div>;
@@ -41,7 +45,7 @@ const Post = () => {
                         })}
                     </span>
                     <span className="spaceholder" />
-                    <Likes />
+                    <Likes id={id} initialCount={post.likeCount}/>
                 </div>
             </div>
 
@@ -54,21 +58,42 @@ const Post = () => {
     );
 };
 
-const Likes = () => {
-    const [liked, setLiked] = useState(false);
-    const [count, setCount] = useState(0);
+const Likes = ({ id, initialLiked = false, initialCount = 0 }) => {
+    const [liked, setLiked] = useState(initialLiked);
+    const [count, setCount] = useState(initialCount);
+
+    const handleLikeClick = async () => {
+        const token = localStorage.getItem("access");
+
+        if (!token) {
+            alert("로그인이 필요합니다.");
+            return;
+        }
+
+        try {
+            const res = await axios.post(`${BASE_URL}/${id}/like`, id, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                withCredentials: true, // Cookie 전달함.
+            });
+            console.log("Success to post likes.", res);
+
+            setLiked(res.data.data.islike);
+            setCount(res.data.data.likeCount);
+        } catch (error) {
+            console.error("Fail to post likes.", error);
+        }
+    };
 
     return (
         <a
             className={`like-button ${liked ? "liked" : ""}`}
-            onClick={() => {
-                setLiked(!liked);
-                setCount((prev) => prev + (liked ? -1 : 1));
-            }}
+            onClick={handleLikeClick}
         >
             <span>좋아요 </span>
             <span className="count">{count}</span>
-            <span className="heart">{liked ? "❤️" : "🤍"}</span>
+            <span className="heart">❤️</span>
         </a>
     );
 };
@@ -192,5 +217,16 @@ const Comments = ({ comments: initialComments }) => {
         // </div>
     );
 };
+
+function isLogined() {
+    const token = localStorage.getItem("access");
+
+    if (!token) {
+        alert("로그인이 필요합니다.");
+        return false;
+    }
+
+    return true;
+}
 
 export default Post;
