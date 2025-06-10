@@ -1,10 +1,7 @@
 .main-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    /* 두 개 컬럼을 동일 비율로 분할 */
-    gap: 20px;
+    display: flex;
     /* 컬럼 간격 */
-    padding: 20px 20px 30px;
+    padding: 20px 20px 20px;
     box-sizing: border-box;
 }
 
@@ -12,17 +9,10 @@
     display: flex;
     justify-content: center;
     align-items: stretch;
-    padding: 0 0 30px;
-    /* height는 auto에 맡깁니다 */
-}
-
-.right-panel {
-    position: relative;
-}
-
-.prediction-panel {
+    gap: 20px; /* 자식 요소 사이 간격 */
     padding: 0 20px;
-    width: 100%;
+    /* height는 auto에 맡깁니다 */
+    flex-wrap: wrap;
 }
 
 .section-divider {
@@ -55,4 +45,21 @@
     width: 67%;
     margin: 0 auto;
     box-sizing: border-box;
+}
+
+.panel > .indicator-panel,
+.panel > .news-slider {
+    flex: 1 1 calc(50% - 10px);
+    min-width: 300px;
+}
+
+@media (max-width: 768px) {
+  .panel {
+    flex-direction: column;
+  }
+  .panel > .indicator-panel,
+  .panel > .news-slider {
+    flex: 1 1 100%;
+    min-width: auto;
+  }
 }

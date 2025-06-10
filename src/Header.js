@@ -1,49 +1,124 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import LoginModal from "./LoginModal";
 import "./Header.css";
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const closeTimeoutRef = useRef(null);
   const [userInfo, setUserInfo] = useState({
     email: "",
     name: "",
+    point: 0,
+    user_type: ""
   });
+  const [myPosts, setMyPosts] = useState([]);
+  const [showPosts, setShowPosts] = useState(false);
+  const handleFetchPosts = async () => {
+    if (showPosts) {
+      // 이미 열려 있으면 닫기
+      setShowPosts(false);
+      return;
+    }
+    // 열려 있지 않으면 API 호출
+    try {
+      const res = await fetch("https://api.bitoracle.shop/api/community/my-posts", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`
+        },
+        // credentials: "include"
+      });
+      if (!res.ok) throw new Error("작성글 목록 조회 실패");
+      const data = await res.json();
+      setMyPosts(data);
+      setShowPosts(true);
+    } catch (err) {
+      console.error("❌ /api/community/my-posts 오류:", err);
+    }
+  };
 
   React.useEffect(() => {
     fetch("https://api.bitoracle.shop/api/auth/init", {
       method: "GET",
       credentials: "include", // refresh 쿠키 전송
     })
-      .then((res) => res.json())
+      .then(async (res) => {
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text);
+        }
+        return res.json();
+      })
       .then((data) => {
         const token = data.access || data.accessToken;
         if (token) {
           localStorage.setItem("access", token);
-          console.log("✅ access_token from /api/auth/init:", token);
+          // document.cookie = `access=${token}; path=/;`;
           setIsLoggedIn(true);
 
           // 사용자 정보 저장
           if (data.user) {
-            setUserInfo({
+            setUserInfo(prev => ({
+              ...prev,
               email: data.user.email,
-              name: data.user.name || data.user.email.split("@")[0],
-            });
+              name: data.user.nickname || data.user.name || data.user.email.split("@")[0],
+              user_type: data.user.user_type,
+              point: data.user.point
+            }));
           }
         } else {
-          console.log("⛔ 로그인되지 않음");
           setIsLoggedIn(false);
         }
       })
       .catch((err) => {
-        console.error("❌ /api/auth/init 요청 실패:", err);
-        setIsLoggedIn(false);
+        if (err.message && err.message.includes("Refresh token mismatch")) {
+          setIsLoggedIn(false);
+        } else {
+          console.error("❌ /api/auth/init 요청 실패:", err);
+          setIsLoggedIn(false);
+        }
+      })
+      .finally(() => {
+        setAuthChecked(true);
       });
   }, []);
+
+  // Fetch detailed user info after auth checked and login
+  useEffect(() => {
+    if (!authChecked || !isLoggedIn) return;
+    fetch("https://api.bitoracle.shop/api/mypage/userinfo", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access")}`,
+        "Content-Type": "application/json"
+      }
+    })
+      .then(async res => {
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text);
+        }
+        return res.json();
+      })
+      .then(json => {
+        const info = json.data;
+        setUserInfo(prev => ({
+          ...prev,
+          point: info.point,
+          user_type: info.user_type,
+          name: info.nickname // update nickname if desired
+        }));
+      })
+      .catch(err => {
+        console.error("❌ /api/mypage/userinfo 오류:", err);
+      });
+  }, [authChecked, isLoggedIn]);
 
   /*
   useEffect(() => {
@@ -57,7 +132,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch("https://api.bitoracle.shop/api/auth/logout", {
+      await fetch("https://api.bitoracle.shop/logout", {
         method: "POST",
         credentials: "include",
       });
@@ -66,6 +141,7 @@ const Header = () => {
     }
 
     localStorage.removeItem("access");
+    document.cookie = "access=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"; // ← 추가
     setIsLoggedIn(false);
     setIsDropdownOpen(false);
     window.location.href = "/";
@@ -92,7 +168,7 @@ const Header = () => {
           window.scrollTo(0, 0);
           window.location.reload();
         }}>
-          <img src="/BitOracle_Logo(demo).png" alt="BitOracle Logo" className="logo" />
+          <img src="/BitOracle_Logo_demo.png" alt="BitOracle Logo" className="logo" />
         </button>
         <nav className="nav">
           <a
@@ -115,34 +191,69 @@ const Header = () => {
         </nav>
       </div>
       <nav className="nav">
-        <a href="#" className="nav-link">알림</a>
-        <a href="/portfolio" className="nav-link">포트폴리오</a>
-        <a href="/proto" className="nav-link">차트예측</a>
+        <a href="#" className="nav-link" onClick={(e) => {
+          e.preventDefault();
+          const token = localStorage.getItem("access");
+          if (!token) {
+            alert("로그인이 필요합니다.");
+            setIsLoginModalOpen(true);
+          } else {
+            navigate("/portfolio");
+          }
+        }}>
+          포트폴리오
+        </a>
+        <a href="#" className="nav-link" onClick={(e) => {
+          e.preventDefault();
+          const token = localStorage.getItem("access");
+          if (!token) {
+            alert("로그인이 필요합니다.");
+            setIsLoginModalOpen(true);
+          } else {
+            navigate("/proto");
+          }
+        }}>
+          차트예측
+        </a>
 
-        {isLoggedIn ? (
-          <div
-            className="mypage-container"
-            ref={dropdownRef}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            <a href="#" className="nav-link">마이페이지</a>
-            {isDropdownOpen && (
-              <div className="mypage-dropdown">
-                <img
-                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo.name)}&background=random`}
-                  alt="프로필"
-                  className="profile-pic"
-                />
-                <p className="nickname">{userInfo.name}</p>
-                <p className="points">포인트: 90pt</p>
-                <button className="dropdown-btn">작성글 목록</button>
-                <button className="dropdown-btn" onClick={handleLogout}>로그아웃</button>
-              </div>
-            )}
-          </div>
-        ) : (
-          <a href="#" className="nav-link login-btn" onClick={() => setIsLoginModalOpen(true)}>로그인</a>
+        {authChecked && (
+          isLoggedIn ? (
+            <a
+              href="#"
+              className="nav-link"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              ref={dropdownRef}
+            >
+              마이페이지
+              {isDropdownOpen && (
+                <div className="mypage-dropdown">
+                  <img
+                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo.name)}&background=random`}
+                    alt="프로필"
+                    className="profile-pic"
+                  />
+                  <p className="nickname">{userInfo.name}</p>
+                  <p className="points">포인트: {userInfo.point.toLocaleString()}pt</p>
+                  <button className="dropdown-btn" onClick={handleFetchPosts}>작성글 목록</button>
+                  <button className="dropdown-btn" onClick={handleLogout}>로그아웃</button>
+                  {showPosts && (
+                    <ul className="mypage-posts">
+                      {myPosts.length === 0 ? (
+                        <li className="no-posts">작성한 글이 없습니다.</li>
+                      ) : (
+                        myPosts.map(post => (
+                          <li key={post.id}>{post.title}</li>
+                        ))
+                      )}
+                    </ul>
+                  )}
+                </div>
+              )}
+            </a>
+          ) : (
+            <a href="#" className="nav-link login-btn" onClick={() => setIsLoginModalOpen(true)}>로그인</a>
+          )
         )}
       </nav>
 

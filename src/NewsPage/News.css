@@ -32,22 +32,38 @@
 
 .good_news-items,
 .bad_news-items {
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
 }
 
 .news-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* 수직 정렬 */
     padding: 16px;
     border-bottom: 1px solid #ddd;
-    margin-bottom: 8px;
     text-decoration: none;
     color: #000;
-    display: block;
-  }
+}
 
-  .custom-pagination {
+.title-box {
+  flex: 1; /* 남는 공간 전부 차지 */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis; /* 너무 길면 ... 표시 */
+  margin-right: 8px; /* 날짜와 거리 확보 */
+}
+
+.created-at {
+  white-space: nowrap; /* 줄바꿈 방지 */
+  font-size: 0.9rem;
+  color: gray;
+  text-align: right;
+}
+
+.custom-pagination {
     display: flex;
     justify-content: center;
     gap: 8px;

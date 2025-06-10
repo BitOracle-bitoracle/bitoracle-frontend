@@ -4,30 +4,35 @@ import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recha
 
 const COLORS = ["#4CAF50", "#2196F3", "#9C27B0", "#FFC107"];
 
-const PortfolioChart = ({ holdings, dummyPrices }) => {
+const PortfolioChart = ({ holdings = [] }) => {
+  const chartData = holdings
+    .map(item => ({
+      name: item.coin,
+      value: item.amount * (item.currentPrice ?? item.avgPrice ?? 0)
+    }))
+    .filter(item => item.value > 0);
+
   return (
     <div className="overview-right">
       <ResponsiveContainer width={240} height={240}>
         <PieChart>
           <Pie
-            data={holdings.map(item => ({
-              name: item.coin,
-              value: item.amount * (dummyPrices[item.coin] || 0)
-            }))}
+            data={chartData}
             dataKey="value"
             nameKey="name"
             cx="50%"
             cy="50%"
             outerRadius={80}
             fill="#8884d8"
-            label
+            label={false}
+            labelLine={false}
           >
-            {holdings.map((_, index) => (
+            {chartData.map((_, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
           <Legend />
-          <Tooltip />
+          <Tooltip formatter={(value, name) => [`₩${value.toLocaleString()}`, name]} />
         </PieChart>
       </ResponsiveContainer>
     </div>

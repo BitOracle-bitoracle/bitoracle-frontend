@@ -16,10 +16,12 @@ const MainPage = () => {
         <div className="main-content">
           <div className="main-container">
             <div className="panel">
-              <IndicatorPanel />
-            </div>
-            <div className="panel">
-              <NewsSlider />
+              <div className="indicator-panel">
+                <IndicatorPanel />
+              </div>
+              <div className="news-slider">
+                <NewsSlider />
+              </div>
             </div>
           </div>
           <div className="section-divider" />
