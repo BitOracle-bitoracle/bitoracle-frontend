@@ -32,7 +32,7 @@ const PortfolioChart = ({ holdings = [] }) => {
             ))}
           </Pie>
           <Legend />
-          <Tooltip />
+          <Tooltip formatter={(value, name) => [`₩${value.toLocaleString()}`, name]} />
         </PieChart>
       </ResponsiveContainer>
     </div>

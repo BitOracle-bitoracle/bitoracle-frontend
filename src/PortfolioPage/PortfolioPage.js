@@ -289,10 +289,10 @@ const PortfolioPage = () => {
                     disabled={!editMode}
                   />
                 </td>
-                <td>{calc.buy.toLocaleString()}￦</td>
-                <td>{calc.now.toLocaleString()}￦</td>
+                <td>₩{calc.buy.toLocaleString()}</td>
+                <td>₩{calc.now.toLocaleString()}</td>
                 <td className={calc.profit >= 0 ? "red" : "blue"}>
-                  {calc.rate}%<br />{calc.profit.toLocaleString()}￦
+                  {calc.rate >= 0 ? '+' : '-'}{calc.rate}%<br />₩{calc.profit.toLocaleString()}
                 </td>
                 {editMode && (
                   <td>

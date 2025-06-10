@@ -7,17 +7,17 @@ const PortfolioSummary = ({ summary }) => {
     <div className="overview-left">
       <div className="portfolio-summary">
         <div>
-          총 보유자산: <span className="value">{totalNow.toLocaleString()}￦</span>
+          총 보유자산: <span className="value">₩{totalNow.toLocaleString()}</span>
         </div>
         <div>
-          총 매수: <span className="value">{totalBuy.toLocaleString()}￦</span>
+          총 매수: <span className="value">₩{totalBuy.toLocaleString()}</span>
         </div>
         <div>
-          총 평가: <span className="value">{totalNow.toLocaleString()}￦</span>
+          총 평가: <span className="value">₩{totalNow.toLocaleString()}</span>
         </div>
         <div>
           총 평가손익: <span className={`value ${totalProfit >= 0 ? 'red' : 'blue'}`}>
-            {totalProfit >= 0 ? '+' : '-'}{Math.abs(totalProfit).toLocaleString()}￦
+            {totalProfit >= 0 ? '+' : '-'}₩{Math.abs(totalProfit).toLocaleString()}
           </span>
         </div>
         <div>
