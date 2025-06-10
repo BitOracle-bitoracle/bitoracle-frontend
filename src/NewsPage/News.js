@@ -8,26 +8,34 @@ import "./News.css";
 // TODO 페이지네이션 위치 고정하기
 // TODO 요약글 대신 날짜 우측 정렬로 추가
 
-const BASE_URL = "https://api.bitoracle.shop/news";
-const ITEMS_PER_PAGE = 5;
+const BASE_URL = "https://api.bitoracle.shop/api/news";
+const NEWS_PER_PAGE = 7;
 
 const News = () => {
     const [topic, setTopic] = useState("bitcoin");
+
     const [goodCurPage, setGoodCurPage] = useState(0);
-    const [badCurPage, setBadCurPage] = useState(0);
     const [goodTotalPages, setGoodTotalPages] = useState(0);
+    const [goodNews, setGoodNews] = useState([]);
+
+    const [badCurPage, setBadCurPage] = useState(0);
     const [badTotalPages, setBadTotalPages] = useState(0);
-    const [goodNews, setGoodNews] = useState({});
-    const [badNews, setBadNews] = useState({});
+    const [badNews, setBadNews] = useState([]);
 
     useEffect(() => {
         fetchTopic(setTopic);
+
+        // ISSUE: size params가 적용이 안되고 사이즈 고정되서 날라옴. 백엔드 문제.
         fetchGoodNews(setGoodCurPage, setGoodTotalPages, setGoodNews, {
-            page: badCurPage,
-            size: ITEMS_PER_PAGE,
+            page: goodCurPage,
+            size: NEWS_PER_PAGE,
         });
-        fetchBadNews(setBadCurPage, setBadTotalPages, setBadNews);
-    }, []);
+
+        fetchBadNews(setBadCurPage, setBadTotalPages, setBadNews, {
+            page: badCurPage,
+            size: NEWS_PER_PAGE,
+        });
+    }, [goodCurPage, badCurPage]);
 
     return (
         <div className="news-container">
@@ -50,20 +58,29 @@ const News = () => {
                 <div className="good_news-items">
                     {goodNews.map((news) => (
                         <a
-                            key={news.id}
+                            key={`${news.news_title}-${news.created_at}`}
                             className="news-item"
-                            href={news.link}
+                            href={news.news_url}
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            {news.title}
+                            <span className="title-box">{news.news_title}</span>
+                            <span className="createdAt">
+                                {new Date(news.created_at).toLocaleString(
+                                    "ko-KR",
+                                    {
+                                        year: "2-digit",
+                                        month: "2-digit",
+                                        day: "2-digit",
+                                    }
+                                )}
+                            </span>
                         </a>
                     ))}
+
                     <CustomPagination
                         currentPage={goodCurPage}
-                        totalPages={Math.ceil(
-                            goodNewsData.length / ITEMS_PER_PAGE
-                        )}
+                        totalPages={goodTotalPages}
                         onPageChange={setGoodCurPage}
                     />
                 </div>
@@ -71,20 +88,28 @@ const News = () => {
                 <div className="bad_news-items">
                     {badNews.map((news) => (
                         <a
-                            key={news.id}
+                            key={`${news.news_title}-${news.created_at}`}
                             className="news-item"
-                            href={news.link}
+                            href={news.news_url}
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            {news.title}
+                            <span className="title-box">{news.news_title}</span>
+                            <span className="createdAt">
+                                {new Date(news.created_at).toLocaleString(
+                                    "ko-KR",
+                                    {
+                                        year: "2-digit",
+                                        month: "2-digit",
+                                        day: "2-digit",
+                                    }
+                                )}
+                            </span>
                         </a>
                     ))}
                     <CustomPagination
                         currentPage={badCurPage}
-                        totalPages={Math.ceil(
-                            badNewsData.length / ITEMS_PER_PAGE
-                        )}
+                        totalPages={badTotalPages}
                         onPageChange={setBadCurPage}
                     />
                 </div>
@@ -97,55 +122,59 @@ async function fetchTopic(setTopic) {
     try {
         const res = await axios.get(`${BASE_URL}/kw`);
         console.log("Success to get today`s topic\n", res);
-        setTopic(res.data?.kw);
+        setTopic(res.data.data.kw);
     } catch (error) {
         console.error("Fail to get today`s topic\n", error);
     }
 }
 
-async function fetchGoodNews(setGoodCurPage, setGoodTotalPages, setGoodNews, request) {
+async function fetchGoodNews(
+    setGoodCurPage,
+    setGoodTotalPages,
+    setGoodNews,
+    params
+) {
     try {
-        const res = await axios.get(`${BASE_URL}/goodNews`, request);
-        console.log("Success to get good news.\n", res);
+        const res = await axios.get(`${BASE_URL}/goodNews`, params);
+        console.log("Success to get good news.\n", res, params);
 
-        setGoodCurPage(request.page);
-        setGoodTotalPages();
-        setGoodNews();
-
+        setGoodCurPage(params.page);
+        setGoodTotalPages(res.data.data.totalPages);
+        setGoodNews(res.data.data.content);
     } catch (error) {
         console.error("Fail to get good news.\n", error);
     }
 }
 
-async function fetchBadNews(setBadCurPage, setBadTotalPage, setBadNews) {
-    // try {
-    //     const res = await axios.get(`${BASE_URL}/kw`);
-    //     console.log("Success to get bad news.\n", res);
-    //     setTopic(res.data?.kw);
-    // } catch (error) {
-    //     console.error("Fail to get bad news.\n", error);
-    // }
+async function fetchBadNews(
+    setBadCurPage,
+    setBadTotalPages,
+    setBadNews,
+    params
+) {
+    try {
+        const res = await axios.get(`${BASE_URL}/badNews`, params);
+        console.log("Success to get bad news.\n", res, params);
+
+        setBadCurPage(params.page);
+        setBadTotalPages(res.data.data.totalPages);
+        setBadNews(res.data.data.content);
+    } catch (error) {
+        console.error("Fail to get bad news.\n", error);
+    }
 }
 
 const CustomPagination = ({ currentPage, totalPages, onPageChange }) => {
-    const navigate = useNavigate();
-
     const MAX_PAGE_DISPLAY = 5;
 
-    const handleClick = (page) => {
-        if (page !== currentPage && page >= 0 && page < totalPages) {
-            onPageChange(page);
-            navigate(`?page=${page + 1}`);
-        }
-    };
-
-    const getPageNumbers = () => {
+    const getPages = () => {
         let pages = [];
 
         const startPage = Math.max(
             0,
             Math.min(currentPage - 2, totalPages - MAX_PAGE_DISPLAY)
         );
+
         const endPage = Math.min(
             startPage + MAX_PAGE_DISPLAY - 1,
             totalPages - 1
@@ -158,14 +187,18 @@ const CustomPagination = ({ currentPage, totalPages, onPageChange }) => {
         return { pages, startPage };
     };
 
-    const { pages, startPage } = getPageNumbers();
+    const { pages, startPage } = getPages();
 
     return (
         <ul className="custom-pagination">
             {/* 앞으로 */}
             <li
                 className={`page-btn ${currentPage === 0 ? "disabled" : ""}`}
-                onClick={() => handleClick(currentPage - 1)}
+                onClick={
+                    currentPage === 0
+                        ? undefined
+                        : () => onPageChange(currentPage - 1)
+                }
             >
                 {"<"}
             </li>
@@ -173,7 +206,7 @@ const CustomPagination = ({ currentPage, totalPages, onPageChange }) => {
             {/* 1 ... 생략 */}
             {startPage > 0 && (
                 <>
-                    <li className="page-btn" onClick={() => handleClick(0)}>
+                    <li className="page-btn" onClick={() => onPageChange(0)}>
                         1
                     </li>
                     <li className="page-ellipsis">...</li>
@@ -187,7 +220,7 @@ const CustomPagination = ({ currentPage, totalPages, onPageChange }) => {
                     className={`page-btn ${
                         page === currentPage ? "active" : ""
                     }`}
-                    onClick={() => handleClick(page)}
+                    onClick={() => onPageChange(page)}
                 >
                     {page + 1}
                 </li>
@@ -198,7 +231,11 @@ const CustomPagination = ({ currentPage, totalPages, onPageChange }) => {
                 className={`page-btn ${
                     currentPage === totalPages - 1 ? "disabled" : ""
                 }`}
-                onClick={() => handleClick(currentPage + 1)}
+                onClick={
+                    currentPage === totalPages - 1
+                        ? undefined
+                        : () => onPageChange(currentPage + 1)
+                }
             >
                 {">"}
             </li>

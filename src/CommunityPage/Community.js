@@ -11,7 +11,7 @@ import axios from "axios";
 import "./Community.css";
 
 const CATEGORIES = ["전체글", "인기글", "칼럼글"];
-const POSTS_PER_PAGE = 7;
+const POSTS_PER_PAGE = 3;
 const BASE_URL = "https://api.bitoracle.shop/api/community";
 
 const CommunityPage = () => {
