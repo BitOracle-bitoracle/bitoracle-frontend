@@ -16,8 +16,13 @@ const Proto = () => {
         }
 
         try {
-            const res = await axios.post(`${BASE_URL}/select`, predictType);
-            alert(`${predictType}을 선택하셨습니다.`);
+            const res = await axios.post(`${BASE_URL}/select`, predictType, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                withCredentials: true, // Cookie 전달함.
+            });
+            alert(`${predictType.upDown}을 선택하셨습니다.`);
             console.log("Success to post predict.", res);
         } catch (error) {
             console.error("Fail to post predict.", error);
@@ -33,7 +38,7 @@ const Proto = () => {
                     <button
                         className="prediction-btn"
                         onClick={() => {
-                            handlePrdictBtnClick("UP");
+                            handlePrdictBtnClick({ upDown: "UP" });
                         }}
                     >
                         업
@@ -41,7 +46,7 @@ const Proto = () => {
                     <button
                         className="prediction-btn"
                         onClick={() => {
-                            handlePrdictBtnClick("DOWN");
+                            handlePrdictBtnClick({ upDown: "DOWN" });
                         }}
                     >
                         다운
@@ -65,12 +70,6 @@ const CoinIndex = () => {
     const [price, setPrice] = useState(null);
 
     useEffect(() => {
-        const token = localStorage.getItem("access");
-        if (!token) {
-            alert("로그인하세요!");
-            return;
-        }
-
         axios
             .get(`${BASE_URL}/midnight`)
             .then((res) => {
