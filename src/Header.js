@@ -243,7 +243,20 @@ const Header = () => {
                         <li className="no-posts">작성한 글이 없습니다.</li>
                       ) : (
                         myPosts.map(post => (
-                          <li key={post.id}>{post.title}</li>
+                          <li key={post.id}>
+                            <a
+                              href={`/community/${post.id}`}
+                              className="post-link"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                navigate(`/community/post/${post.id}`);
+                                setIsDropdownOpen(false);
+                                setShowPosts(false);
+                              }}
+                            >
+                              {post.title}
+                            </a>
+                          </li>
                         ))
                       )}
                     </ul>
