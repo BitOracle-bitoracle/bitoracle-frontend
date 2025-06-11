@@ -292,7 +292,7 @@ const PortfolioPage = () => {
                 <td>₩{calc.buy.toLocaleString()}</td>
                 <td>₩{calc.now.toLocaleString()}</td>
                 <td className={calc.profit >= 0 ? "red" : "blue"}>
-                  {calc.rate >= 0 ? '+' : '-'}{calc.rate}%<br />₩{calc.profit.toLocaleString()}
+                  {calc.rate >= 0 ? '+' : ''}{calc.rate}%<br />₩{calc.profit.toLocaleString()}
                 </td>
                 {editMode && (
                   <td>
