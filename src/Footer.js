@@ -22,8 +22,8 @@ const Footer = () => {
                     <strong>Developers</strong>
                     <ul>
                         <li><a href="https://github.com/BitOracle-bitoracle" target="_blank" rel="noreferrer">GitHub Repo</a></li>
-                        <li><a href="/api/docs" target="_self">API Docs</a></li>
-                        <li><a href="/sdk" target="_self">JavaScript SDK</a></li>
+                        <li><a href="https://coherent-sound-67a.notion.site/BitOracle-1ae89ee9697780228c6aff8083da92f3" target="_self">Collab docs</a></li>
+                        {/* <li><a href="/sdk" target="_self">JavaScript SDK</a></li> */}
                         <li><a href="/community" target="_self">Community</a></li>
                     </ul>
                     </div>
