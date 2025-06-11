@@ -117,6 +117,9 @@
 
 /* Top button size increase */
 .footer-btn-icon.top-btn {
+    position: absolute;
+    top: 16px;
+    right: 28px;
     width: 48px;
     height: 48px;
     font-size: 20px;
