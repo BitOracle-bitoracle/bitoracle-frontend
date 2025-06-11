@@ -4,7 +4,7 @@ import axios from "axios";
 
 import "./Proto.css";
 
-const BASE_URL = "http://api.bitoracle.shop/api/predict";
+const BASE_URL = "https://api.bitoracle.shop/api/predict";
 
 const Proto = () => {
     const handlePrdictBtnClick = async (predictType) => {
@@ -16,12 +16,7 @@ const Proto = () => {
         }
 
         try {
-            const res = await axios.post(`${BASE_URL}/select`, predictType, {
-                headers: {
-                    Authorization: `Bearer ${token}`, // Access token을 header로 전달함.
-                },
-                withCredentials: true, // Cookie 전달함.
-            });
+            const res = await axios.post(`${BASE_URL}/select`, predictType);
             alert(`${predictType}을 선택하셨습니다.`);
             console.log("Success to post predict.", res);
         } catch (error) {
@@ -71,19 +66,13 @@ const CoinIndex = () => {
 
     useEffect(() => {
         const token = localStorage.getItem("access");
-
         if (!token) {
-            alert("로그인이 필요합니다.");
+            alert("로그인하세요!");
             return;
         }
 
         axios
-            .get(`${BASE_URL}/predict/midnight`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-                withCredentials: true, // Cookie 전달함.
-            })
+            .get(`${BASE_URL}/midnight`)
             .then((res) => {
                 console.log("today 0d coin data:", res);
                 setPrice(res.data.data.price);
@@ -171,7 +160,7 @@ const StatText = () => {
         }
 
         axios
-            .get(`${BASE_URL}/predict/stats`, {
+            .get(`${BASE_URL}/stats`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

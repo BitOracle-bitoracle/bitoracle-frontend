@@ -67,6 +67,7 @@
     cursor: pointer;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
     transition: background-color 0.2s ease;
+    z-index: 1000;
 }
 
 .post-index {
