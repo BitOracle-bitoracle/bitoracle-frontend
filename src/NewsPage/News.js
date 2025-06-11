@@ -9,7 +9,7 @@ import "./News.css";
 // TODO 요약글 대신 날짜 우측 정렬로 추가
 
 const BASE_URL = "https://api.bitoracle.shop/api/news";
-const NEWS_PER_PAGE = 7;
+const NEWS_PER_PAGE = 10;
 
 const News = () => {
     const [topic, setTopic] = useState("bitcoin");
@@ -24,18 +24,21 @@ const News = () => {
 
     useEffect(() => {
         fetchTopic(setTopic);
+    }, []);
 
-        // ISSUE: size params가 적용이 안되고 사이즈 고정되서 날라옴. 백엔드 문제.
+    useEffect(() => {
         fetchGoodNews(setGoodCurPage, setGoodTotalPages, setGoodNews, {
             page: goodCurPage,
             size: NEWS_PER_PAGE,
         });
+    }, [goodCurPage]);
 
+    useEffect(() => {
         fetchBadNews(setBadCurPage, setBadTotalPages, setBadNews, {
             page: badCurPage,
             size: NEWS_PER_PAGE,
         });
-    }, [goodCurPage, badCurPage]);
+    }, [badCurPage]);
 
     return (
         <div className="news-container">
@@ -135,8 +138,8 @@ async function fetchGoodNews(
     params
 ) {
     try {
-        const res = await axios.get(`${BASE_URL}/goodNews`, params);
-        console.log("Success to get good news.\n", res, params);
+        const res = await axios.get(`${BASE_URL}/goodNews`, { params });
+        console.log("Success to get good news.\n", res, { params });
 
         setGoodCurPage(params.page);
         setGoodTotalPages(res.data.data.totalPages);
@@ -153,8 +156,8 @@ async function fetchBadNews(
     params
 ) {
     try {
-        const res = await axios.get(`${BASE_URL}/badNews`, params);
-        console.log("Success to get bad news.\n", res, params);
+        const res = await axios.get(`${BASE_URL}/badNews`, { params });
+        console.log("Success to get bad news.\n", res, { params });
 
         setBadCurPage(params.page);
         setBadTotalPages(res.data.data.totalPages);
