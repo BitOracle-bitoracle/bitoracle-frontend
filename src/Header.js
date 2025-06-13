@@ -19,6 +19,8 @@ const Header = () => {
   });
   const [myPosts, setMyPosts] = useState([]);
   const [showPosts, setShowPosts] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
   const handleFetchPosts = async () => {
     if (showPosts) {
       // 이미 열려 있으면 닫기
@@ -89,7 +91,7 @@ const Header = () => {
       });
   }, []);
 
-  // Fetch detailed user info after auth checked and login
+  // Fetch detailed user info after auth checked and login, or when login modal closes after successful login
   useEffect(() => {
     if (!authChecked || !isLoggedIn) return;
     fetch("https://api.bitoracle.shop/api/mypage/userinfo", {
@@ -112,13 +114,13 @@ const Header = () => {
           ...prev,
           point: info.point,
           user_type: info.user_type,
-          name: info.nickname // update nickname if desired
+          name: info.nickname
         }));
       })
       .catch(err => {
         console.error("❌ /api/mypage/userinfo 오류:", err);
       });
-  }, [authChecked, isLoggedIn]);
+  }, [authChecked, isLoggedIn, isLoginModalOpen]);
 
   /*
   useEffect(() => {
@@ -157,8 +159,6 @@ const Header = () => {
       setIsDropdownOpen(false);
     }, 200); // delay before closing
   };
-
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   return (
     <header className="header">
