@@ -11,6 +11,7 @@ const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const closeTimeoutRef = useRef(null);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [userInfo, setUserInfo] = useState({
     email: "",
     name: "",
@@ -19,7 +20,6 @@ const Header = () => {
   });
   const [myPosts, setMyPosts] = useState([]);
   const [showPosts, setShowPosts] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const handleFetchPosts = async () => {
     if (showPosts) {
