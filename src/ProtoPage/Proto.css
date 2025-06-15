@@ -149,18 +149,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 2px;
 }
 
-.marker.success {
-    width: 8px;
-    height: 8px;
-    background-color: #3498db; /* 파란색 */
-    border-radius: 50%;
+.marker-success {
+    font-size: 16px;
+    color: #3498db; /* 파란색 */
 }
 
-.marker.fail {
-    font-size: 12px;
+.marker-fail {
+    font-size: 16px;
     color: red;
 }
 

@@ -63,14 +63,14 @@ const Proto = () => {
                 <div className="btn-wrapper">
                     <button
                         className="prediction-btn"
-                        // onClick={() => handlePredictBtnClick({ upDown: "UP" })}
+                        onClick={() => handlePredictBtnClick({ upDown: "UP" })}
                         disabled={isPredicted}
                     >
                         업
                     </button>
                     <button
                         className="prediction-btn"
-                        // onClick={() => {handlePredictBtnClick({ upDown: "DOWN" });}}
+                        onClick={() => {handlePredictBtnClick({ upDown: "DOWN" });}}
                         disabled={isPredicted}
                     >
                         다운
@@ -121,15 +121,13 @@ const StatCalendar = () => {
     const [predictions, setPredictions] = useState({});
 
     const tileContent = ({ date, view }) => {
-        if (view !== "month") return null;
-
         const dateStr = date.toISOString().slice(0, 10); // 'YYYY-MM-DD'
 
-        const result = predictions[dateStr];
-        if (result === "success") {
-            return <div className="marker success" />;
-        } else if (result === "fail") {
-            return <div className="marker fail">✖</div>;
+        if (predictions[dateStr] === "true") {
+            return <span className="marker-success">●</span>; 
+        }
+        else if (predictions[dateStr] === "false") {
+            return <span className="marker-fail">✖</span>;
         }
         return null;
     };
@@ -150,13 +148,14 @@ const StatCalendar = () => {
                 withCredentials: true, // Cookie 전달함.
             })
             .then((res) => {
-                console.log("Success to get calendar.", res.data);
-
                 const resultMap = {};
+
                 res.data.data?.forEach((item) => {
                     resultMap[item.created_at] = item.correct;
                 });
                 setPredictions(resultMap);
+
+                console.log("Success to get calendar.", res.data, resultMap);
             })
             .catch((error) => {
                 console.error("Fail to get predictions.", error);
@@ -165,7 +164,7 @@ const StatCalendar = () => {
 
     return (
         <Calendar
-            // tileContent={tileContent}
+            tileContent={tileContent}
             maxDate={new Date()} // 오늘까지만 선택 가능
             formatDay={(locale, date) => date.getDate()}
         />
