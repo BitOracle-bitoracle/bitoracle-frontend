@@ -63,14 +63,20 @@ const Proto = () => {
                 <div className="btn-wrapper">
                     <button
                         className="prediction-btn"
-                        onClick={() => handlePredictBtnClick({ upDown: "UP" })}
+                        onClick={() => {
+                            handlePredictBtnClick({ upDown: "UP" });
+                            setIsPredicted(true);
+                        }}
                         disabled={isPredicted}
                     >
                         업
                     </button>
                     <button
                         className="prediction-btn"
-                        onClick={() => {handlePredictBtnClick({ upDown: "DOWN" });}}
+                        onClick={() => {
+                            handlePredictBtnClick({ upDown: "DOWN" });
+                            setIsPredicted(true);
+                        }}
                         disabled={isPredicted}
                     >
                         다운
