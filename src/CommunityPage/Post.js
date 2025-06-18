@@ -54,8 +54,6 @@ const Post = () => {
             </ReactMarkdown>
 
             {/* <Comments comments={post.replyList} /> */}
-
-            <div className="placeholder" />
         </div>
     );
 };
@@ -63,6 +61,10 @@ const Post = () => {
 const Likes = ({ id, initialLiked = false, initialCount = 0 }) => {
     const [liked, setLiked] = useState(initialLiked);
     const [count, setCount] = useState(initialCount);
+
+    useEffect(() => {
+        // handleLikeClick();
+    }, []);
 
     const handleLikeClick = async () => {
         const token = localStorage.getItem("access");
@@ -82,7 +84,8 @@ const Likes = ({ id, initialLiked = false, initialCount = 0 }) => {
             console.log("Success to post likes.", res);
 
             setLiked(res.data.data.islike);
-            setCount(res.data.data.likeCount);
+            setCount(initialCount + res.data.data.likeCount);
+            console.log("like count: ", res, res.data.data.likeCount);
         } catch (error) {
             console.error("Fail to post likes.", error);
         }
