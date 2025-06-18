@@ -53,7 +53,9 @@ const Post = () => {
                 {post.content}
             </ReactMarkdown>
 
-            <Comments comments={post.replyList} />
+            {/* <Comments comments={post.replyList} /> */}
+
+            <div className="placeholder" />
         </div>
     );
 };
