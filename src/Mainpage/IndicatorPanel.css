@@ -85,3 +85,95 @@
     color: #888;
     margin: 0;
 }
+
+/* 태블릿 크기 (768px ~ 1024px) */
+@media (max-width: 1024px) {
+    .indicator-grid {
+        gap: 10px;
+    }
+
+    .indicator-card {
+        min-height: 150px;
+    }
+}
+
+/* 모바일 크기 (768px 이하) */
+@media (max-width: 768px) {
+    .indicator-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 8px;
+        grid-auto-rows: minmax(140px, 1fr);
+    }
+
+    .indicator-card {
+        min-height: 140px;
+        border-radius: 8px;
+    }
+
+    .indicator-title {
+        font-size: 16px;
+        margin-top: 8px;
+    }
+
+    .fear-greed-title {
+        margin-top: 20px;
+    }
+
+    .indicator-card p {
+        font-size: 20px;
+    }
+
+    .fear-greed-chart-wrapper {
+        width: 100px;
+        height: 100px;
+    }
+
+    .fear-greed-center p:first-child {
+        font-size: 20px;
+    }
+
+    .fear-greed-center p:last-child {
+        font-size: 14px;
+    }
+
+    .last-update {
+        font-size: 10px;
+        top: 4px;
+        left: 4px;
+    }
+}
+
+/* 작은 모바일 (480px 이하) */
+@media (max-width: 480px) {
+    .indicator-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, auto);
+        gap: 10px;
+    }
+
+    .indicator-card {
+        min-height: 120px;
+    }
+
+    .indicator-title {
+        font-size: 14px;
+    }
+
+    .indicator-card p {
+        font-size: 18px;
+    }
+
+    .fear-greed-chart-wrapper {
+        width: 90px;
+        height: 90px;
+    }
+
+    .fear-greed-center p:first-child {
+        font-size: 18px;
+    }
+
+    .fear-greed-center p:last-child {
+        font-size: 12px;
+    }
+}

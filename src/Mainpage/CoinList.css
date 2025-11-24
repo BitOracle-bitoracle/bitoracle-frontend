@@ -2,12 +2,21 @@
     width: 100%;
     padding-top: 20px;
     box-sizing: border-box;
+    overflow-x: auto;
+}
+
+.coin-list-container h2 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 12px;
+    padding: 0 4px;
 }
 
 .coin-list-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 16px;
+    min-width: 600px;
 }
 
 .coin-list-table thead th {
@@ -15,11 +24,13 @@
     color: #555;
     padding: 16px;
     text-align: left;
+    white-space: nowrap;
 }
 
 .coin-list-table tbody td {
     padding: 16px;
     border-bottom: 1px solid #f1f1f1;
+    white-space: nowrap;
 }
 
 .coin-list-table tbody tr:hover {
@@ -45,4 +56,78 @@
     height: 1.6em;
     vertical-align: middle;
     margin-right: 0.5em;
+}
+
+/* 태블릿 크기 (768px ~ 1024px) */
+@media (max-width: 1024px) {
+    .coin-list-table {
+        font-size: 15px;
+    }
+
+    .coin-list-table thead th,
+    .coin-list-table tbody td {
+        padding: 12px;
+    }
+}
+
+/* 모바일 크기 (768px 이하) */
+@media (max-width: 768px) {
+    .coin-list-container {
+        padding-top: 12px;
+    }
+
+    .coin-list-container h2 {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+
+    .coin-list-table {
+        font-size: 14px;
+        min-width: 500px;
+    }
+
+    .coin-list-table thead th,
+    .coin-list-table tbody td {
+        padding: 10px 8px;
+    }
+
+    .coin-icon {
+        width: 1.4em;
+        height: 1.4em;
+        margin-right: 0.4em;
+    }
+
+    .symbol {
+        margin-left: 4px;
+        font-size: 0.85em;
+    }
+}
+
+/* 작은 모바일 (480px 이하) */
+@media (max-width: 480px) {
+    .coin-list-container h2 {
+        font-size: 1rem;
+        margin-bottom: 8px;
+    }
+
+    .coin-list-table {
+        font-size: 12px;
+        min-width: 450px;
+    }
+
+    .coin-list-table thead th,
+    .coin-list-table tbody td {
+        padding: 8px 6px;
+    }
+
+    .coin-icon {
+        width: 1.2em;
+        height: 1.2em;
+        margin-right: 0.3em;
+    }
+
+    .symbol {
+        margin-left: 3px;
+        font-size: 0.8em;
+    }
 }

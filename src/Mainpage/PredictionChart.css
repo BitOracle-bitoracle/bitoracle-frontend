@@ -5,6 +5,16 @@
     margin-bottom: 40px; /* ✅ add spacing from coin list below */
 }
 
+.prediction-header {
+    margin-bottom: 12px;
+}
+
+.prediction-header h2 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 0;
+}
+
 .prediction-controls {
     position: absolute;
     right: 20px;
@@ -90,4 +100,91 @@
     font-size: 14px;
     color: #999;
     padding: 20px;
+}
+
+/* 태블릿 크기 (768px ~ 1024px) */
+@media (max-width: 1024px) {
+    .prediction-controls {
+        right: 15px;
+        top: 8px;
+        gap: 6px;
+    }
+
+    .prediction-controls button {
+        padding: 5px 8px;
+        font-size: 13px;
+    }
+}
+
+/* 모바일 크기 (768px 이하) */
+@media (max-width: 768px) {
+    .prediction-chart-wrapper {
+        margin-top: 12px;
+        margin-bottom: 20px;
+    }
+
+    .prediction-header {
+        margin-bottom: 8px;
+    }
+
+    .prediction-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .prediction-header h2 img {
+        width: 20px !important;
+        height: 20px !important;
+    }
+
+    .prediction-controls {
+        position: relative;
+        right: auto;
+        top: auto;
+        justify-content: center;
+        margin-bottom: 12px;
+        gap: 6px;
+    }
+
+    .prediction-controls button {
+        padding: 8px 12px;
+        font-size: 13px;
+        flex: 1;
+        max-width: 100px;
+    }
+
+    .prediction-chart-container {
+        padding-top: 20px;
+    }
+}
+
+/* 작은 모바일 (480px 이하) */
+@media (max-width: 480px) {
+    .prediction-header {
+        margin-bottom: 6px;
+    }
+
+    .prediction-header h2 {
+        font-size: 1rem;
+        gap: 6px !important;
+    }
+
+    .prediction-header h2 img {
+        width: 18px !important;
+        height: 18px !important;
+    }
+
+    .prediction-controls {
+        gap: 4px;
+        margin-bottom: 8px;
+    }
+
+    .prediction-controls button {
+        padding: 6px 8px;
+        font-size: 12px;
+        max-width: 80px;
+    }
+
+    .prediction-chart-container {
+        padding-top: 16px;
+    }
 }

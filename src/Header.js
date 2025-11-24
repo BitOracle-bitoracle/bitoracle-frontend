@@ -20,6 +20,7 @@ const Header = () => {
   });
   const [myPosts, setMyPosts] = useState([]);
   const [showPosts, setShowPosts] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleFetchPosts = async () => {
     if (showPosts) {
@@ -160,6 +161,44 @@ const Header = () => {
     }, 200); // delay before closing
   };
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleNavClick = (e, path) => {
+    e.preventDefault();
+    closeMobileMenu();
+    navigate(path);
+  };
+
+  const handlePortfolioClick = (e) => {
+    e.preventDefault();
+    closeMobileMenu();
+    const token = localStorage.getItem("access");
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      setIsLoginModalOpen(true);
+    } else {
+      navigate("/portfolio");
+    }
+  };
+
+  const handleProtoClick = (e) => {
+    e.preventDefault();
+    closeMobileMenu();
+    const token = localStorage.getItem("access");
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      setIsLoginModalOpen(true);
+    } else {
+      navigate("/proto");
+    }
+  };
+
   return (
     <header className="header">
       <div className="header-left">
@@ -167,10 +206,11 @@ const Header = () => {
           navigate("/");
           window.scrollTo(0, 0);
           window.location.reload();
+          closeMobileMenu();
         }}>
           <img src="/BitOracle_Logo_demo.png" alt="BitOracle Logo" className="logo" />
         </button>
-        <nav className="nav">
+        <nav className="nav desktop-nav">
           <a
             href="/"
             onClick={(e) => {
@@ -181,38 +221,20 @@ const Header = () => {
                 if (section) {
                   section.scrollIntoView({ behavior: "smooth" });
                 }
-              }, 200); // short delay to ensure page has navigated
+              }, 200);
             }}
           >
             암호화폐
           </a>
-          <a href="/community">커뮤니티</a>
-          <a href="/news">뉴스</a>
+          <a href="/community" onClick={(e) => handleNavClick(e, "/community")}>커뮤니티</a>
+          <a href="/news" onClick={(e) => handleNavClick(e, "/news")}>뉴스</a>
         </nav>
       </div>
-      <nav className="nav">
-        <a href="#" className="nav-link" onClick={(e) => {
-          e.preventDefault();
-          const token = localStorage.getItem("access");
-          if (!token) {
-            alert("로그인이 필요합니다.");
-            setIsLoginModalOpen(true);
-          } else {
-            navigate("/portfolio");
-          }
-        }}>
+      <nav className="nav desktop-nav header-right-nav">
+        <a href="#" className="nav-link" onClick={handlePortfolioClick}>
           포트폴리오
         </a>
-        <a href="#" className="nav-link" onClick={(e) => {
-          e.preventDefault();
-          const token = localStorage.getItem("access");
-          if (!token) {
-            alert("로그인이 필요합니다.");
-            setIsLoginModalOpen(true);
-          } else {
-            navigate("/proto");
-          }
-        }}>
+        <a href="#" className="nav-link" onClick={handleProtoClick}>
           차트예측
         </a>
 
@@ -223,6 +245,10 @@ const Header = () => {
               className="nav-link"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
+              onClick={(e) => {
+                e.preventDefault();
+                setIsDropdownOpen(!isDropdownOpen);
+              }}
               ref={dropdownRef}
             >
               마이페이지
@@ -252,6 +278,7 @@ const Header = () => {
                                 navigate(`/community/post/${post.id}`);
                                 setIsDropdownOpen(false);
                                 setShowPosts(false);
+                                closeMobileMenu();
                               }}
                             >
                               {post.title}
@@ -265,10 +292,110 @@ const Header = () => {
               )}
             </a>
           ) : (
-            <a href="#" className="nav-link login-btn" onClick={() => setIsLoginModalOpen(true)}>로그인</a>
+            <a href="#" className="nav-link login-btn" onClick={() => {
+              setIsLoginModalOpen(true);
+              closeMobileMenu();
+            }}>로그인</a>
           )
         )}
       </nav>
+      
+      {/* 모바일 햄버거 메뉴 버튼 */}
+      <button className="mobile-menu-btn" onClick={toggleMobileMenu} aria-label="메뉴">
+        <span className={`hamburger ${isMobileMenuOpen ? 'active' : ''}`}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+
+      {/* 모바일 메뉴 */}
+      <div className={`mobile-menu ${isMobileMenuOpen ? 'open' : ''}`}>
+        <nav className="mobile-nav">
+          <a
+            href="/"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/");
+              setTimeout(() => {
+                const section = document.getElementById("coin-list-section");
+                if (section) {
+                  section.scrollIntoView({ behavior: "smooth" });
+                }
+              }, 200);
+              closeMobileMenu();
+            }}
+          >
+            암호화폐
+          </a>
+          <a href="/community" onClick={(e) => handleNavClick(e, "/community")}>커뮤니티</a>
+          <a href="/news" onClick={(e) => handleNavClick(e, "/news")}>뉴스</a>
+          <a href="#" onClick={handlePortfolioClick}>포트폴리오</a>
+          <a href="#" onClick={handleProtoClick}>차트예측</a>
+          
+          {authChecked && (
+            isLoggedIn ? (
+              <>
+                <a
+                  href="#"
+                  className="mobile-nav-link"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsDropdownOpen(!isDropdownOpen);
+                  }}
+                >
+                  마이페이지
+                </a>
+                {isDropdownOpen && (
+                  <div className="mobile-dropdown">
+                    <div className="mobile-dropdown-content">
+                      <img
+                        src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo.name)}&background=random`}
+                        alt="프로필"
+                        className="profile-pic"
+                      />
+                      <p className="nickname">{userInfo.name}</p>
+                      <p className="points">포인트: {userInfo.point.toLocaleString()}pt</p>
+                      <button className="dropdown-btn" onClick={handleFetchPosts}>작성글 목록</button>
+                      <button className="dropdown-btn" onClick={handleLogout}>로그아웃</button>
+                      {showPosts && (
+                        <ul className="mypage-posts">
+                          {myPosts.length === 0 ? (
+                            <li className="no-posts">작성한 글이 없습니다.</li>
+                          ) : (
+                            myPosts.map(post => (
+                              <li key={post.id}>
+                                <a
+                                  href={`/community/${post.id}`}
+                                  className="post-link"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    navigate(`/community/post/${post.id}`);
+                                    setIsDropdownOpen(false);
+                                    setShowPosts(false);
+                                    closeMobileMenu();
+                                  }}
+                                >
+                                  {post.title}
+                                </a>
+                              </li>
+                            ))
+                          )}
+                        </ul>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <a href="#" className="mobile-login-btn" onClick={() => {
+                setIsLoginModalOpen(true);
+                closeMobileMenu();
+              }}>로그인</a>
+            )
+          )}
+        </nav>
+      </div>
 
       {/* 로그인 모달 */}
       <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />

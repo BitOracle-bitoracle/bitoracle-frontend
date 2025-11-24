@@ -152,6 +152,23 @@ const PredictionChart = () => {
   const minY = yValues.length > 0 ? Math.min(...yValues) : 0;
   const maxY = yValues.length > 0 ? Math.max(...yValues) : 0;
 
+  // 모바일 반응형 높이 계산
+  const getChartHeight = () => {
+    if (window.innerWidth <= 480) return 350;
+    if (window.innerWidth <= 768) return 400;
+    return 600;
+  };
+
+  const [chartHeight, setChartHeight] = useState(getChartHeight());
+
+  useEffect(() => {
+    const handleResize = () => {
+      setChartHeight(getChartHeight());
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className="prediction-chart-wrapper" style={{ position: 'relative' }}>
       <div style={{ position: 'relative' }}>
@@ -159,7 +176,7 @@ const PredictionChart = () => {
           ref={containerRef}
           style={{
             width: '100%',
-            height: 600,
+            height: chartHeight,
             position: 'relative',
             cursor: 'default',
             userSelect: 'none',
