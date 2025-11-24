@@ -1,15 +1,54 @@
 .news-container {
     width: 67%;
     margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.news-header {
+    margin-bottom: 32px;
+}
+
+.news-header h1 {
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+.news-header h4 {
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    font-weight: 400;
 }
 
 .topic-bar {
     margin-bottom: 32px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 16px 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .topic-bar strong {
     margin-left: 8px;
     font-size: 24px;
+    color: #fff;
 }
 
 .news-index {
@@ -17,11 +56,16 @@
     font-size: 24px;
     padding: 8px;
     gap: 16px;
+    margin-bottom: 16px;
 }
 
 .news-index span {
     flex: 1;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    font-weight: 600;
+    padding-bottom: 8px;
 }
 
 .news-items {
@@ -36,31 +80,61 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    padding: 16px;
 }
 
 .news-item {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* 수직 정렬 */
+    align-items: center;
     padding: 16px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     text-decoration: none;
-    color: #000;
+    color: #fff;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.news-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(4px);
+}
+
+.news-item:last-child {
+    border-bottom: none;
 }
 
 .title-box {
-  flex: 1; /* 남는 공간 전부 차지 */
+  flex: 1;
   overflow: hidden;
   white-space: nowrap;
-  text-overflow: ellipsis; /* 너무 길면 ... 표시 */
-  margin-right: 8px; /* 날짜와 거리 확보 */
+  text-overflow: ellipsis;
+  margin-right: 8px;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.createdAt {
+  white-space: nowrap;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: right;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .created-at {
-  white-space: nowrap; /* 줄바꿈 방지 */
+  white-space: nowrap;
   font-size: 0.9rem;
-  color: gray;
+  color: rgba(255, 255, 255, 0.8);
   text-align: right;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .custom-pagination {
@@ -70,32 +144,153 @@
     list-style: none;
     padding: 0;
     margin-top: 16px;
+    flex-wrap: wrap;
 }
 
 .page-btn {
     padding: 8px 16px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    min-width: 40px;
+    text-align: center;
 }
 
-.page-btn:hover {
-    background-color: #f0f0f0;
+.page-btn:hover:not(.disabled) {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
 }
 
 .page-btn.active {
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
+    background: rgba(255, 255, 255, 0.4);
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
 }
 
 .page-btn.disabled {
-    color: #aaa;
+    color: rgba(255, 255, 255, 0.4);
     cursor: not-allowed;
-    border-color: #eee;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .page-ellipsis {
     padding: 8px 16px;
-    color: #999;
+    color: rgba(255, 255, 255, 0.7);
     pointer-events: none;
+}
+
+/* 태블릿 크기 (768px ~ 1024px) */
+@media (max-width: 1024px) {
+    .news-container {
+        width: 85%;
+        padding: 16px;
+    }
+}
+
+/* 모바일 크기 (768px 이하) */
+@media (max-width: 768px) {
+    .news-container {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .news-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .news-header h4 {
+        font-size: 0.9rem;
+    }
+
+    .topic-bar {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+
+    .topic-bar strong {
+        font-size: 18px;
+    }
+
+    .news-index {
+        font-size: 18px;
+        gap: 12px;
+    }
+
+    .news-items {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .good_news-items,
+    .bad_news-items {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .news-item {
+        padding: 12px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .title-box {
+        white-space: normal;
+        text-overflow: clip;
+        margin-right: 0;
+    }
+
+    .createdAt {
+        align-self: flex-end;
+    }
+
+    .page-btn {
+        padding: 6px 12px;
+        font-size: 14px;
+        min-width: 36px;
+    }
+}
+
+/* 작은 모바일 (480px 이하) */
+@media (max-width: 480px) {
+    .news-container {
+        padding: 8px;
+    }
+
+    .news-header h1 {
+        font-size: 1.25rem;
+    }
+
+    .topic-bar {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+
+    .topic-bar strong {
+        font-size: 16px;
+    }
+
+    .news-index {
+        font-size: 16px;
+        gap: 8px;
+    }
+
+    .good_news-items,
+    .bad_news-items {
+        padding: 10px;
+    }
+
+    .page-btn {
+        padding: 6px 10px;
+        font-size: 12px;
+        min-width: 32px;
+    }
 }

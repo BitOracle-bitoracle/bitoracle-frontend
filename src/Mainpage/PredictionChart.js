@@ -241,17 +241,21 @@ const PredictionChart = () => {
                   data={chartData}
                   margin={{ top: 40, right: 50, bottom: 20, left: 20 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.2)" />
                   <XAxis
                     dataKey="timestamp"
                     domain={domain}
                     type="number"
                     tickFormatter={(ts) => moment(ts).format('YYYY-MM-DD')}
+                    stroke="rgba(255, 255, 255, 0.7)"
+                    tick={{ fill: 'rgba(255, 255, 255, 0.9)' }}
                   />
                   <YAxis
                     domain={[minY, maxY]}
                     tickFormatter={(val) => `₩${(val / 1e6).toFixed(0)}M`}
                     interval="preserveStartEnd"
+                    stroke="rgba(255, 255, 255, 0.7)"
+                    tick={{ fill: 'rgba(255, 255, 255, 0.9)' }}
                   />
                   <Tooltip
                     labelFormatter={(label) => moment(label).format('YYYY-MM-DD')}
@@ -262,7 +266,11 @@ const PredictionChart = () => {
                       return [formatted, name];
                     }}
                   />
-                  <Legend verticalAlign="top" height={36} />
+                  <Legend 
+                    verticalAlign="top" 
+                    height={36}
+                    wrapperStyle={{ color: 'rgba(255, 255, 255, 0.9)' }}
+                  />
 
                   {/* 실제 가격 영역 (Area) */}
                   <Area

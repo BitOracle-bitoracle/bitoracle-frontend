@@ -2,6 +2,24 @@
   width: 67%;
   margin: 0 auto;
   box-sizing: border-box;
+  padding: 20px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.portfolio-page h2 {
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 2rem;
+  margin-bottom: 24px;
 }
 
 .portfolio-header {
@@ -9,72 +27,10 @@
   font-weight: 600;
   margin-bottom: 24px;
   text-align: left;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.portfolio-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 24px;
-}
-
-.portfolio-table th,
-.portfolio-table td {
-  border: 1px solid #e5e7eb;
-  padding: 12px;
-  text-align: center;
-}
-
-.portfolio-table th {
-  background-color: #f9fafb;
-  font-weight: 600;
-}
-
-.portfolio-table td input {
-  width: calc(100% - 28px);
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  text-align: center;
-}
-
-.add-row-button {
-  background-color: #2563eb;
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.add-row-button:hover {
-  background-color: #1e4ed8;
-}
-
-.edit-toggle-button {
-  display: inline-block;
-  background-color: #3b82f6;
-  color: white;
-  text-align: center;
-  text-decoration: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  border: none;
-  transition: background-color 0.2s;
-}
-
-.edit-toggle-button:hover {
-  background-color: #2563eb;
-}
-
-.coin-select {
-  padding: 6px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
 .portfolio-overview {
     display: flex;
     align-items: stretch;
@@ -97,23 +53,219 @@
 /* Chart panel (right) */
 .overview-right {
     padding: 16px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     align-items: center;
 }
 
 .overview-right>* {
     flex: 1;
 }
+
 .portfolio-controls {
   margin-bottom: 8px;
 }
 
+.portfolio-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.portfolio-table th,
+.portfolio-table td {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 12px;
+  text-align: center;
+}
+
+.portfolio-table th {
+  background: rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.portfolio-table td {
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.portfolio-table td input {
+  width: calc(100% - 28px);
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.portfolio-table td input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.portfolio-table td input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.add-row-button {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
+  padding: 8px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.add-row-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.edit-toggle-button {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.edit-toggle-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.coin-select {
+  padding: 6px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.coin-select option {
+  background: rgba(100, 100, 100, 0.9);
+  color: #fff;
+}
+
 .red {
-  color: #e53935; /* 빨간색 (수익) */
+  color: #ff6b6b; /* 빨간색 (수익) */
+  font-weight: 600;
 }
 
 .blue {
-  color: #1e88e5; /* 파란색 (손실) */
+  color: #74b9ff; /* 파란색 (손실) */
+  font-weight: 600;
+}
+
+/* 태블릿 크기 (768px ~ 1024px) */
+@media (max-width: 1024px) {
+    .portfolio-page {
+        width: 85%;
+        padding: 16px;
+    }
+
+    .portfolio-overview {
+        gap: 16px;
+    }
+}
+
+/* 모바일 크기 (768px 이하) */
+@media (max-width: 768px) {
+    .portfolio-page {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .portfolio-page h2 {
+        font-size: 1.5rem;
+    }
+
+    .portfolio-overview {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .portfolio-table {
+        font-size: 14px;
+        overflow-x: auto;
+        display: block;
+    }
+
+    .portfolio-table th,
+    .portfolio-table td {
+        padding: 8px 6px;
+        font-size: 12px;
+    }
+
+    .portfolio-table td input {
+        width: calc(100% - 16px);
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+
+    .edit-toggle-button {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+}
+
+/* 작은 모바일 (480px 이하) */
+@media (max-width: 480px) {
+    .portfolio-page {
+        padding: 8px;
+    }
+
+    .portfolio-page h2 {
+        font-size: 1.25rem;
+    }
+
+    .portfolio-table th,
+    .portfolio-table td {
+        padding: 6px 4px;
+        font-size: 11px;
+    }
+
+    .portfolio-table td input {
+        padding: 4px 6px;
+        font-size: 11px;
+    }
 }
