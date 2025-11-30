@@ -95,6 +95,7 @@
 .panel > .news-slider {
   flex: 1 1 calc(50% - 10px); /* 데스크탑: 가로로 50%씩 차지 */
   min-width: 300px;
+  height: 100%; /* 데스크탑: panel의 align-items: stretch로 인해 같은 높이 유지 */
 }
 
 /* 태블릿 크기 (768px ~ 1024px) - 세로 배치 */
@@ -112,8 +113,8 @@
     flex-wrap: nowrap; /* 세로 배치 강제 */
     gap: 12px;
     padding: 0; /* padding 제거 */
-    margin-top: 30%;
-    margin-bottom: 20%; /* main-container의 margin-bottom 사용 */
+    margin-top: 0;
+    margin-bottom: 0; /* main-container의 margin-bottom 사용 */
   }
 
   .panel > .indicator-panel {
@@ -122,6 +123,7 @@
     min-width: 0 !important; /* min-width 강제 제거 */
     width: 100% !important; /* 전체 너비 강제 */
     max-width: 100% !important; /* 최대 너비 제한 */
+    height: auto !important; /* 태블릿: 높이 자동 조정 */
   }
 
   .panel > .news-slider {
@@ -130,6 +132,7 @@
     min-width: 0 !important; /* min-width 강제 제거 */
     width: 100% !important; /* 전체 너비 강제 */
     max-width: 100% !important; /* 최대 너비 제한 */
+    height: auto !important; /* 태블릿: 높이 자동 조정 */
     margin-bottom: 0; /* main-container의 margin-bottom 사용 */
   }
 }
@@ -153,7 +156,7 @@
     flex-wrap: nowrap; /* 세로 배치 강제 */
     gap: 12px;
     padding: 0; /* padding 제거 */
-    margin-bottom: 20%; /* main-container의 margin-bottom 사용 */
+    margin-bottom: 0%; /* main-container의 margin-bottom 사용 */
   }
 
   /* IndicatorPanel이 항상 위에 오도록 순서 보장 */
@@ -163,6 +166,7 @@
     min-width: 0 !important; /* min-width 강제 제거 */
     width: 100% !important; /* 전체 너비 강제 */
     max-width: 100% !important; /* 최대 너비 제한 */
+    height: auto !important; /* 모바일: 높이 자동 조정 */
     margin-top: 10%;
   }
 
@@ -172,6 +176,7 @@
     min-width: 0 !important; /* min-width 강제 제거 */
     width: 100% !important; /* 전체 너비 강제 */
     max-width: 100% !important; /* 최대 너비 제한 */
+    height: auto !important; /* 모바일: 높이 자동 조정 */
     margin-bottom: 0; /* panel의 gap으로 간격 조정 */
   }
 
