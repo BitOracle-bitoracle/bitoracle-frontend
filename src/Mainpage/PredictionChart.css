@@ -1,92 +1,127 @@
-/* src/Mainpage/PredictionChart.css */
-
 .prediction-chart-wrapper {
     position: relative;
     margin-top: 20px;
-    margin-bottom: 20px;
-
-    /* Coin List와 동일한 유리 효과 */
+    margin-bottom: 40px;
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-
     padding: 20px;
     box-sizing: border-box;
     overflow: hidden;
 }
 
-/* ─── Header & Signal Badge ─── */
+/* ─── Header Layout ─── */
 .prediction-header {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    width: 100%;
 }
 
 .header-top {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* 액션 행 (배지 + 버튼) */
+.header-actions-row {
+    display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    justify-content: space-between; /* 양쪽 끝 정렬 */
     gap: 12px;
+    width: 100%;
+}
+
+.header-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.title-row img {
+    display: block;
+    width: 28px;
+    /* 아이콘 크기를 조금 더 키움 (텍스트와 밸런스 맞춤) */
+    height: 28px;
+    object-fit: contain;
+    /* 비율 유지 */
 }
 
 .prediction-header h2 {
     font-size: 1.25rem;
     font-weight: bold;
     margin: 0;
-
-    /* Coin List와 동일한 텍스트 스타일 */
     color: #fff;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-
-    display: flex;
-    align-items: center;
+    white-space: nowrap;
+    transform: translateY(6px);
+    line-height: 1;
 }
 
-/* 시그널 배지 (유리 위에 뜬 버튼 느낌) */
+.model-version {
+    font-size: 0.8em;
+    opacity: 0.8;
+    font-weight: normal;
+}
+
+/* ─── Signal Badge ─── */
 .signal-badge {
-    padding: 6px 14px;
+    padding: 6px 16px;
     border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 600;
-
-    /* 배경을 조금 더 투명하게 */
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #fff;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff; /* 글씨 흰색 고정 */
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
     backdrop-filter: blur(5px);
     display: inline-flex;
     align-items: center;
-    transition: all 0.3s ease;
+    justify-content: center; /* 텍스트 중앙 정렬 */
+    width: fit-content;
     white-space: nowrap;
+    transition: all 0.3s ease;
 }
 
-/* ─── Controls (Buttons) ─── */
+/* 배지 슬롯 (위치 잡기용) */
+.signal-slot {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+}
+
+.badge-prob {
+    font-size: 0.9em;
+    margin-left: 6px;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+/* 배지 색상 */
+.badge-strong-buy { background-color: #00b894; }
+.badge-weak-buy   { background-color: #55efc4; }
+.badge-weak-sell  { background-color: #fab1a0; }
+.badge-strong-sell{ background-color: #ff7675; }
+
+/* ─── Controls ─── */
 .prediction-controls {
     display: flex;
-    gap: 8px;
-    z-index: 10;
-    justify-content: flex-end; /* 데스크톱에서 우측 정렬 */
-}
-
-@media (min-width: 769px) {
-    .prediction-controls {
-        position: static;
-        margin-left: auto;
-    }
+    gap: 6px;
 }
 
 .prediction-controls button {
-    /* Coin List 스타일과 어울리는 반투명 버튼 */
     background: rgba(255, 255, 255, 0.1);
     color: rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.3);
-
     padding: 6px 12px;
-    font-size: 14px;
+    font-size: 13px;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 500;
@@ -96,7 +131,6 @@
 .prediction-controls button:hover {
     background: rgba(255, 255, 255, 0.25);
     color: #fff;
-    transform: translateY(-1px);
 }
 
 .prediction-controls button.active {
@@ -105,84 +139,34 @@
     color: #fff;
     font-weight: 700;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* ─── Loading & Error States ─── */
-.loading-state,
-.error-state {
+/* ─── Chart States ─── */
+.loading-state, .error-state {
     height: 350px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 1.1rem;
-    font-weight: 500;
     color: rgba(255, 255, 255, 0.7);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
+.error-state { color: #ff6b6b; }
 
-.error-state {
-    color: #ff6b6b;
-}
-
-/* ─── Chart Customization (Recharts overrides) ─── */
 .prediction-chart-container {
-    height: auto;
-    min-height: 350px;
-    padding-top: 20px;
+    width: 100%;
+    height: 480px;
+    padding-top: 10px;
+    padding-bottom: 0px;
 }
 
-.prediction-chart-wrapper .recharts-wrapper {
-    background: transparent !important;
-}
+/* Recharts Customization */
+.recharts-wrapper { background: transparent !important; }
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line { stroke: rgba(255, 255, 255, 0.1) !important; }
+.recharts-cartesian-axis-tick-value { fill: rgba(255, 255, 255, 0.8) !important; font-size: 12px; }
+.recharts-legend-item-text { color: rgba(255, 255, 255, 0.9) !important; }
 
-/* 그리드 라인: 은은한 흰색 */
-.prediction-chart-wrapper .recharts-cartesian-grid-horizontal line,
-.prediction-chart-wrapper .recharts-cartesian-grid-vertical line {
-    stroke: rgba(255, 255, 255, 0.15) !important;
-}
-
-/* 축 텍스트: 흰색 */
-.prediction-chart-wrapper .recharts-cartesian-axis-tick-value {
-    fill: rgba(255, 255, 255, 0.8) !important;
-    font-size: 12px;
-    font-weight: 500;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-/* 축 레이블 */
-.prediction-chart-wrapper .recharts-label {
-    fill: rgba(255, 255, 255, 0.8) !important;
-}
-
-/* 범례 텍스트 */
-.prediction-chart-wrapper .recharts-legend-item-text {
-    color: rgba(255, 255, 255, 0.9) !important;
-}
-
-/* 툴팁 스타일: Coin List Row Hover와 유사한 느낌 */
-.prediction-chart-wrapper .recharts-tooltip-wrapper .recharts-default-tooltip {
-    background-color: rgba(30, 30, 40, 0.9) !important;
-    /* 가독성을 위해 어둡게 */
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 8px !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
-    color: #fff !important;
-}
-
-/* ─── Responsive Design (Coin List 미디어 쿼리와 통일) ─── */
-
-/* 태블릿 (1024px 이하) */
-@media (max-width: 1024px) {
-    .prediction-controls button {
-        padding: 5px 10px;
-        font-size: 13px;
-    }
-}
-
-/* src/Mainpage/PredictionChart.css - 모바일 부분 수정 */
-
-/* 모바일 (768px 이하) */
+/* ─── Mobile Styles (768px 이하) ─── */
 @media (max-width: 768px) {
     .prediction-chart-wrapper {
         margin-top: 12px;
@@ -190,62 +174,46 @@
         padding: 15px;
     }
 
-    /* 헤더를 세로 정렬로 변경하여 겹침 방지 */
     .header-top {
+        gap: 15px;
+    }
+
+    /* 모바일에서는 액션 행을 세로로 */
+    .header-actions-row {
         flex-direction: column;
         align-items: flex-start;
-        gap: 15px;
+        gap: 10px;
     }
 
     .prediction-header h2 {
         font-size: 1.1rem;
-        margin-bottom: 5px;
     }
 
-    /* [수정] 배지가 가로로 꽉 차지 않도록 width 제한 해제 */
+    /* 배지 꽉 차게 */
+    .signal-slot {
+        width: 100%;
+    }
+    
     .signal-badge {
-        width: auto !important;
-        /* fit-content 강제 */
-        margin-top: 0;
-        font-size: 0.8rem;
-        align-self: flex-start;
-        /* 왼쪽 정렬 */
+        width: 100%; /* 가로 100% */
+        box-sizing: border-box;
+        font-size: 0.85rem;
     }
 
-    /* 버튼 그룹 */
+    /* 버튼 그룹 꽉 차게 */
     .prediction-controls {
-        position: relative;
-        /* absolute 해제 */
-        right: auto;
-        top: auto;
         width: 100%;
         overflow-x: auto;
-        /* 버튼 많으면 스크롤 */
-        justify-content: flex-start;
-        margin-left: 0;
+        justify-content: space-between;
     }
 
     .prediction-controls button {
         flex: 1;
-        padding: 8px 12px;
         white-space: nowrap;
         min-width: 60px;
     }
 
-    /* 차트 높이 보정 */
     .prediction-chart-container {
-        height: 400px;
-    }
-}
-
-/* 작은 모바일 (480px 이하) */
-@media (max-width: 480px) {
-    .prediction-header h2 {
-        font-size: 1rem;
-    }
-
-    .prediction-controls button {
-        font-size: 12px;
-        padding: 6px 8px;
+        height: 380px;
     }
 }

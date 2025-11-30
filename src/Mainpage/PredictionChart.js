@@ -15,82 +15,104 @@ import {
   ReferenceLine
 } from 'recharts';
 
+const TOOLTIP_STYLE = {
+  backgroundColor: 'rgba(20, 20, 30, 0.95)',
+  border: '1px solid rgba(255,255,255,0.2)',
+  borderRadius: '12px',
+  boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+  fontSize: '13px'
+};
+
+const CustomActiveDot = (props) => {
+  const { cx, cy, payload } = props;
+  if (!payload) return null;
+
+  // 50% 이상이면 초록(#00b894), 미만이면 빨강(#ff7675) -> 그라디언트/배지 색상과 통일
+  const color = payload.probability >= 50 ? '#00b894' : '#ff7675';
+
+  return (
+    <svg>
+      {/* 바깥쪽 은은한 광채 (Glow) */}
+      <circle cx={cx} cy={cy} r={8} fill={color} fillOpacity={0.4} />
+      {/* 안쪽 메인 점 (흰색 테두리로 가독성 확보) */}
+      <circle cx={cx} cy={cy} r={5} fill={color} stroke="#fff" strokeWidth={2} />
+    </svg>
+  );
+};
+
 const PredictionChart = () => {
   const containerRef = useRef(null);
-
-  // 기간 선택 상태
   const [range, setRange] = useState('1M');
   const [chartData, setChartData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [latestPrediction, setLatestPrediction] = useState(null); // 최신 예측 값 저장
+  const [latestPrediction, setLatestPrediction] = useState(null);
+  const [chartHeight, setChartHeight] = useState(500);
+
+  // SMA(이동평균) 계산
+  const calculateSMA = (data, windowSize) => {
+    return data.map((item, index, arr) => {
+      const start = Math.max(0, index - windowSize + 1);
+      const subset = arr.slice(start, index + 1);
+      const sum = subset.reduce((acc, curr) => acc + curr.probability, 0);
+      return { ...item, probability: sum / subset.length };
+    });
+  };
+
+  useEffect(() => {
+    const handleResize = () => setChartHeight(window.innerWidth <= 768 ? 380 : 480);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
 
-      // 날짜 계산 로직 (기존 유지)
       let start_date;
-      if (range === '2W') start_date = moment().subtract(14, 'days').format('YYYY-MM-DD');
-      else if (range === '1M') start_date = moment().subtract(1, 'month').format('YYYY-MM-DD');
-      else start_date = moment().subtract(6, 'months').format('YYYY-MM-DD');
+      if (range === '1D') start_date = moment().subtract(1, 'day');
+      else if (range === '2W') start_date = moment().subtract(14, 'days');
+      else if (range === '1M') start_date = moment().subtract(1, 'month');
+      else start_date = moment().subtract(6, 'months');
+      
+      const startTs = start_date.valueOf();
 
       try {
-        // 1. 실제 가격 데이터 가져오기
-        let actualRaw = [];
-        try {
-          const realRes = await axiosInstance.get('/api/price/chart');
-          actualRaw = Array.isArray(realRes.data) ? realRes.data : realRes.data.data || [];
-        } catch (e) {
-          console.error(e);
-        }
+        const [realRes, predictRes] = await Promise.allSettled([
+            axiosInstance.get('/api/price/chart'),
+            axiosInstance.get('/api/predict/chart')
+        ]);
 
-        // 2. 예측 데이터 (0~1 사이 확률값 가정)
-        let predictRaw = [];
-        try {
-          const predictRes = await axiosInstance.get('/api/predict/chart');
-          predictRaw = Array.isArray(predictRes.data) ? predictRes.data : predictRes.data.data || [];
-        } catch (e) {
-          console.error(e);
-        }
+        const actualRaw = realRes.status === 'fulfilled' 
+            ? (Array.isArray(realRes.value.data) ? realRes.value.data : realRes.value.data.data || []) : [];
+        const predictRaw = predictRes.status === 'fulfilled'
+            ? (Array.isArray(predictRes.value.data) ? predictRes.value.data : predictRes.value.data.data || []) : [];
 
-        // 데이터 병합
         const actualMap = {};
-        actualRaw.forEach((row) => {
-          actualMap[row.date] = row.actual;
-        });
+        actualRaw.forEach((row) => { actualMap[row.date] = row.actual; });
 
-        const merged = predictRaw.map((row) => {
-          const dateStr = row.date;
-          const ts = new Date(dateStr).getTime();
-
-          const prob = row.predicted; // 0~1 확률값
-
+        let merged = predictRaw.map((row) => {
           return {
-            date: dateStr,
-            timestamp: ts,
-            price: actualMap[dateStr], // 실제 가격 (참고용)
-            probability: prob * 100, // 0~1 -> 0~100%
+            date: row.date,
+            timestamp: new Date(row.date).getTime(),
+            price: actualMap[row.date] || null,
+            probability: row.predicted * 100, 
           };
         });
 
-        // 필터링
-        const startTs = new Date(start_date).getTime();
-        const filtered = merged.filter((row) => row.timestamp >= startTs);
+        merged = merged.filter((row) => row.timestamp >= startTs)
+                       .sort((a, b) => a.timestamp - b.timestamp);
 
-        // 날짜 오름차순 정렬
-        filtered.sort((a, b) => a.timestamp - b.timestamp);
+        const smoothWindow = range === '1D' ? 3 : range === '2W' ? 5 : range === '1M' ? 7 : 9;
+        const smoothedData = calculateSMA(merged, smoothWindow);
 
-        setChartData(filtered);
+        setChartData(smoothedData);
+        setLatestPrediction(smoothedData.length > 0 ? smoothedData[smoothedData.length - 1] : null);
 
-        // 최신 예측 정보 세팅 (가장 마지막 데이터)
-        if (filtered.length > 0) {
-          setLatestPrediction(filtered[filtered.length - 1]);
-        } else {
-          setLatestPrediction(null);
-        }
       } catch (err) {
+        console.error(err);
         setError(err);
       } finally {
         setLoading(false);
@@ -100,182 +122,171 @@ const PredictionChart = () => {
     fetchData();
   }, [range]);
 
-  // 차트 그라디언트(초록/빨강)를 위한 오프셋 계산 (항상 50% 기준)
   const gradientOffset = () => {
-    // 0~100 범위에서 50이 기준이므로 항상 0.5 (50%)
-    return 0.5;
+    if (chartData.length === 0) return 0.5;
+    const dataMax = Math.max(...chartData.map((i) => i.probability));
+    const dataMin = Math.min(...chartData.map((i) => i.probability));
+    if (dataMin >= 50) return 1; 
+    if (dataMax <= 50) return 0; 
+    return (dataMax - 50) / (dataMax - dataMin);
   };
 
   const off = gradientOffset();
 
-  // 반응형 높이
-  const [chartHeight, setChartHeight] = useState(window.innerWidth <= 768 ? 350 : 500);
-  useEffect(() => {
-    const handleResize = () => setChartHeight(window.innerWidth <= 768 ? 350 : 500);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // 현재 포지션 텍스트 생성기
-  const getSignalText = (prob) => {
-    if (prob >= 60) return { text: '강력 매수 (Strong Buy)', color: '#00ff88' };
-    if (prob >= 50) return { text: '매수 우위 (Weak Buy)', color: '#82ca9d' };
-    if (prob >= 40) return { text: '매도 우위 (Weak Sell)', color: '#ff8080' };
-    return { text: '강력 매도 (Strong Sell)', color: '#ff4d4d' };
+  const getSignalInfo = (prob) => {
+    if (prob >= 60) return { text: '강력 매수 (Strong Buy)', className: 'badge-strong-buy' };
+    if (prob >= 50) return { text: '매수 우위 (Weak Buy)', className: 'badge-weak-buy' };
+    if (prob >= 40) return { text: '매도 우위 (Weak Sell)', className: 'badge-weak-sell' };
+    return { text: '강력 매도 (Strong Sell)', className: 'badge-strong-sell' };
   };
 
   return (
     <div className="prediction-chart-wrapper">
-      {/* ─── 1. 헤더: 비트코인 아이콘 + 현재 시그널 상태 ─── */}
       <div className="prediction-header">
+        
+        {/* CSS 구조에 맞춰 계층 변경 */}
         <div className="header-top">
-          <h2 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <img src="/icons/Bitcoin.png" alt="Bitcoin" style={{ width: '24px', height: '24px' }} />
-            AI 예측 트렌드 (GRU v14)
-          </h2>
-          {latestPrediction && (
-            <div
-              className="signal-badge"
-              style={{
-                border: `1px solid ${getSignalText(latestPrediction.probability).color}`,
-                color: getSignalText(latestPrediction.probability).color,
-                boxShadow: `0 0 10px ${getSignalText(latestPrediction.probability).color}40`,
-              }}
-            >
-              {getSignalText(latestPrediction.probability).text}
-              <span style={{ fontSize: '0.8em', marginLeft: '5px' }}>
-                ({latestPrediction.probability.toFixed(1)}%)
-              </span>
+            
+            {/* 1. 제목 그룹 */}
+            <div className="header-title-group">
+                <div className="title-row">
+                    <img src="/icons/Bitcoin.png" alt="Bitcoin" style={{ width: '24px', height: '24px' }} />
+                    <h2>AI 예측 트렌드 <span className="model-version">(GRU v14)</span></h2>
+                </div>
             </div>
-          )}
+
+            {/* 2. 액션 그룹 (배지 + 버튼) */}
+            <div className="header-actions-row">
+                {/* 왼쪽: 배지 */}
+                <div className="signal-slot">
+                    {latestPrediction && (() => {
+                        const info = getSignalInfo(latestPrediction.probability);
+                        return (
+                            <div className={`signal-badge ${info.className}`}>
+                                {info.text} 
+                                <span className="badge-prob">
+                                    ({latestPrediction.probability.toFixed(1)}%)
+                                </span>
+                            </div>
+                        );
+                    })()}
+                </div>
+
+                {/* 오른쪽: 버튼 */}
+                <div className="prediction-controls">
+                    {['1D', '2W', '1M', '6M'].map((r) => (
+                    <button key={r} className={r === range ? 'active' : ''} onClick={() => setRange(r)}>
+                        {r === '1D' ? '1일' : r === '2W' ? '2주' : r === '1M' ? '1개월' : '6개월'}
+                    </button>
+                    ))}
+                </div>
+            </div>
         </div>
       </div>
 
-      {/* ─── 2. 로딩/에러 처리 ─── */}
       {loading ? (
         <div className="loading-state">Loading AI Model Data...</div>
       ) : error ? (
         <div className="error-state">데이터 로딩 실패</div>
       ) : (
-        <>
-          {/* ─── 3. 기간 선택 버튼 ─── */}
-          <div className="prediction-controls">
-            {['2W', '1M', '6M'].map((r) => (
-              <button key={r} className={r === range ? 'active' : ''} onClick={() => setRange(r)}>
-                {r === '2W' ? '2주' : r === '1M' ? '1개월' : '6개월'}
-              </button>
-            ))}
-          </div>
+        <div className="prediction-chart-container" style={{ height: chartHeight }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart data={chartData} margin={{ top: 20, right: 20, bottom: 0, left: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
 
-          {/* ─── 4. 차트 영역 ─── */}
-          <div ref={containerRef} style={{ width: '100%', height: chartHeight }}>
-            <ResponsiveContainer>
-              <ComposedChart data={chartData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                {/* 배경 그리드 */}
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.15)" vertical={false} />
+              <defs>
+                <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
+                  {/* 🟢 위쪽 (상승): 형광 초록 */}
+                  <stop offset={0} stopColor="#00ff9d" stopOpacity={0.9} /> {/* 꼭대기는 아주 진하게 */}
+                  <stop offset={off} stopColor="#00ff9d" stopOpacity={0.25} /> {/* 바닥도 0이 아니라 은은하게 보이게 */}
+                  
+                  {/* 🔴 아래쪽 (하락): 형광 빨강/핑크 */}
+                  <stop offset={off} stopColor="#ff4757" stopOpacity={0.25} /> {/* 천장도 은은하게 보이게 */}
+                  <stop offset={1} stopColor="#ff4757" stopOpacity={0.9} />   {/* 바닥은 아주 진하게 */}
+                </linearGradient>
+              </defs>
 
-                {/* 그라디언트 정의 (50% 기준 위는 초록, 아래는 빨강) */}
-                <defs>
-                  <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset={0} stopColor="#00ff88" stopOpacity={0.4} />
-                    <stop offset={off} stopColor="#00ff88" stopOpacity={0} />
-                    <stop offset={off} stopColor="#ff4d4d" stopOpacity={0} />
-                    <stop offset={1} stopColor="#ff4d4d" stopOpacity={0.4} />
-                  </linearGradient>
-                </defs>
+              <XAxis
+                dataKey="timestamp"
+                type="number"
+                domain={['dataMin', 'dataMax']}
+                tickFormatter={(ts) => (range === '1D' ? moment(ts).format('HH:mm') : moment(ts).format('MM/DD'))}
+                tick={{ fill: 'rgba(255, 255, 255, 0.6)', fontSize: 11 }}
+                dy={10}
+                tickCount={6}
+                stroke="rgba(255,255,255,0.1)"
+              />
+              
+              <YAxis
+                yAxisId="left" 
+                domain={['auto', 'auto']} 
+                unit="%" 
+                tick={{ fill: 'rgba(255, 255, 255, 0.6)', fontSize: 11 }}
+                label={{ value: '상승 확률', angle: -90, position: 'insideLeft', fill: 'rgba(255, 255, 255, 0.4)', style: {textAnchor: 'middle'} }}
+                stroke="rgba(255,255,255,0.1)"
+              />
+              
+              <YAxis
+                yAxisId="right" orientation="right" domain={['auto', 'auto']}
+                tickFormatter={(val) => `$${val.toLocaleString()}`} 
+                tick={{ fill: 'rgba(255, 255, 255, 0.6)', fontSize: 11 }}
+                hide={window.innerWidth <= 768}
+                stroke="rgba(255,255,255,0.1)"
+              />
 
-                {/* X축 */}
-                <XAxis
-                  dataKey="timestamp"
-                  type="number"
-                  domain={['dataMin', 'dataMax']}
-                  tickFormatter={(ts) => moment(ts).format('MM/DD')}
-                  stroke="rgba(255, 255, 255, 0.5)"
-                  tick={{ fill: 'rgba(255, 255, 255, 0.8)' }}
-                  dy={10}
-                />
+              <Tooltip
+                contentStyle={TOOLTIP_STYLE}
+                labelStyle={{ color: '#fff', fontWeight: 'bold', marginBottom: '5px' }} 
+                itemStyle={{ color: '#fff' }}
+                labelFormatter={(label) => moment(label).format('YYYY-MM-DD HH:mm')}
+                formatter={(value, name, props) => {
+                  const key = props?.dataKey || name;
+                  if (key === 'price' || name === '실제 가격') {
+                    const n = Number(value);
+                    if (!Number.isFinite(n)) return ['-', '실제 가격'];
+                    return [`$${Math.floor(n).toLocaleString()}`, '실제 가격'];
+                  }
+                  if (key === 'probability' || name === '상승 확률') {
+                    const n = Number(value);
+                    if (!Number.isFinite(n)) return ['-', '상승 확률'];
+                    return [`${n.toFixed(1)}%`, '상승 확률'];
+                  }
+                  return [value, name];
+                }}
+              />
+              
+              <Legend verticalAlign="top" height={36} wrapperStyle={{ top: -10, right: 0, textAlign: 'right' }} iconSize={10} />
 
-                {/* Y축 (좌측): 확률 (%) */}
-                <YAxis
-                  yAxisId="left"
-                  domain={[0, 100]}
-                  unit="%"
-                  stroke="rgba(255, 255, 255, 0.5)"
-                  tick={{ fill: 'rgba(255, 255, 255, 0.8)' }}
-                  label={{
-                    value: '상승 확률',
-                    angle: -90,
-                    position: 'insideLeft',
-                    fill: 'rgba(255, 255, 255, 0.6)',
-                  }}
-                />
+              <ReferenceLine yAxisId="left" y={50} stroke="rgba(255, 255, 255, 0.3)" strokeDasharray="3 3" />
+              
+              <Area
+                yAxisId="left"
+                type="basis"
+                dataKey="probability"
+                name="상승 확률"
+                stroke="none"
+                strokeWidth={0}
+                fill="url(#splitColor)"
+                fillOpacity={1}
+                baseValue={50}
+                activeDot={<CustomActiveDot />}
+                isAnimationActive={false}
+              />
 
-                {/* Y축 (우측): 실제 가격 (참고용) */}
-                <YAxis
-                  yAxisId="right"
-                  orientation="right"
-                  domain={['auto', 'auto']}
-                  tickFormatter={(val) => `₩${(val / 10000).toFixed(0)}만`}
-                  stroke="rgba(255, 255, 255, 0.5)"
-                  tick={{ fill: 'rgba(255, 255, 255, 0.8)' }}
-                  hide={window.innerWidth <= 768}
-                />
-
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'rgba(0,0,0,0.8)',
-                    border: '1px solid #555',
-                    borderRadius: '8px',
-                  }}
-                  labelFormatter={(label) => moment(label).format('YYYY-MM-DD HH:mm')}
-                  formatter={(value, name) => {
-                    if (name === 'price') return [`₩${value.toLocaleString()}`, '실제 가격'];
-                    if (name === 'probability') return [`${value.toFixed(2)}%`, '상승 확률'];
-                    return [value, name];
-                  }}
-                />
-
-                <Legend verticalAlign="bottom" height={36} wrapperStyle={{ bottom: 0, left: 0, right: 0, textAlign: 'center' }} />
-
-                {/* 50% 기준선 (중립 라인) */}
-                <ReferenceLine
-                  yAxisId="left"
-                  y={50}
-                  stroke="rgba(255, 255, 255, 0.8)"
-                  strokeDasharray="3 3"
-                  label={{
-                    value: 'Neutral',
-                    fill: 'rgba(255, 255, 255, 0.8)',
-                    position: 'insideRight',
-                  }}
-                />
-
-                {/* 메인 데이터 1: 상승 확률 (Area Chart with Gradient) */}
-                <Area
-                  yAxisId="left"
-                  type="monotone"
-                  dataKey="probability"
-                  name="상승 확률"
-                  stroke="#fff"
-                  strokeWidth={1}
-                  fill="url(#splitColor)"
-                />
-
-                {/* 보조 데이터 2: 실제 가격 흐름 (Line Chart) */}
-                <Line
-                  yAxisId="right"
-                  type="monotone"
-                  dataKey="price"
-                  name="실제 가격"
-                  stroke="#8884d8"
-                  dot={false}
-                  strokeWidth={2}
-                  opacity={0.6}
-                />
-              </ComposedChart>
-            </ResponsiveContainer>
-          </div>
-        </>
+              <Line
+                yAxisId="right"
+                type="monotone"
+                dataKey="price"
+                name="실제 가격"
+                stroke="#ffffff"
+                dot={false}
+                strokeWidth={2}
+                opacity={1}
+                style={{ filter: 'drop-shadow(0px 0px 4px rgba(255,255,255,0.5))' }}
+              />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
       )}
     </div>
   );
