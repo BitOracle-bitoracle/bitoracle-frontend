@@ -1,9 +1,8 @@
 /* 전체 페이지 스타일 */
 .community-container {
-  width: 67%;
-  margin: 0 auto;
-  padding: 20px;
-  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   min-height: 100vh;
   background: linear-gradient(
     135deg,
@@ -15,6 +14,19 @@
   );
   background-size: 400% 400%;
   animation: gradientShift 15s ease infinite;
+
+  /* 내용물 정렬을 위해 flex 사용 권장 (선택사항) */
+    display: flex;
+    justify-content: center;
+}
+
+/* 2. 내용물 래퍼: 기존 레이아웃(67%) 유지 */
+.community-content {
+  width: 67%;
+  margin: 0 auto;
+  padding: 20px;
+  /* 컨테이너에 있던 패딩을 이리로 이동 */
+  box-sizing: border-box;
 }
 
 @keyframes gradientShift {
@@ -345,7 +357,7 @@
 
 /* 태블릿 크기 (768px ~ 1024px) */
 @media (max-width: 1024px) {
-  .community-container {
+  .community-content {
     width: 85%;
     padding: 16px;
   }
@@ -357,7 +369,7 @@
 
 /* 모바일 크기 (768px 이하) */
 @media (max-width: 768px) {
-  .community-container {
+  .community-content {
     width: 100%;
     padding: 12px;
   }
@@ -440,7 +452,7 @@
 
 /* 작은 모바일 (480px 이하) */
 @media (max-width: 480px) {
-  .community-container {
+  .community-content {
     padding: 8px;
   }
 

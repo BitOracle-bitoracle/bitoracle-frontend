@@ -1,12 +1,25 @@
+/* 1. 컨테이너: 배경 꽉 채우기 */
 .post-container {
-    width: 67%;
-    margin: 0 auto;
-    padding: 20px;
-    box-sizing: border-box;
+    width: 100%;
+    /* 67% -> 100% */
+    margin: 0;
+    padding: 0;
     min-height: 100vh;
+
+    /* 배경 유지 */
     background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
     background-size: 400% 400%;
     animation: gradientShift 15s ease infinite;
+
+    display: flex;
+    justify-content: center;
+}
+
+/* 2. 내용물 래퍼: 너비 및 패딩 설정 */
+.post-content-wrapper {
+    width: 67%;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 @keyframes gradientShift {
@@ -206,7 +219,7 @@
 
 /* 태블릿 크기 (768px ~ 1024px) */
 @media (max-width: 1024px) {
-    .post-container {
+    .post-content-wrapper {
         width: 85%;
         padding: 16px;
     }
@@ -214,7 +227,7 @@
 
 /* 모바일 크기 (768px 이하) */
 @media (max-width: 768px) {
-    .post-container {
+    .post-content-wrapper {
         width: 100%;
         padding: 12px;
     }
@@ -254,7 +267,7 @@
 
 /* 작은 모바일 (480px 이하) */
 @media (max-width: 480px) {
-    .post-container {
+    .post-content-wrapper {
         padding: 8px;
     }
 

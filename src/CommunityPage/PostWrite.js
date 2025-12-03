@@ -21,6 +21,7 @@ const PostWrite = () => {
 
     return (
         <div className="write-container">
+            <div className="write-content">
             <input
                 type="text"
                 value={title}
@@ -48,6 +49,7 @@ const PostWrite = () => {
             >
                 작성 완료
             </button>
+            </div>
         </div>
     );
 };

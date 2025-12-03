@@ -57,6 +57,7 @@ const Proto = () => {
 
     return (
         <div className="proto-container">
+            <div className="proto-content">
             <div className="proto-left">
                 <CoinIndex />
                 <div className="middle-placeholder" />
@@ -92,6 +93,7 @@ const Proto = () => {
                     <StatText />
                 </div>
             </div>
+        </div>
         </div>
     );
 };

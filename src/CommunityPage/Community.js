@@ -66,6 +66,7 @@ const CommunityPage = () => {
 
     return (
         <div className="community-container">
+            <div className="community-content">
             <div>
                 <h1>커뮤니티 페이지</h1>
                 <h4>당신의 생각을 공유해보세요.</h4>
@@ -175,7 +176,8 @@ const CommunityPage = () => {
                         `/community?category=${category}&page=${page + 1}`
                     );
                 }}
-            />
+                />
+                </div>
         </div>
     );
 };

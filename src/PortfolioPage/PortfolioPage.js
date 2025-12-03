@@ -153,6 +153,7 @@ const PortfolioPage = () => {
 
   return (
     <div className="portfolio-page">
+      <div className="portfolio-content">
       <h2>나의 포트폴리오</h2>
        <div className="portfolio-overview">
          <PortfolioSummary summary={summary} />
@@ -329,6 +330,7 @@ const PortfolioPage = () => {
           )}
         </tbody>
       </table>
+      </div>
     </div>
   );
 };

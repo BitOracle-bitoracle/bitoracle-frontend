@@ -42,6 +42,7 @@ const News = () => {
 
     return (
         <div className="news-container">
+            <div className="news-content">
             <div className="news-header">
                 <h1>뉴스</h1>
                 <h4>AI가 뽑은 호재/악재 뉴스로 핵심만 빠르게 파악하세요.</h4>
@@ -115,6 +116,7 @@ const News = () => {
                         totalPages={badTotalPages}
                         onPageChange={setBadCurPage}
                     />
+                </div>
                 </div>
             </div>
         </div>

@@ -1,20 +1,32 @@
-/* 전체 페이지 스타일 */
+/* 1. 컨테이너: 배경 꽉 채우기 */
 .proto-container {
-    display: flex;
-    width: 67%;
+    width: 100%; /* 67% -> 100% */
     min-height: 90vh;
-    margin: 0 auto;
-    padding: 20px;
-    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    
+    /* 배경 유지 */
     background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
     background-size: 400% 400%;
     animation: gradientShift 15s ease infinite;
+    
+    /* 내부 내용 중앙 정렬 */
+    display: flex;
+    justify-content: center;
 }
 
 @keyframes gradientShift {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
+}
+
+/* 2. 내용물 래퍼: 기존 레이아웃 속성 이동 */
+.proto-content {
+    display: flex; /* 좌우 패널 배치 */
+    width: 67%;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .proto-left {

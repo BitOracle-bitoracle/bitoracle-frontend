@@ -29,6 +29,7 @@ const Post = () => {
 
     return (
         <div className="post-container">
+            <div className="post-content-wrapper">
             <div className="top-main">
                 <h2 className="title">{post.title}</h2>
                 <div className="info-box">
@@ -54,6 +55,7 @@ const Post = () => {
             </ReactMarkdown>
 
             {/* <Comments comments={post.replyList} /> */}
+            </div>
         </div>
     );
 };
