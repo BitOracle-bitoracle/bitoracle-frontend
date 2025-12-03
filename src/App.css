@@ -1,8 +1,31 @@
+/* 1. App 전체 컨테이너 설정 */
 .App {
-  text-align: center;
-  padding-top: 70px; /* Add space for fixed header */
+  /* [핵심 1] 고정된 헤더 높이(약 80px)만큼 전체 페이지를 아래로 밀어줍니다. */
+  padding-top: 80px;
+
+  /* [핵심 2] 화면 전체 최소 높이 설정 */
+  min-height: 100vh;
+
+  /* [핵심 3] 흰 여백이 생겨도 티가 안 나게 기본 배경색을 어두운 색(또는 보라색)으로 깝니다 */
+  background-color: #1a1a1a;
+  /* 푸터 색상과 맞춤 */
+
+  /* 기본 정렬 설정 (기존 center는 레이아웃을 망가뜨릴 수 있어 제거하거나 left로 변경) */
+  text-align: left;
 }
 
+/* 2. 전역 스타일 리셋 (선택사항) */
+/* 모든 페이지의 맨 위 제목(h1, h2 등)이 가진 마진이 흰 줄을 만드는 것을 방지 */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+}
+
+/* 아래는 기존 코드 유지 (로딩 스피너 등을 위해 필요하다면 두세요) */
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -14,25 +37,11 @@
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: calc(100vh - 70px); /* Adjusted for top padding */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

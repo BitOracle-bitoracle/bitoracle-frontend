@@ -13,8 +13,7 @@
   gap: 20px; /* 자식 요소 사이 간격 */
   padding: 0; /* prediction-section과 동일하게 padding 제거 */
   width: 100%; /* prediction-section과 동일한 너비 */
-  box-sizing: border-box;
-  /* height는 auto에 맡깁니다 */
+  box-sizing: border-box; /* height는 auto에 맡깁니다 */
   flex-wrap: nowrap; /* 기본값: 줄바꿈 없음 */
   flex-direction: row; /* 데스크탑: 가로 배치 */
 }
@@ -39,7 +38,7 @@
 /* 태블릿/모바일에서 panel 하단 간격 추가 */
 @media (max-width: 1024px) {
   .main-container {
-    margin-bottom: 24px; /* PredictionChart와의 간격 확보 (더 넓게) */
+    padding-bottom: 24px; /* PredictionChart와의 간격 확보 (더 넓게) */
   }
 }
 
@@ -50,9 +49,15 @@
   box-sizing: border-box;
 }
 
-.prediction-section h2,
-.coin-list-section {
+.prediction-section h2 {
   margin-bottom: 12px;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.coin-list-section {
+  margin-bottom: 0 !important;
+  /* 여백을 0으로 강제 설정 */
   font-size: 1.25rem;
   font-weight: bold;
 }
@@ -196,7 +201,7 @@
     padding: 8px; /* prediction-section과 동일한 padding (8px) */
     padding-top: 0; /* Layout에서 이미 paddingTop 설정했으므로 제거 */
     margin-top: 0; /* Layout의 paddingTop 사용 */
-    margin-bottom: 28px; /* PredictionChart와의 간격 확보 */
+    padding-bottom: 28px; /* PredictionChart와의 간격 확보 */
   }
 
   .prediction-section,
