@@ -48,37 +48,29 @@
 
 .portfolio-overview {
     display: flex;
-    align-items: stretch;
-    gap: 20px;
+    align-items: flex-start;
+    gap: 32px;
     margin-bottom: 32px;
-}
-
-.overview-left,
-.overview-right {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.overview-left {
-    display: flex;
-    flex-direction: column;
-}
-
-/* Chart panel (right) */
-.overview-right {
-    padding: 16px;
+    padding: 24px;
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    align-items: center;
+    overflow: visible;
 }
 
-.overview-right>* {
+.overview-left {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.overview-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .portfolio-controls {
@@ -211,6 +203,231 @@
   font-weight: 600;
 }
 
+/* 코인 카드 (PC & 모바일 공통) */
+.mobile-coin-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 데스크톱 테이블 숨김 */
+.desktop-table-wrapper {
+  display: none;
+}
+
+/* 글래스모피즘 코인 카드 */
+.coin-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.coin-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 16px 48px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.coin-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  position: relative;
+}
+
+.coin-name {
+  flex: 1;
+}
+
+.coin-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.coin-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.coin-symbol {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.coin-profit-info {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+
+.profit-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profit-row .label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.profit-row .value {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.profit-row .value.red {
+  color: #f75467;
+}
+
+.profit-row .value.blue {
+  color: #4a90d9;
+}
+
+.delete-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(255, 80, 80, 0.2) 0%, rgba(255, 100, 100, 0.15) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 100, 100, 0.4);
+  border-top: none;
+  border-radius: 0 0 20px 20px;
+  color: #ff7a7a;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+  background: linear-gradient(135deg, rgba(255, 80, 80, 0.35) 0%, rgba(255, 100, 100, 0.25) 100%);
+  color: #ff6060;
+}
+
+.coin-card-body {
+  padding: 20px 24px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.info-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.info-value input {
+  width: 100%;
+  max-width: 150px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 15px;
+  text-align: right;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.info-value input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    inset 0 1px 2px rgba(0, 0, 0, 0.1),
+    0 0 12px rgba(255, 255, 255, 0.1);
+}
+
+.info-label {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.add-coin-btn {
+  width: 100%;
+  padding: 22px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 2px dashed rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.add-coin-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #fff;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 8px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.coin-card .coin-select {
+  padding: 10px 14px;
+  font-size: 18px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.coin-card .coin-select:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.coin-card .coin-select option {
+  background: rgba(30, 30, 50, 0.98);
+  color: #fff;
+}
+
 /* 태블릿 크기 (768px ~ 1024px) */
 @media (max-width: 1024px) {
     .portfolio-content {
@@ -219,7 +436,8 @@
     }
 
     .portfolio-overview {
-        gap: 16px;
+        gap: 24px;
+        padding: 20px;
     }
 }
 
@@ -227,77 +445,219 @@
 @media (max-width: 768px) {
     .portfolio-content {
         width: 100%;
-        padding: 12px;
+        padding: 16px;
         overflow-x: hidden;
     }
 
     .portfolio-page h2 {
         font-size: 1.5rem;
+        margin-bottom: 20px;
     }
 
     .portfolio-overview {
         flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+        align-items: stretch;
+    }
+
+    .overview-left {
+        width: 100%;
+    }
+
+    .overview-right {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* 모바일 카드 조정 */
+    .mobile-coin-cards {
+        gap: 14px;
+    }
+
+    .coin-card {
+        border-radius: 16px;
+    }
+
+    .coin-card:hover {
+        transform: none;
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .coin-card-header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 16px;
+        background: rgba(255, 255, 255, 0.03);
         gap: 12px;
     }
 
-    .portfolio-table {
-        font-size: 14px;
-        display: table;
-        table-layout: fixed;
-        width: 100%;
+    .coin-card-header .coin-name {
+        display: flex;
+        align-items: center;
     }
 
-    .portfolio-table th,
-    .portfolio-table td {
-        padding: 8px 4px;
-        font-size: 11px;
-        word-break: break-word;
-        overflow: hidden;
-        text-overflow: ellipsis;
+    .coin-symbol {
+        font-size: 18px;
     }
 
-    .portfolio-table td input {
-        width: calc(100% - 12px);
-        padding: 4px 6px;
-        font-size: 11px;
+    .coin-icon {
+        width: 24px;
+        height: 24px;
     }
 
-    .edit-toggle-button {
-        padding: 6px 10px;
+    .coin-info {
+        gap: 8px;
+    }
+
+    .coin-profit-info {
+        display: flex;
+        flex-direction: row;
+        gap: 16px;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .profit-row {
+        gap: 8px;
+    }
+
+    .profit-row .label {
         font-size: 12px;
     }
 
-    .coin-select {
-        padding: 4px;
-        font-size: 11px;
+    .profit-row .value {
+        font-size: 15px;
+    }
+
+    .delete-btn {
+        padding: 10px;
+        font-size: 13px;
+        border-radius: 0 0 16px 16px;
+    }
+
+    .coin-card-body {
+        padding: 16px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 16px;
+    }
+
+    .info-item {
+        min-width: 0; /* flex 아이템 오버플로우 방지 */
+    }
+
+    .info-value {
+        font-size: 14px;
+        word-break: break-all;
+    }
+
+    .info-value input {
         width: 100%;
+        max-width: none;
+        padding: 8px 10px;
+        font-size: 13px;
+        border-radius: 8px;
+        box-sizing: border-box;
+    }
+
+    .info-label {
+        font-size: 12px;
+    }
+
+    .add-coin-btn {
+        padding: 18px;
+        font-size: 15px;
+        border-radius: 16px;
+    }
+
+    .coin-card .coin-select {
+        padding: 8px 12px;
+        font-size: 16px;
+        border-radius: 10px;
+    }
+
+    .edit-toggle-button {
+        padding: 12px 20px;
+        font-size: 15px;
     }
 }
 
 /* 작은 모바일 (480px 이하) */
 @media (max-width: 480px) {
     .portfolio-content {
-        padding: 8px;
+        padding: 12px;
     }
 
     .portfolio-page h2 {
-        font-size: 1.25rem;
+        font-size: 1.4rem;
+        margin-bottom: 16px;
     }
 
-    .portfolio-table th,
-    .portfolio-table td {
-        padding: 4px 2px;
+    .portfolio-overview {
+        padding: 16px;
+        gap: 16px;
+    }
+
+    .coin-card-header {
+        padding: 12px;
+        gap: 10px;
+    }
+
+    .coin-symbol {
+        font-size: 16px;
+    }
+
+    .coin-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .coin-profit-info {
+        gap: 12px;
+    }
+
+    .profit-row .label {
+        font-size: 11px;
+    }
+
+    .profit-row .value {
+        font-size: 14px;
+    }
+
+    .coin-card-body {
+        padding: 12px;
+    }
+
+    .info-grid {
+        gap: 10px 12px;
+    }
+
+    .info-value {
+        font-size: 13px;
+    }
+
+    .info-value input {
+        padding: 7px 8px;
+        font-size: 12px;
+    }
+
+    .info-label {
         font-size: 10px;
     }
 
-    .portfolio-table td input {
-        padding: 3px 4px;
-        font-size: 10px;
-        width: calc(100% - 8px);
+    .add-coin-btn {
+        padding: 14px;
+        font-size: 14px;
     }
 
-    .coin-select {
-        padding: 3px;
-        font-size: 10px;
+    .delete-btn {
+        padding: 8px;
+        font-size: 12px;
     }
 }

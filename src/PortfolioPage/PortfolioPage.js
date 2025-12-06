@@ -12,7 +12,13 @@ const PortfolioPage = () => {
     editModeRef.current = editMode;
   }, [editMode]);
   // holdings: [{ coin, amount, avgPrice, currentPrice }]
-  const [holdings, setHoldings] = useState([]);
+  // 테스트용 더미 데이터 (테스트 후 빈 배열로 변경)
+  const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+  const [holdings, setHoldings] = useState(isLocalhost ? [
+    { coin: "BTC", amount: 0.5, avgPrice: 130000000, currentPrice: 142000000 },
+    { coin: "ETH", amount: 2, avgPrice: 4500000, currentPrice: 4800000 },
+    { coin: "XRP", amount: 1000, avgPrice: 3200, currentPrice: 3500 },
+  ] : []);
   const [originalHoldings, setOriginalHoldings] = useState([]);
 
 
@@ -87,6 +93,12 @@ const PortfolioPage = () => {
     const removedItem = holdings[index];
     const updated = holdings.filter((_, i) => i !== index);
     setHoldings(updated);
+
+    // 로컬 환경에서는 API 호출 없이 바로 삭제
+    if (isLocalhost) {
+      console.log("✅ 로컬 테스트 - 코인 삭제:", removedItem.coin);
+      return;
+    }
 
     const token = localStorage.getItem("access");
     console.log("PortfolioPage - removeRow token:", token); //디버깅
@@ -165,19 +177,28 @@ const PortfolioPage = () => {
           type="button"
           className="edit-toggle-button"
           onClick={async () => {
-            const token = localStorage.getItem("access");
-            console.log("PortfolioPage - BUY loop token:", token); //디버깅
-            if (!token) {
-              alert("로그인이 필요합니다.");
-              return;
-            }
-
             if (editMode) {
               const duplicateCoins = holdings.map(h => h.coin).filter((v, i, a) => a.indexOf(v) !== i);
               if (duplicateCoins.length > 0) {
                 alert("동일한 코인을 여러 개 추가할 수 없습니다.");
                 return;
               }
+
+              // 로컬 환경에서는 API 호출 없이 바로 적용
+              if (isLocalhost) {
+                console.log("✅ 로컬 테스트 - 포트폴리오 수정 완료:", holdings);
+                setEditMode(false);
+                editModeRef.current = false;
+                return;
+              }
+
+              const token = localStorage.getItem("access");
+              console.log("PortfolioPage - BUY loop token:", token); //디버깅
+              if (!token) {
+                alert("로그인이 필요합니다.");
+                return;
+              }
+
               // 수정 완료 모드 → 각 항목별 매수 API 호출
               try {
                 for (const item of holdings) {
@@ -236,6 +257,107 @@ const PortfolioPage = () => {
           {editMode ? "수정 완료" : "수정"}
         </button>
       </div>
+      {/* 모바일 카드 뷰 (업비트 스타일) */}
+      <div className="mobile-coin-cards">
+        {holdings.map((item, i) => {
+          const calc = calculate(item);
+          return (
+            <div key={i} className="coin-card">
+              <div className={`coin-card-header ${editMode ? 'edit-mode' : ''}`}>
+                <div className="coin-name">
+                  {editMode ? (
+                    <select
+                      value={item.coin}
+                      onChange={(e) => handleInputChange(i, "coin", e.target.value)}
+                      className="coin-select"
+                    >
+                      <option value="BTC">BTC</option>
+                      <option value="ETH">ETH</option>
+                      <option value="XRP">XRP</option>
+                    </select>
+                  ) : (
+                    <div className="coin-info">
+                      <img 
+                        src={`/icons/${item.coin.toLowerCase()}.png`} 
+                        alt={item.coin}
+                        className="coin-icon"
+                      />
+                      <span className="coin-symbol">{item.coin}</span>
+                    </div>
+                  )}
+                </div>
+                <div className="coin-profit-info">
+                  <div className="profit-row">
+                    <span className="label">평가손익</span>
+                    <span className={`value ${calc.profit >= 0 ? 'red' : 'blue'}`}>
+                      {calc.profit >= 0 ? '+' : ''}₩{calc.profit.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="profit-row">
+                    <span className="label">수익률</span>
+                    <span className={`value ${calc.profit >= 0 ? 'red' : 'blue'}`}>
+                      {calc.rate >= 0 ? '+' : ''}{calc.rate}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="coin-card-body">
+                <div className="info-grid">
+                  <div className="info-item">
+                    <span className="info-value">
+                      {editMode ? (
+                        <input
+                          type="number"
+                          value={item.amount}
+                          onChange={(e) => handleInputChange(i, "amount", parseFloat(e.target.value))}
+                        />
+                      ) : (
+                        item.amount.toLocaleString()
+                      )} {item.coin}
+                    </span>
+                    <span className="info-label">보유수량</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-value">
+                      {editMode ? (
+                        <input
+                          type="number"
+                          value={item.avgPrice}
+                          onChange={(e) => handleInputChange(i, "avgPrice", parseFloat(e.target.value))}
+                        />
+                      ) : (
+                        `₩${item.avgPrice.toLocaleString()}`
+                      )}
+                    </span>
+                    <span className="info-label">매수평균가</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-value">₩{calc.now.toLocaleString()}</span>
+                    <span className="info-label">평가금액</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-value">₩{calc.buy.toLocaleString()}</span>
+                    <span className="info-label">매수금액</span>
+                  </div>
+                </div>
+              </div>
+              {editMode && (
+                <button className="delete-btn" onClick={() => removeRow(i)}>
+                  삭제
+                </button>
+              )}
+            </div>
+          );
+        })}
+        {editMode && (
+          <button className="add-coin-btn" onClick={() => addNewRow()}>
+            + 코인 추가
+          </button>
+        )}
+      </div>
+
+      {/* 데스크톱 테이블 뷰 */}
+      <div className="desktop-table-wrapper">
       <table className="portfolio-table">
         <thead>
           <tr>
@@ -330,6 +452,7 @@ const PortfolioPage = () => {
           )}
         </tbody>
       </table>
+      </div>
       </div>
     </div>
   );

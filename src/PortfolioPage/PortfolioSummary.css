@@ -1,70 +1,128 @@
-/* Portfolio summary panel styles (moved back to this file) */
+/* Portfolio summary panel styles */
 .portfolio-summary {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 16px;
-    padding: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    font-size: 18px;
-    line-height: 1.6;
     color: #fff;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* 균일한 위/아래 여백 */
-.portfolio-summary div + div {
-    margin-top: 16px;
-}
-.portfolio-summary div:first-child {
-    margin-top: 16px;
-}
-.portfolio-summary div:last-child {
-    margin-bottom: 16px;
+/* 메인 총 보유자산 */
+.summary-main {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* 숫자 값을 볼드체로 */
-.portfolio-summary .value {
+.summary-main-label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.summary-main-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* 상세 정보 그리드 */
+.summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 32px;
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.summary-item .label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.summary-item .value {
+    font-size: 16px;
     font-weight: 600;
+    color: #fff;
 }
 
 /* Profit/Loss colors */
-.portfolio-summary .profit {
-    color: #4caf50;
-}
-.portfolio-summary .loss {
-    color: #f44336;
-}
 .portfolio-summary .red {
-    color: #ff6b6b; /* red for positive */
+    color: #f75467;
     font-weight: 700;
 }
+
 .portfolio-summary .blue {
-    color: #74b9ff; /* blue for negative */
+    color: #4a90d9;
     font-weight: 700;
 }
 
 /* 태블릿 크기 (768px ~ 1024px) */
 @media (max-width: 1024px) {
-    .portfolio-summary {
-        padding: 20px;
-        font-size: 16px;
+    .summary-main-value {
+        font-size: 26px;
+    }
+
+    .summary-item .value {
+        font-size: 15px;
     }
 }
 
 /* 모바일 크기 (768px 이하) */
 @media (max-width: 768px) {
     .portfolio-summary {
-        padding: 16px;
+        text-align: center;
+    }
+
+    .summary-main {
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+    }
+
+    .summary-main-label {
         font-size: 14px;
+    }
+
+    .summary-main-value {
+        font-size: 32px;
+    }
+
+    .summary-grid {
+        gap: 16px 24px;
+    }
+
+    .summary-item {
+        align-items: center;
+    }
+
+    .summary-item .label {
+        font-size: 14px;
+    }
+
+    .summary-item .value {
+        font-size: 18px;
     }
 }
 
 /* 작은 모바일 (480px 이하) */
 @media (max-width: 480px) {
-    .portfolio-summary {
-        padding: 12px;
-        font-size: 12px;
+    .summary-main-value {
+        font-size: 28px;
+    }
+
+    .summary-grid {
+        gap: 14px 20px;
+    }
+
+    .summary-item .label {
+        font-size: 13px;
+    }
+
+    .summary-item .value {
+        font-size: 16px;
     }
 }
