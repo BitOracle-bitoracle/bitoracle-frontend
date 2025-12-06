@@ -232,7 +232,7 @@ const Header = () => {
           포트폴리오
         </a>
         <a href="#" className="nav-link" onClick={handleProtoClick}>
-          차트예측
+          가격예측
         </a>
 
         {authChecked && isLoggedIn ? (
