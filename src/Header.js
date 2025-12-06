@@ -49,7 +49,7 @@ const Header = () => {
   React.useEffect(() => {
     fetch("https://api.bitoracle.shop/api/auth/init", {
       method: "GET",
-      credentials: "include", // refresh 쿠키 전송
+      credentials: "include",
     })
       .then(async (res) => {
         if (!res.ok) {
@@ -62,10 +62,8 @@ const Header = () => {
         const token = data.access || data.accessToken;
         if (token) {
           localStorage.setItem("access", token);
-          // document.cookie = `access=${token}; path=/;`;
           setIsLoggedIn(true);
 
-          // 사용자 정보 저장
           if (data.user) {
             setUserInfo(prev => ({
               ...prev,
@@ -92,7 +90,7 @@ const Header = () => {
       });
   }, []);
 
-  // Fetch detailed user info after auth checked and login, or when login modal closes after successful login
+  // Fetch detailed user info after auth checked and login
   useEffect(() => {
     if (!authChecked || !isLoggedIn) return;
     fetch("https://api.bitoracle.shop/api/mypage/userinfo", {
@@ -123,16 +121,6 @@ const Header = () => {
       });
   }, [authChecked, isLoggedIn, isLoginModalOpen]);
 
-  /*
-  useEffect(() => {
-    setIsLoggedIn(true);
-    setUserInfo({
-      email: "geonyeong@gmail.com",
-      name: "geonyeong",
-    });
-  }, []);
-  */
-
   const handleLogout = async () => {
     try {
       await fetch("https://api.bitoracle.shop/logout", {
@@ -144,9 +132,10 @@ const Header = () => {
     }
 
     localStorage.removeItem("access");
-    document.cookie = "access=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"; // ← 추가
+    document.cookie = "access=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     setIsLoggedIn(false);
     setIsDropdownOpen(false);
+    alert("로그아웃 되었습니다.");
     window.location.href = "/";
   };
 
@@ -158,7 +147,13 @@ const Header = () => {
   const handleMouseLeave = () => {
     closeTimeoutRef.current = setTimeout(() => {
       setIsDropdownOpen(false);
-    }, 200); // delay before closing
+    }, 300);
+  };
+
+  const toggleDropdown = (e) => {
+    e.preventDefault();
+    if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current);
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
   const toggleMobileMenu = () => {
@@ -175,11 +170,13 @@ const Header = () => {
     navigate(path);
   };
 
+  const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+
   const handlePortfolioClick = (e) => {
     e.preventDefault();
     closeMobileMenu();
     const token = localStorage.getItem("access");
-    if (!token) {
+    if (!token && !isLocalhost) {
       alert("로그인이 필요합니다.");
       setIsLoginModalOpen(true);
     } else {
@@ -191,7 +188,7 @@ const Header = () => {
     e.preventDefault();
     closeMobileMenu();
     const token = localStorage.getItem("access");
-    if (!token) {
+    if (!token && !isLocalhost) {
       alert("로그인이 필요합니다.");
       setIsLoginModalOpen(true);
     } else {
@@ -239,18 +236,19 @@ const Header = () => {
         </a>
 
         {authChecked && isLoggedIn ? (
-          <a
-            href="#"
-            className="nav-link"
+          <div 
+            className="mypage-wrapper"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            onClick={(e) => {
-              e.preventDefault();
-              setIsDropdownOpen(!isDropdownOpen);
-            }}
             ref={dropdownRef}
           >
-            마이페이지
+            <a
+              href="#"
+              className="nav-link mypage-link"
+              onClick={toggleDropdown}
+            >
+              마이페이지
+            </a>
             {isDropdownOpen && (
               <div className="mypage-dropdown">
                 <img
@@ -289,7 +287,7 @@ const Header = () => {
                 )}
               </div>
             )}
-          </a>
+          </div>
         ) : (
           <a href="#" className="nav-link login-btn" onClick={() => {
             setIsLoginModalOpen(true);
