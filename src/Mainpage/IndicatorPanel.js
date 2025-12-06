@@ -116,9 +116,9 @@ const IndicatorPanel = () => {
       <div className="indicator-grid">
         {indicators.map((item, index) => (
           <div key={index} className="indicator-card">
-            <h3 className={item.title === "공포와 탐욕 지수" ? "indicator-title fear-greed-title" : "indicator-title"}>
+            <h2 className={item.title === "공포와 탐욕 지수" ? "indicator-title fear-greed-title" : "indicator-title"}>
               {item.title}
-            </h3>
+            </h2>
             {item.title === "공포와 탐욕 지수" && item.value !== "Loading..." ? (
               <div className="fear-greed-chart-wrapper">
                 <RadialBarChart

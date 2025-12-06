@@ -11,10 +11,10 @@ const LoginModal = ({ isOpen, onClose }) => {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <h2>로그인</h2>
-        {/* 구글 로그인 버튼 */}
+        <h2>BitOracle 로그인</h2>
+        <p>소셜 계정으로 간편하게 시작하세요</p>
         <button className="login-button google" onClick={redirectToGoogleLogin}>
-          Google 계정으로 로그인
+          Google로 계속하기
         </button>
         <button className="close-btn" onClick={onClose}>닫기</button>
       </div>

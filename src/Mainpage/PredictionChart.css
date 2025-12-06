@@ -1,7 +1,5 @@
 .prediction-chart-wrapper {
     position: relative;
-    margin-top: 20px;
-    margin-bottom: 40px;
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -169,8 +167,6 @@
 /* ─── Mobile Styles (768px 이하) ─── */
 @media (max-width: 768px) {
     .prediction-chart-wrapper {
-        margin-top: 12px;
-        margin-bottom: 20px;
         padding: 15px;
     }
 

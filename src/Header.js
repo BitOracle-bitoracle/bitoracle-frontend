@@ -309,6 +309,11 @@ const Header = () => {
         </span>
       </button>
 
+      {/* 모바일 메뉴 오버레이 */}
+      {isMobileMenuOpen && (
+        <div className="mobile-menu-overlay" onClick={closeMobileMenu} />
+      )}
+
       {/* 모바일 메뉴 */}
       <div className={`mobile-menu ${isMobileMenuOpen ? 'open' : ''}`}>
         <nav className="mobile-nav">

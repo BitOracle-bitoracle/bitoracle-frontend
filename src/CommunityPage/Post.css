@@ -1,10 +1,11 @@
 /* 1. 컨테이너: 배경 꽉 채우기 */
 .post-container {
     width: 100%;
-    /* 67% -> 100% */
     margin: 0;
     padding: 0;
+    padding-top: var(--header-height);
     min-height: 100vh;
+    box-sizing: border-box;
 
     /* 배경 유지 */
     background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);

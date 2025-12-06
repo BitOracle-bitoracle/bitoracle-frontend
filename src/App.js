@@ -13,6 +13,7 @@ import Proto from "./ProtoPage/Proto";
 import "./App.css";
 
 import Layout from "./Layout";
+import ScrollToTop from "./ScrollToTop";
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
@@ -32,6 +33,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <Layout>
         <Routes>
           <Route path="/" element={<MainPage />} />

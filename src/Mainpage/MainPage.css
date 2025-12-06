@@ -1,23 +1,41 @@
-.main-container {
-  display: flex;
-  /* 컬럼 간격 */
-  padding: 20px; /* prediction-section과 동일한 padding */
-  box-sizing: border-box;
-  width: 100%; /* prediction-section과 동일한 너비 */
+/* CSS Variables (uses --header-height from index.css) */
+:root {
+  --padding-desktop: 20px;
+  --padding-tablet: 20px;
+  --padding-mobile: 12px;
+  --padding-small: 8px;
+  --gap-desktop: 20px;
+  --gap-mobile: 12px;
+  --section-gap: 24px;
+  --section-gap-mobile: 16px;
 }
 
+/* Main Container */
+.main-container {
+  display: flex;
+  padding: 0 var(--padding-desktop);
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* Panel */
 .panel {
   display: flex;
   justify-content: center;
   align-items: stretch;
-  gap: 20px; /* 자식 요소 사이 간격 */
-  padding: 0; /* prediction-section과 동일하게 padding 제거 */
-  width: 100%; /* prediction-section과 동일한 너비 */
-  box-sizing: border-box; /* height는 auto에 맡깁니다 */
-  flex-wrap: nowrap; /* 기본값: 줄바꿈 없음 */
-  flex-direction: row; /* 데스크탑: 가로 배치 */
+  gap: var(--gap-desktop);
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
+.panel > .indicator-panel,
+.panel > .news-slider {
+  flex: 1 1 calc(50% - 10px);
+  min-width: 300px;
+}
+
+/* Section Divider */
 .section-divider {
   width: 100%;
   height: 1px;
@@ -27,25 +45,14 @@
     rgba(255, 255, 255, 0.3),
     transparent
   );
-  margin: 0;
+  margin: var(--section-gap) 0;
 }
 
-/* panel과 prediction-section 사이 간격 조정 */
-.main-container {
-  margin-bottom: 0;
-}
-
-/* 태블릿/모바일에서 panel 하단 간격 추가 */
-@media (max-width: 1024px) {
-  .main-container {
-    padding-bottom: 24px; /* PredictionChart와의 간격 확보 (더 넓게) */
-  }
-}
-
+/* Prediction & Coin List Sections */
 .prediction-section,
 .coin-list-section {
   width: 100%;
-  padding: 20px;
+  padding: 0 var(--padding-desktop);
   box-sizing: border-box;
 }
 
@@ -56,15 +63,15 @@
 }
 
 .coin-list-section {
-  margin-bottom: 0 !important;
-  /* 여백을 0으로 강제 설정 */
+  margin-bottom: 0;
   font-size: 1.25rem;
   font-weight: bold;
 }
 
-/* Use .main-scroll-wrapper to wrap the main content for scrolling */
+/* Main Scroll Wrapper */
 .main-scroll-wrapper {
   margin-top: 0;
+  padding-top: var(--header-height);
   min-height: 100vh;
   background: linear-gradient(
     135deg,
@@ -76,136 +83,90 @@
   );
   background-size: 400% 400%;
   animation: gradientShift 15s ease infinite;
+  box-sizing: border-box;
 }
 
 @keyframes gradientShift {
-  0% {
+  0%, 100% {
     background-position: 0% 50%;
   }
   50% {
     background-position: 100% 50%;
   }
-  100% {
-    background-position: 0% 50%;
-  }
 }
 
+/* Main Content */
 .main-content {
   width: 67%;
   margin: 0 auto;
+  padding-top: var(--section-gap);
+  padding-bottom: var(--section-gap);
   box-sizing: border-box;
 }
 
-.panel > .indicator-panel,
-.panel > .news-slider {
-  flex: 1 1 calc(50% - 10px); /* 데스크탑: 가로로 50%씩 차지 */
-  min-width: 300px;
-  height: 100%; /* 데스크탑: panel의 align-items: stretch로 인해 같은 높이 유지 */
-}
-
-/* 태블릿 크기 (768px ~ 1024px) - 세로 배치 */
+/* Tablet (768px ~ 1024px) */
 @media (max-width: 1024px) {
   .main-content {
     width: 85%;
   }
 
   .main-container {
-    padding: 20px; /* prediction-section과 동일한 padding 유지 */
+    padding: 0 var(--padding-tablet);
   }
 
   .panel {
-    flex-direction: column; /* 태블릿: 세로 배치 */
-    flex-wrap: nowrap; /* 세로 배치 강제 */
-    gap: 12px;
-    padding: 0; /* padding 제거 */
-    margin-top: 0;
-    margin-bottom: 0; /* main-container의 margin-bottom 사용 */
+    flex-direction: column;
+    gap: var(--gap-mobile);
+  }
+
+  .panel > .indicator-panel,
+  .panel > .news-slider {
+    flex: 0 0 auto;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
   }
 
   .panel > .indicator-panel {
     order: 1;
-    flex: 0 0 auto; /* 태블릿: 고정 크기, 세로 배치 */
-    min-width: 0 !important; /* min-width 강제 제거 */
-    width: 100% !important; /* 전체 너비 강제 */
-    max-width: 100% !important; /* 최대 너비 제한 */
-    height: auto !important; /* 태블릿: 높이 자동 조정 */
   }
 
   .panel > .news-slider {
     order: 2;
-    flex: 0 0 auto; /* 태블릿: 고정 크기, 세로 배치 */
-    min-width: 0 !important; /* min-width 강제 제거 */
-    width: 100% !important; /* 전체 너비 강제 */
-    max-width: 100% !important; /* 최대 너비 제한 */
-    height: auto !important; /* 태블릿: 높이 자동 조정 */
-    margin-bottom: 0; /* main-container의 margin-bottom 사용 */
   }
 }
 
-/* 모바일 크기 (768px 이하) - 세로 배치 */
+/* Mobile (768px 이하) */
 @media (max-width: 768px) {
   .main-content {
     width: 100%;
-    padding: 0;
+    padding-top: var(--section-gap-mobile);
+    padding-bottom: var(--section-gap-mobile);
   }
 
   .main-container {
-    padding: 12px; /* prediction-section과 동일한 padding (12px) */
-    padding-top: 0; /* Layout에서 이미 paddingTop 설정했으므로 제거 */
-    margin-top: 0; /* Layout의 paddingTop 사용 */
-    margin-bottom: 0%; /* PredictionChart와의 간격 확보 (더 넓게) */
-  }
-
-  .panel {
-    flex-direction: column; /* 모바일: 세로 배치 */
-    flex-wrap: nowrap; /* 세로 배치 강제 */
-    gap: 12px;
-    padding: 0; /* padding 제거 */
-    margin-bottom: 0%; /* main-container의 margin-bottom 사용 */
-  }
-
-  /* IndicatorPanel이 항상 위에 오도록 순서 보장 */
-  .panel > .indicator-panel {
-    order: 1;
-    flex: 0 0 auto; /* 모바일: 고정 크기, 세로 배치 */
-    min-width: 0 !important; /* min-width 강제 제거 */
-    width: 100% !important; /* 전체 너비 강제 */
-    max-width: 100% !important; /* 최대 너비 제한 */
-    height: auto !important; /* 모바일: 높이 자동 조정 */
-    margin-top: 10%;
-  }
-
-  .panel > .news-slider {
-    order: 2;
-    flex: 0 0 auto; /* 모바일: 고정 크기, 세로 배치 */
-    min-width: 0 !important; /* min-width 강제 제거 */
-    width: 100% !important; /* 전체 너비 강제 */
-    max-width: 100% !important; /* 최대 너비 제한 */
-    height: auto !important; /* 모바일: 높이 자동 조정 */
-    margin-bottom: 0; /* panel의 gap으로 간격 조정 */
+    padding: 0 var(--padding-mobile);
   }
 
   .prediction-section,
   .coin-list-section {
-    padding: 12px;
+    padding: 0 var(--padding-mobile);
   }
 
   .section-divider {
-    margin: 12px 0 24px 0; /* 상하단 간격 확대하여 PredictionChart와의 간격 확보 */
+    margin: var(--section-gap-mobile) 0;
   }
 }
 
-/* 작은 모바일 (480px 이하) */
+/* Small Mobile (480px 이하) */
 @media (max-width: 480px) {
   .main-container {
-    padding: 8px; /* prediction-section과 동일한 padding (8px) */
-    padding-top: 0; /* Layout에서 이미 paddingTop 설정했으므로 제거 */
-    margin-top: 0; /* Layout의 paddingTop 사용 */
-    padding-bottom: 28px; /* PredictionChart와의 간격 확보 */
+    padding: 0 var(--padding-small);
   }
 
   .prediction-section,
   .coin-list-section {
-    padding: 8px; /* 동일한 padding 유지 */
+    padding: 0 var(--padding-small);
   }
 }

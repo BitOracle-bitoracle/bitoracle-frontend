@@ -1,3 +1,8 @@
+/* Global CSS Variables */
+:root {
+  --header-height: 58px;
+}
+
 @font-face {
   font-family: 'NEXONLv1Gothic';
   src: url('./assets/fonts/NEXONLv1GothicLight.woff2') format('woff2');

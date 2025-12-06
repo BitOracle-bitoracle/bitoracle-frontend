@@ -3,7 +3,9 @@
   width: 100%; /* 67% -> 100% */
   margin: 0;
   padding: 0;
+  padding-top: var(--header-height);
   min-height: 100vh;
+  box-sizing: border-box;
   
   /* 배경 유지 */
   background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
@@ -226,6 +228,7 @@
     .portfolio-content {
         width: 100%;
         padding: 12px;
+        overflow-x: hidden;
     }
 
     .portfolio-page h2 {
@@ -239,25 +242,35 @@
 
     .portfolio-table {
         font-size: 14px;
-        overflow-x: auto;
-        display: block;
+        display: table;
+        table-layout: fixed;
+        width: 100%;
     }
 
     .portfolio-table th,
     .portfolio-table td {
-        padding: 8px 6px;
-        font-size: 12px;
+        padding: 8px 4px;
+        font-size: 11px;
+        word-break: break-word;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .portfolio-table td input {
-        width: calc(100% - 16px);
-        padding: 4px 8px;
-        font-size: 12px;
+        width: calc(100% - 12px);
+        padding: 4px 6px;
+        font-size: 11px;
     }
 
     .edit-toggle-button {
         padding: 6px 10px;
         font-size: 12px;
+    }
+
+    .coin-select {
+        padding: 4px;
+        font-size: 11px;
+        width: 100%;
     }
 }
 
@@ -273,12 +286,18 @@
 
     .portfolio-table th,
     .portfolio-table td {
-        padding: 6px 4px;
-        font-size: 11px;
+        padding: 4px 2px;
+        font-size: 10px;
     }
 
     .portfolio-table td input {
-        padding: 4px 6px;
-        font-size: 11px;
+        padding: 3px 4px;
+        font-size: 10px;
+        width: calc(100% - 8px);
+    }
+
+    .coin-select {
+        padding: 3px;
+        font-size: 10px;
     }
 }
