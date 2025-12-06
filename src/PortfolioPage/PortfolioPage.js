@@ -12,13 +12,8 @@ const PortfolioPage = () => {
     editModeRef.current = editMode;
   }, [editMode]);
   // holdings: [{ coin, amount, avgPrice, currentPrice }]
-  // 테스트용 더미 데이터 (테스트 후 빈 배열로 변경)
   const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-  const [holdings, setHoldings] = useState(isLocalhost ? [
-    { coin: "BTC", amount: 0.5, avgPrice: 130000000, currentPrice: 142000000 },
-    { coin: "ETH", amount: 2, avgPrice: 4500000, currentPrice: 4800000 },
-    { coin: "XRP", amount: 1000, avgPrice: 3200, currentPrice: 3500 },
-  ] : []);
+  const [holdings, setHoldings] = useState([]);
   const [originalHoldings, setOriginalHoldings] = useState([]);
 
 
