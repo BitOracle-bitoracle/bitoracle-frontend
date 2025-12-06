@@ -102,13 +102,9 @@ const Proto = () => {
 };
 
 const CoinIndex = () => {
-    // 로컬 테스트용 더미 가격
-    const [price, setPrice] = useState(isLocalhost ? "142,350,000" : null);
+    const [price, setPrice] = useState(null);
 
     useEffect(() => {
-        // 로컬에서는 API 호출 스킵
-        if (isLocalhost) return;
-
         axios
             .get(`${BASE_URL}/midnight`)
             .then((res) => {
@@ -132,19 +128,7 @@ const CoinIndex = () => {
 };
 
 const StatCalendar = () => {
-    // 로컬 테스트용 더미 예측 데이터
-    const dummyPredictions = isLocalhost ? {
-        "2025-12-01": "true",
-        "2025-12-02": "true",
-        "2025-12-03": "false",
-        "2025-12-04": "true",
-        "2025-12-05": "false",
-        "2025-11-28": "true",
-        "2025-11-29": "false",
-        "2025-11-30": "true",
-    } : {};
-
-    const [predictions, setPredictions] = useState(dummyPredictions);
+    const [predictions, setPredictions] = useState({});
 
     const tileContent = ({ date, view }) => {
         const dateStr = date.toISOString().slice(0, 10);
@@ -200,14 +184,7 @@ const StatCalendar = () => {
 };
 
 const StatText = () => {
-    // 로컬 테스트용 더미 통계 데이터
-    const dummyStats = isLocalhost ? {
-        trial: 8,
-        success: 5,
-        failure: 3
-    } : null;
-
-    const [stats, setStats] = useState(dummyStats);
+    const [stats, setStats] = useState(null);
 
     useEffect(() => {
         const token = localStorage.getItem("access");
