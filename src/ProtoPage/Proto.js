@@ -102,9 +102,13 @@ const Proto = () => {
 };
 
 const CoinIndex = () => {
-    const [price, setPrice] = useState(null);
+    // 로컬 테스트용 더미 가격
+    const [price, setPrice] = useState(isLocalhost ? "142,350,000" : null);
 
     useEffect(() => {
+        // 로컬에서는 API 호출 스킵
+        if (isLocalhost) return;
+
         axios
             .get(`${BASE_URL}/midnight`)
             .then((res) => {
@@ -128,7 +132,19 @@ const CoinIndex = () => {
 };
 
 const StatCalendar = () => {
-    const [predictions, setPredictions] = useState({});
+    // 로컬 테스트용 더미 예측 데이터
+    const dummyPredictions = isLocalhost ? {
+        "2025-12-01": "true",
+        "2025-12-02": "true",
+        "2025-12-03": "false",
+        "2025-12-04": "true",
+        "2025-12-05": "false",
+        "2025-11-28": "true",
+        "2025-11-29": "false",
+        "2025-11-30": "true",
+    } : {};
+
+    const [predictions, setPredictions] = useState(dummyPredictions);
 
     const tileContent = ({ date, view }) => {
         const dateStr = date.toISOString().slice(0, 10);
@@ -184,7 +200,14 @@ const StatCalendar = () => {
 };
 
 const StatText = () => {
-    const [stats, setStats] = useState(null);
+    // 로컬 테스트용 더미 통계 데이터
+    const dummyStats = isLocalhost ? {
+        trial: 8,
+        success: 5,
+        failure: 3
+    } : null;
+
+    const [stats, setStats] = useState(dummyStats);
 
     useEffect(() => {
         const token = localStorage.getItem("access");
@@ -212,29 +235,50 @@ const StatText = () => {
             });
     }, []);
 
+    const winRate = stats && stats.trial > 0 
+        ? Math.round((stats.success * 100) / stats.trial) 
+        : 0;
+
     return (
-        <div>
+        <div className="stat-content">
             {stats ? (
-                <div className="proto-stat">
-                    <div className="stat-row">
-                        <span className="stats-text">총 {stats.trial}</span>
-                        <span className="stats-text">성공 {stats.success}</span>
-                        <span className="stats-text">실패 {stats.failure}</span>
+                <>
+                    <div className="stat-header">
+                        <h3 className="stat-title">📊 나의 예측 기록</h3>
                     </div>
-                    <div className="stat-row">
-                        <span className="stats-text">
-                            승률{" "}
-                            {stats.trial > 0
-                                ? Math.round(
-                                      (stats.success * 100) / stats.trial
-                                  )
-                                : 0}
-                            %
-                        </span>
+                    <div className="stat-cards">
+                        <div className="stat-card total">
+                            <span className="stat-label">총 예측</span>
+                            <span className="stat-value">{stats.trial}</span>
+                        </div>
+                        <div className="stat-card success">
+                            <span className="stat-label">성공</span>
+                            <span className="stat-value">{stats.success}</span>
+                        </div>
+                        <div className="stat-card failure">
+                            <span className="stat-label">실패</span>
+                            <span className="stat-value">{stats.failure}</span>
+                        </div>
                     </div>
-                </div>
+                    <div className="stat-winrate">
+                        <div className="winrate-bar">
+                            <div 
+                                className="winrate-fill" 
+                                style={{ width: `${winRate}%` }}
+                            />
+                        </div>
+                        <div className="winrate-info">
+                            <span className="winrate-label">승률</span>
+                            <span className="winrate-value">{winRate}%</span>
+                        </div>
+                    </div>
+                </>
             ) : (
-                <span className="stats-text">아직 통계가 없어요!</span>
+                <div className="stat-empty">
+                    <span className="empty-icon">📈</span>
+                    <span className="empty-text">아직 통계가 없어요!</span>
+                    <span className="empty-hint">예측에 참여해보세요</span>
+                </div>
             )}
         </div>
     );

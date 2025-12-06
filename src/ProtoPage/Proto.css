@@ -98,51 +98,113 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    gap: 20px;
+    gap: 24px;
 }
 
 .prediction-btn {
+    position: relative;
     width: 140px;
-    padding: 16px 28px;
+    padding: 20px 32px;
     cursor: pointer;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 20px;
     color: white;
-    font-weight: 600;
-    font-size: 16px;
+    font-weight: 700;
+    font-size: 20px;
     text-align: center;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+/* 업 버튼 - 초록색 그라데이션 */
+.prediction-btn:first-child {
+    background: linear-gradient(135deg, #00b894 0%, #00cec9 50%, #55efc4 100%);
     box-shadow: 
-        0 4px 16px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        0 8px 24px rgba(0, 184, 148, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.prediction-btn:first-child::before {
+    content: '📈';
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    font-size: 18px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.prediction-btn:first-child:hover:not(:disabled)::before {
+    opacity: 1;
+}
+
+/* 다운 버튼 - 빨간색 그라데이션 */
+.prediction-btn:last-child {
+    background: linear-gradient(135deg, #e74c3c 0%, #e55039 50%, #ff6b6b 100%);
+    box-shadow: 
+        0 8px 24px rgba(231, 76, 60, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.prediction-btn:last-child::before {
+    content: '📉';
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    font-size: 18px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.prediction-btn:last-child:hover:not(:disabled)::before {
+    opacity: 1;
 }
 
 .prediction-btn:hover:not(:disabled) {
-    transform: translateY(-3px);
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-4px) scale(1.02);
+}
+
+.prediction-btn:first-child:hover:not(:disabled) {
     box-shadow: 
-        0 8px 24px rgba(0, 0, 0, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        0 12px 32px rgba(0, 184, 148, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        0 0 20px rgba(85, 239, 196, 0.3);
+}
+
+.prediction-btn:last-child:hover:not(:disabled) {
+    box-shadow: 
+        0 12px 32px rgba(231, 76, 60, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        0 0 20px rgba(255, 107, 107, 0.3);
 }
 
 .prediction-btn:active:not(:disabled) {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px) scale(0.98);
+}
+
+.prediction-btn:first-child:active:not(:disabled) {
+    box-shadow: 0 4px 12px rgba(0, 184, 148, 0.3);
+}
+
+.prediction-btn:last-child:active:not(:disabled) {
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
 }
 
 .prediction-btn:disabled {
-    background: rgba(255, 255, 255, 0.08);
+    background: linear-gradient(135deg, rgba(150, 150, 150, 0.3), rgba(100, 100, 100, 0.3));
     cursor: not-allowed;
-    transition: none;
     transform: none;
     box-shadow: none;
-    border-color: rgba(255, 255, 255, 0.15);
     opacity: 0.5;
+}
+
+.prediction-btn:disabled::before {
+    display: none;
 }
 
 .proto-right {
@@ -331,7 +393,6 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 20px;
     background: rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
@@ -340,25 +401,151 @@
     box-shadow: 
         0 8px 32px rgba(0, 0, 0, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    padding: 28px;
+    padding: 24px;
     box-sizing: border-box;
 }
 
-.stat-row {
+.stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100%;
+}
+
+.stat-header {
+    text-align: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.stat-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.stat-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.stat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 12px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.stat-card.total {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+    border-color: rgba(102, 126, 234, 0.4);
+}
+
+.stat-card.success {
+    background: linear-gradient(135deg, rgba(46, 204, 113, 0.3), rgba(39, 174, 96, 0.3));
+    border-color: rgba(46, 204, 113, 0.4);
+}
+
+.stat-card.failure {
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.3), rgba(192, 57, 43, 0.3));
+    border-color: rgba(231, 76, 60, 0.4);
+}
+
+.stat-label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.stat-winrate {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.winrate-bar {
+    width: 100%;
+    height: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.winrate-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+    border-radius: 6px;
+    transition: width 0.8s ease;
+    box-shadow: 0 0 12px rgba(118, 75, 162, 0.5);
+}
+
+.winrate-info {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 0;
 }
 
-.stats-text {
-    font-size: 18px;
+.winrate-label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.winrate-value {
+    font-size: 24px;
+    font-weight: 700;
     color: #fff;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.stats-text:last-child {
+/* 통계 없을 때 */
+.stat-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 48px;
+    opacity: 0.8;
+}
+
+.empty-text {
+    font-size: 18px;
     font-weight: 600;
+    color: #fff;
+}
+
+.empty-hint {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
 }
 
 /* 태블릿 크기 (768px ~ 1024px) */
@@ -431,13 +618,20 @@
 
     .btn-wrapper {
         margin-top: 8px;
-        gap: 16px;
+        gap: 20px;
     }
 
     .prediction-btn {
-        width: 130px;
-        padding: 14px 24px;
-        font-size: 15px;
+        width: 120px;
+        padding: 16px 24px;
+        font-size: 18px;
+        border-radius: 16px;
+    }
+
+    .prediction-btn:first-child::before,
+    .prediction-btn:last-child::before {
+        left: 12px;
+        font-size: 16px;
     }
 
     .proto-calendar {
@@ -462,17 +656,31 @@
     }
 
     .proto-stat {
-        padding: 24px;
+        padding: 20px;
+    }
+
+    .stat-content {
         gap: 16px;
     }
 
-    .stat-row {
-        flex-wrap: wrap;
-        gap: 8px;
+    .stat-title {
+        font-size: 16px;
     }
 
-    .stats-text {
-        font-size: 16px;
+    .stat-cards {
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 14px 10px;
+    }
+
+    .stat-value {
+        font-size: 24px;
+    }
+
+    .winrate-value {
+        font-size: 20px;
     }
 }
 
@@ -515,9 +723,15 @@
     }
 
     .prediction-btn {
-        width: 120px;
-        padding: 12px 20px;
-        font-size: 14px;
+        width: 110px;
+        padding: 14px 18px;
+        font-size: 16px;
+        border-radius: 14px;
+    }
+
+    .prediction-btn:first-child::before,
+    .prediction-btn:last-child::before {
+        display: none;
     }
 
     .proto-calendar {
@@ -543,11 +757,63 @@
     }
 
     .proto-stat {
-        padding: 20px;
+        padding: 16px;
+    }
+
+    .stat-content {
         gap: 14px;
     }
 
-    .stats-text {
+    .stat-header {
+        padding-bottom: 10px;
+    }
+
+    .stat-title {
         font-size: 15px;
+    }
+
+    .stat-cards {
+        gap: 8px;
+    }
+
+    .stat-card {
+        padding: 12px 8px;
+        border-radius: 12px;
+    }
+
+    .stat-label {
+        font-size: 11px;
+    }
+
+    .stat-value {
+        font-size: 20px;
+    }
+
+    .stat-winrate {
+        padding: 12px;
+    }
+
+    .winrate-bar {
+        height: 10px;
+    }
+
+    .winrate-label {
+        font-size: 13px;
+    }
+
+    .winrate-value {
+        font-size: 18px;
+    }
+
+    .empty-icon {
+        font-size: 36px;
+    }
+
+    .empty-text {
+        font-size: 16px;
+    }
+
+    .empty-hint {
+        font-size: 13px;
     }
 }
