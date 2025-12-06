@@ -83,7 +83,9 @@ const CoinList = () => {
       <h2 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.25rem', fontWeight: 'bold' }}>
         코인 리스트
       </h2>
-      <table className="coin-list-table">
+      
+      {/* 데스크톱 테이블 뷰 */}
+      <table className="coin-list-table desktop-table">
         <thead>
           <tr>
             <th>#</th>
@@ -117,6 +119,31 @@ const CoinList = () => {
           ))}
         </tbody>
       </table>
+
+      {/* 모바일 카드 뷰 */}
+      <div className="coin-cards-mobile">
+        {coins.map((c) => (
+          <div key={c.id || c.rank} className="coin-card-mobile">
+            <div className="coin-card-left">
+              <img src={c.icon} alt="" className="coin-icon-mobile" />
+              <div className="coin-info-mobile">
+                <span className="coin-name-mobile">{c.name}</span>
+                <span className="coin-symbol-mobile">{c.symbol}</span>
+              </div>
+            </div>
+            <div className="coin-card-right">
+              <span className="coin-price-mobile">
+                {c.price ? `₩${Number(c.price).toLocaleString()}` : '–'}
+              </span>
+              <span className={`coin-change-mobile ${c.change24h >= 0 ? 'positive' : 'negative'}`}>
+                {c.change24h
+                  ? (c.change24h >= 0 ? `+${c.change24h.toFixed(2)}%` : `${c.change24h.toFixed(2)}%`)
+                  : '–'}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
