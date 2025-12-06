@@ -238,65 +238,63 @@ const Header = () => {
           차트예측
         </a>
 
-        {authChecked && (
-          isLoggedIn ? (
-            <a
-              href="#"
-              className="nav-link"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              onClick={(e) => {
-                e.preventDefault();
-                setIsDropdownOpen(!isDropdownOpen);
-              }}
-              ref={dropdownRef}
-            >
-              마이페이지
-              {isDropdownOpen && (
-                <div className="mypage-dropdown">
-                  <img
-                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo.name)}&background=random`}
-                    alt="프로필"
-                    className="profile-pic"
-                  />
-                  <p className="nickname">{userInfo.name}</p>
-                  <p className="points">포인트: {userInfo.point.toLocaleString()}pt</p>
-                  <button className="dropdown-btn" onClick={handleFetchPosts}>작성글 목록</button>
-                  <button className="dropdown-btn" onClick={handleLogout}>로그아웃</button>
-                  {showPosts && (
-                    <ul className="mypage-posts">
-                      {myPosts.length === 0 ? (
-                        <li className="no-posts">작성한 글이 없습니다.</li>
-                      ) : (
-                        myPosts.map(post => (
-                          <li key={post.id}>
-                            <a
-                              href={`/community/${post.id}`}
-                              className="post-link"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                navigate(`/community/post/${post.id}`);
-                                setIsDropdownOpen(false);
-                                setShowPosts(false);
-                                closeMobileMenu();
-                              }}
-                            >
-                              {post.title}
-                            </a>
-                          </li>
-                        ))
-                      )}
-                    </ul>
-                  )}
-                </div>
-              )}
-            </a>
-          ) : (
-            <a href="#" className="nav-link login-btn" onClick={() => {
-              setIsLoginModalOpen(true);
-              closeMobileMenu();
-            }}>로그인</a>
-          )
+        {authChecked && isLoggedIn ? (
+          <a
+            href="#"
+            className="nav-link"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onClick={(e) => {
+              e.preventDefault();
+              setIsDropdownOpen(!isDropdownOpen);
+            }}
+            ref={dropdownRef}
+          >
+            마이페이지
+            {isDropdownOpen && (
+              <div className="mypage-dropdown">
+                <img
+                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo.name)}&background=random`}
+                  alt="프로필"
+                  className="profile-pic"
+                />
+                <p className="nickname">{userInfo.name}</p>
+                <p className="points">포인트: {userInfo.point.toLocaleString()}pt</p>
+                <button className="dropdown-btn" onClick={handleFetchPosts}>작성글 목록</button>
+                <button className="dropdown-btn" onClick={handleLogout}>로그아웃</button>
+                {showPosts && (
+                  <ul className="mypage-posts">
+                    {myPosts.length === 0 ? (
+                      <li className="no-posts">작성한 글이 없습니다.</li>
+                    ) : (
+                      myPosts.map(post => (
+                        <li key={post.id}>
+                          <a
+                            href={`/community/${post.id}`}
+                            className="post-link"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              navigate(`/community/post/${post.id}`);
+                              setIsDropdownOpen(false);
+                              setShowPosts(false);
+                              closeMobileMenu();
+                            }}
+                          >
+                            {post.title}
+                          </a>
+                        </li>
+                      ))
+                    )}
+                  </ul>
+                )}
+              </div>
+            )}
+          </a>
+        ) : (
+          <a href="#" className="nav-link login-btn" onClick={() => {
+            setIsLoginModalOpen(true);
+            closeMobileMenu();
+          }}>로그인</a>
         )}
       </nav>
       
@@ -338,66 +336,64 @@ const Header = () => {
           <a href="#" onClick={handlePortfolioClick}>포트폴리오</a>
           <a href="#" onClick={handleProtoClick}>차트예측</a>
           
-          {authChecked && (
-            isLoggedIn ? (
-              <>
-                <a
-                  href="#"
-                  className="mobile-nav-link"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsDropdownOpen(!isDropdownOpen);
-                  }}
-                >
-                  마이페이지
-                </a>
-                {isDropdownOpen && (
-                  <div className="mobile-dropdown">
-                    <div className="mobile-dropdown-content">
-                      <img
-                        src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo.name)}&background=random`}
-                        alt="프로필"
-                        className="profile-pic"
-                      />
-                      <p className="nickname">{userInfo.name}</p>
-                      <p className="points">포인트: {userInfo.point.toLocaleString()}pt</p>
-                      <button className="dropdown-btn" onClick={handleFetchPosts}>작성글 목록</button>
-                      <button className="dropdown-btn" onClick={handleLogout}>로그아웃</button>
-                      {showPosts && (
-                        <ul className="mypage-posts">
-                          {myPosts.length === 0 ? (
-                            <li className="no-posts">작성한 글이 없습니다.</li>
-                          ) : (
-                            myPosts.map(post => (
-                              <li key={post.id}>
-                                <a
-                                  href={`/community/${post.id}`}
-                                  className="post-link"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    navigate(`/community/post/${post.id}`);
-                                    setIsDropdownOpen(false);
-                                    setShowPosts(false);
-                                    closeMobileMenu();
-                                  }}
-                                >
-                                  {post.title}
-                                </a>
-                              </li>
-                            ))
-                          )}
-                        </ul>
-                      )}
-                    </div>
+          {authChecked && isLoggedIn ? (
+            <>
+              <a
+                href="#"
+                className="mobile-nav-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsDropdownOpen(!isDropdownOpen);
+                }}
+              >
+                마이페이지
+              </a>
+              {isDropdownOpen && (
+                <div className="mobile-dropdown">
+                  <div className="mobile-dropdown-content">
+                    <img
+                      src={`https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo.name)}&background=random`}
+                      alt="프로필"
+                      className="profile-pic"
+                    />
+                    <p className="nickname">{userInfo.name}</p>
+                    <p className="points">포인트: {userInfo.point.toLocaleString()}pt</p>
+                    <button className="dropdown-btn" onClick={handleFetchPosts}>작성글 목록</button>
+                    <button className="dropdown-btn" onClick={handleLogout}>로그아웃</button>
+                    {showPosts && (
+                      <ul className="mypage-posts">
+                        {myPosts.length === 0 ? (
+                          <li className="no-posts">작성한 글이 없습니다.</li>
+                        ) : (
+                          myPosts.map(post => (
+                            <li key={post.id}>
+                              <a
+                                href={`/community/${post.id}`}
+                                className="post-link"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  navigate(`/community/post/${post.id}`);
+                                  setIsDropdownOpen(false);
+                                  setShowPosts(false);
+                                  closeMobileMenu();
+                                }}
+                              >
+                                {post.title}
+                              </a>
+                            </li>
+                          ))
+                        )}
+                      </ul>
+                    )}
                   </div>
-                )}
-              </>
-            ) : (
-              <a href="#" className="mobile-login-btn" onClick={() => {
-                setIsLoginModalOpen(true);
-                closeMobileMenu();
-              }}>로그인</a>
-            )
+                </div>
+              )}
+            </>
+          ) : (
+            <a href="#" className="mobile-login-btn" onClick={() => {
+              setIsLoginModalOpen(true);
+              closeMobileMenu();
+            }}>로그인</a>
           )}
         </nav>
       </div>
