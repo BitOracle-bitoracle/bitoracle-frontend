@@ -198,6 +198,8 @@
 }
 
 .react-calendar__month-view__weekdays {
+    display: grid !important;
+    grid-template-columns: repeat(7, 1fr) !important;
     text-align: center;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.8);
@@ -206,12 +208,18 @@
     margin-bottom: 8px;
 }
 
+.react-calendar__month-view__weekdays__weekday {
+    padding: 8px 0;
+}
+
 .react-calendar__month-view__weekdays abbr {
     text-decoration: none;
 }
 
 .react-calendar__month-view__days {
-    gap: 6px;
+    display: grid !important;
+    grid-template-columns: repeat(7, 1fr) !important;
+    gap: 4px;
 }
 
 /* 연도/월/10년 선택 뷰 - 3열 레이아웃 */
@@ -242,13 +250,30 @@
     transition: all 0.3s ease;
     color: #fff;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    margin: 2px;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .react-calendar__tile:enabled:hover {
     background: rgba(255, 255, 255, 0.2);
     border-color: rgba(255, 255, 255, 0.35);
     transform: scale(1.05);
+}
+
+/* 이전/다음 달 날짜 (흐리게 표시) */
+.react-calendar__month-view__days__day--neighboringMonth {
+    background: rgba(255, 255, 255, 0.03) !important;
+    color: rgba(255, 255, 255, 0.3) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.react-calendar__month-view__days__day--neighboringMonth:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    transform: none !important;
 }
 
 /* 선택 불가능한 미래 날짜 */
