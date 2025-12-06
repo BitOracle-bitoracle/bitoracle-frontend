@@ -7,145 +7,212 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  /* ✅ 수정 1: 기본 패딩을 줄여서 노트북/작은 화면에서도 깨지지 않게 합니다 */
-  padding: 10px 40px;
-
-  background-color: white;
-  border-bottom: 1px solid #ddd;
+  padding: 12px 40px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
-
-  /* ✅ 수정 2: 절대 줄바꿈 하지 않도록 설정 */
   flex-wrap: nowrap;
-
-  /* ✅ 추가: 내용물이 너무 작아지는 것을 방지 (선택사항) */
   min-width: 320px;
 }
 
 .header-left,
 .header-right {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .header-right-nav {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .logo-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    display: flex;
-    align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.logo-btn:hover {
+  transform: scale(1.02);
 }
 
 .logo {
-    width: 120px;
-    height: auto;
-    object-fit: contain;
-    /*margin-right: 20px;*/
+  width: 120px;
+  height: auto;
+  object-fit: contain;
 }
 
 .nav a {
-    margin: 0 15px;
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    font-size: 16px;
+  margin: 0 16px;
+  text-decoration: none;
+  color: #444;
+  font-weight: 500;
+  font-size: 15px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: width 0.3s ease;
+  border-radius: 2px;
 }
 
 .nav a:hover {
-    color: #1976d2;
+  color: #667eea;
 }
 
-/* .search-bar {
-    padding: 8px 12px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    margin-right: 15px;
-} */
-
+.nav a:hover::after {
+  width: 100%;
+}
 
 .nav a.login-btn {
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    font-weight: 500;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.nav a.login-btn::after {
+  display: none;
 }
 
 .nav a.login-btn:hover {
-    background-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  color: white;
 }
 
 .dialog {
-    position: absolute;
-    background: white;
-    border: 1px solid #ddd;
-    padding: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    z-index: 10;
-    min-width: 150px;
+  position: absolute;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  z-index: 10;
+  min-width: 150px;
 }
 
 .mypage-dropdown {
-    position: fixed;
-    top: 60px;
-    right: 160px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width: 200px;
-    padding: 16px;
-    z-index: 1001;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  position: fixed;
+  top: 70px;
+  right: 160px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  width: 220px;
+  padding: 20px;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .mypage-dropdown .profile-pic {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 10px;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 12px;
+  border: 3px solid transparent;
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(135deg, #667eea 0%, #764ba2 100%) border-box;
 }
 
 .mypage-dropdown .nickname {
-    font-weight: 600;
-    font-size: 16px;
-    margin-bottom: 4px;
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 4px;
 }
 
 .mypage-dropdown .points {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 12px;
+  font-size: 14px;
+  color: #667eea;
+  font-weight: 500;
+  margin-bottom: 16px;
 }
 
 .mypage-dropdown .dropdown-btn {
-    width: 100%;
-    background-color: #f5f5f5;
-    border: none;
-    padding: 10px 12px;
-    margin-top: 6px;
-    border-radius: 4px;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+  width: 100%;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  padding: 12px 16px;
+  margin-top: 8px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .mypage-dropdown .dropdown-btn:hover {
-    background-color: #e5e5e5;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: transparent;
+  transform: translateY(-2px);
+}
+
+.mypage-posts {
+  width: 100%;
+  margin-top: 12px;
+  padding: 0;
+  list-style: none;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.mypage-posts li {
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.mypage-posts li:hover {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.mypage-posts .post-link {
+  color: #555;
+  text-decoration: none;
+  font-size: 13px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mypage-posts .no-posts {
+  color: #999;
+  font-size: 13px;
+  text-align: center;
 }
 
 .nav-scroll-wrapper {
@@ -156,6 +223,7 @@
   width: 100%;
   scrollbar-width: none;
 }
+
 .nav-scroll-wrapper::-webkit-scrollbar {
   display: none;
 }
@@ -163,12 +231,17 @@
 /* 모바일 햄버거 메뉴 버튼 */
 .mobile-menu-btn {
   display: none;
-  background: none;
-  border: none;
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 10px;
   cursor: pointer;
-  padding: 8px;
-  /* 버튼 자체의 패딩 */
+  padding: 10px;
   z-index: 1002;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-btn:hover {
+  background: rgba(102, 126, 234, 0.2);
 }
 
 /* 햄버거 아이콘 컨테이너 */
@@ -176,33 +249,22 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* 선들을 균등하게 분배 */
-  /* 1. 크기 조절: 원하는 크기로 수정하세요 */
   width: 20px;
-  /* 예: 24px -> 20px */
   height: 16px;
-  /* 예: 20px -> 16px */
-  /* 2. 불필요한 transition 제거 */
-  /* transition: all 0.3s ease; -> 삭제 */
   position: relative;
-  /* X 모양 만들 때 기준점 */
 }
 
 /* 햄버거 아이콘 선 */
 .hamburger span {
   width: 100%;
   height: 2.5px;
-  /* 선 두께 */
-  background-color: #333;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 2px;
   transition: all 0.3s ease-in-out;
-  /* 부드러운 전환 효과 */
   position: absolute;
-  /* X 모양을 위해 절대 위치 사용 */
   left: 0;
 }
 
-/* 기본 상태: 선들의 위치 */
 .hamburger span:nth-child(1) {
   top: 0;
 }
@@ -210,15 +272,13 @@
 .hamburger span:nth-child(2) {
   top: 50%;
   transform: translateY(-50%);
-  /* 가운데 정렬 */
 }
 
 .hamburger span:nth-child(3) {
   bottom: 0;
 }
 
-/* 클릭된 상태 (X 모양 만들기) */
-/* 3. 정확한 X 모양을 위해 중앙을 기준으로 회전 */
+/* X 모양 */
 .hamburger.active span:nth-child(1) {
   top: 50%;
   transform: translateY(-50%) rotate(45deg);
@@ -226,103 +286,137 @@
 
 .hamburger.active span:nth-child(2) {
   opacity: 0;
-  /* 가운데 선 숨기기 */
 }
 
 .hamburger.active span:nth-child(3) {
   top: 50%;
-  /* bottom: 0; -> 삭제 */
   transform: translateY(-50%) rotate(-45deg);
 }
 
 /* 모바일 메뉴 */
 .mobile-menu {
   display: none;
-
-  /* 1. 부모(Header)를 기준으로 위치를 잡도록 변경 */
   position: absolute;
-
-  /* 2. 헤더의 맨 아래쪽 라인(100%)에 메뉴 상단을 맞춤 -> 여백 자동 제거 */
   top: 100%;
-
   left: 0;
   width: 100%;
-  background-color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.2s ease-out;
   z-index: 1001;
-
-  /* 테두리 제거 (아까 요청하신 내용 유지) */
   border-bottom: none;
 }
 
 .mobile-menu.open {
-    max-height: 80vh;
-    overflow-y: auto;
-    transition: max-height 0.3s ease-in;
+  max-height: 80vh;
+  overflow-y: auto;
+  transition: max-height 0.3s ease-in;
 }
 
 .mobile-nav {
-    display: flex;
-    flex-direction: column;
-    padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px;
 }
 
 .mobile-nav a {
-    padding: 12px 0;
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    font-size: 16px;
-    border-bottom: 1px solid #f0f0f0;
-    transition: color 0.2s;
-}
-
-.mobile-nav a:last-child {
-    border-bottom: none;
+  padding: 14px 16px;
+  text-decoration: none;
+  color: #444;
+  font-weight: 500;
+  font-size: 15px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  margin-bottom: 4px;
 }
 
 .mobile-nav a:hover {
-    color: #1976d2;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  color: #667eea;
 }
 
 .mobile-login-btn {
-    background-color: #3b82f6;
-    color: white !important;
-    border: none;
-    padding: 12px 20px !important;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    font-weight: 500;
-    text-align: center;
-    margin-top: 8px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  border: none;
+  padding: 14px 20px !important;
+  border-radius: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 8px;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease !important;
 }
 
 .mobile-login-btn:hover {
-    background-color: #2563eb;
-    color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
 .mobile-dropdown {
-    margin-top: 8px;
-    padding: 16px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
+  margin-top: 8px;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  border: 1px solid rgba(102, 126, 234, 0.15);
+  border-radius: 16px;
 }
 
 .mobile-dropdown-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* 1500px 이상의 큰 화면에서만 넓은 여백 적용 */
+.mobile-dropdown .profile-pic {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin-bottom: 12px;
+  border: 3px solid transparent;
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(135deg, #667eea 0%, #764ba2 100%) border-box;
+}
+
+.mobile-dropdown .nickname {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.mobile-dropdown .points {
+  color: #667eea;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.mobile-dropdown .dropdown-btn {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  padding: 12px;
+  margin-top: 8px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mobile-dropdown .dropdown-btn:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+/* 1500px 이상 큰 화면 */
 @media (min-width: 1500px) {
   .header {
-    padding: 10px 230px;
+    padding: 12px 230px;
   }
 }
 
@@ -365,6 +459,7 @@
   .header {
     padding: 10px 16px;
     flex-wrap: nowrap;
+    background: rgba(255, 255, 255, 0.9);
   }
 
   .desktop-nav {
@@ -386,7 +481,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
     z-index: 999;
   }
 
@@ -421,7 +517,7 @@
   }
 
   .mobile-nav a {
-    font-size: 15px;
-    padding: 10px 0;
+    font-size: 14px;
+    padding: 12px 14px;
   }
 }

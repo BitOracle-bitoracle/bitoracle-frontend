@@ -156,7 +156,7 @@
 .write-button {
   position: fixed;
   bottom: 24px;
-  right: 24px;
+  right: calc((100% - 67%) / 2 + 20px);
   width: 56px;
   height: 56px;
   background: rgba(255, 255, 255, 0.2);
@@ -379,6 +379,10 @@
   .post-card {
     width: calc(33.333% - 16px);
   }
+
+  .write-button {
+    right: calc((100% - 85%) / 2 + 16px);
+  }
 }
 
 /* 모바일 크기 (768px 이하) */
@@ -468,7 +472,7 @@
     height: 48px;
     font-size: 28px;
     bottom: 16px;
-    right: 16px;
+    right: 12px;
   }
 
   .page-btn {

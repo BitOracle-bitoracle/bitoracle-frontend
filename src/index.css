@@ -37,3 +37,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* 모달이 열릴 때 스크롤 방지 */
+body.modal-open {
+  overflow: hidden;
+}

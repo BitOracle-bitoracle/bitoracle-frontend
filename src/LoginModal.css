@@ -1,20 +1,10 @@
 /* Modal Overlay */
 .modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        135deg,
-        rgba(102, 126, 234, 0.9) 0%,
-        rgba(118, 75, 162, 0.9) 25%,
-        rgba(240, 147, 251, 0.9) 50%,
-        rgba(79, 172, 254, 0.9) 75%,
-        rgba(0, 242, 254, 0.9) 100%
-    );
-    background-size: 400% 400%;
-    animation: gradientShift 15s ease infinite;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -23,24 +13,22 @@
     box-sizing: border-box;
 }
 
-@keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
 /* Modal Content */
 .modal-content {
-    background: rgba(255, 255, 255, 0.15);
+    background: linear-gradient(
+        135deg,
+        rgba(102, 126, 234, 0.95) 0%,
+        rgba(118, 75, 162, 0.95) 100%
+    );
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    padding: 40px 32px;
+    padding: 48px 40px;
     border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
     text-align: center;
-    min-width: 320px;
-    max-width: 400px;
+    min-width: 340px;
+    max-width: 420px;
     width: 100%;
     position: relative;
     animation: modalSlideIn 0.3s ease-out;
