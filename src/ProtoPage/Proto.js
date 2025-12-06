@@ -5,6 +5,7 @@ import axios from "axios";
 import "./Proto.css";
 
 const BASE_URL = "https://api.bitoracle.shop/api/predict";
+const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
 
 const Proto = () => {
     const [isPredicted, setIsPredicted] = useState(true);
@@ -12,17 +13,19 @@ const Proto = () => {
     useEffect(() => {
         const token = localStorage.getItem("access");
 
-        if (!token) {
+        if (!token && !isLocalhost) {
             alert("로그인이 필요합니다.");
             return;
         }
+
+        if (!token) return; // localhost에서 토큰 없으면 API 호출 스킵
 
         axios
             .get(`${BASE_URL}/check`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                withCredentials: true, // Cookie 전달함.
+                withCredentials: true,
             })
             .then((res) => {
                 console.log("user isPredicted: ", res);
@@ -46,7 +49,7 @@ const Proto = () => {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                withCredentials: true, // Cookie 전달함.
+                withCredentials: true,
             });
             console.log("Success to post predict.", res);
             alert(`${predictType.upDown}을 선택하셨습니다.`);
@@ -120,7 +123,6 @@ const CoinIndex = () => {
             <div className="middle-placeholder"/>
             <h4 className="inform-box">오늘 00시 비트코인</h4>
             <p className="inform-value">{price}원</p>
-            {/* <span className="inform-box">비트코인 현재가: {}</span> */}
         </div>
     );
 };
@@ -129,7 +131,7 @@ const StatCalendar = () => {
     const [predictions, setPredictions] = useState({});
 
     const tileContent = ({ date, view }) => {
-        const dateStr = date.toISOString().slice(0, 10); // 'YYYY-MM-DD'
+        const dateStr = date.toISOString().slice(0, 10);
 
         if (predictions[dateStr] === "true") {
             return <span className="marker-success">●</span>; 
@@ -143,17 +145,19 @@ const StatCalendar = () => {
     useEffect(() => {
         const token = localStorage.getItem("access");
 
-        if (!token) {
+        if (!token && !isLocalhost) {
             alert("로그인이 필요합니다.");
             return;
         }
+
+        if (!token) return; // localhost에서 토큰 없으면 API 호출 스킵
 
         axios
             .get(`${BASE_URL}/calendar`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                withCredentials: true, // Cookie 전달함.
+                withCredentials: true,
             })
             .then((res) => {
                 const resultMap = {};
@@ -173,7 +177,7 @@ const StatCalendar = () => {
     return (
         <Calendar
             tileContent={tileContent}
-            maxDate={new Date()} // 오늘까지만 선택 가능
+            maxDate={new Date()}
             formatDay={(locale, date) => date.getDate()}
         />
     );
@@ -185,17 +189,19 @@ const StatText = () => {
     useEffect(() => {
         const token = localStorage.getItem("access");
 
-        if (!token) {
+        if (!token && !isLocalhost) {
             alert("로그인이 필요합니다.");
             return;
         }
+
+        if (!token) return; // localhost에서 토큰 없으면 API 호출 스킵
 
         axios
             .get(`${BASE_URL}/stats`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                withCredentials: true, // Cookie 전달함.
+                withCredentials: true,
             })
             .then((res) => {
                 console.log("Success to get stats:", res.data);

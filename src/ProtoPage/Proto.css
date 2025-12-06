@@ -25,9 +25,10 @@
 
 /* 2. 내용물 래퍼: 기존 레이아웃 속성 이동 */
 .proto-content {
-    display: flex; /* 좌우 패널 배치 */
+    display: flex;
     width: 67%;
-    padding: 20px;
+    padding: 32px;
+    gap: 32px;
     box-sizing: border-box;
 }
 
@@ -35,8 +36,7 @@
     width: 50%;
     display: flex;
     flex-direction: column;
-    padding: 16px;
-    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    gap: 24px;
 }
 
 .proto-left > .middle-placeholder {
@@ -46,13 +46,15 @@
 .inform-wrapper {
     flex: 1;
     flex-direction: column;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    padding: 24px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    padding: 32px;
     box-sizing: border-box;
 }
 
@@ -64,28 +66,31 @@
 }
 
 .inform-wrapper h4 {
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.85);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     font-weight: 400;
+    margin-bottom: 24px;
 }
 
 .inform-box {
-    font-size: 24px;
+    font-size: 18px;
     text-align: center;
-    color: #fff;
+    color: rgba(255, 255, 255, 0.8);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    margin-bottom: 8px;
 }
 
 .inform-value {
     color: #fff;
-    font-weight: bold;
-    font-size: 32px;
+    font-weight: 700;
+    font-size: 36px;
     text-align: center;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    margin-bottom: 32px;
 }
 
 .inform-wrapper > .middle-placeholder {
-    padding: 48px;
+    padding: 32px;
 }
 
 .btn-wrapper {
@@ -93,31 +98,36 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    gap: 16px;
+    gap: 20px;
 }
 
 .prediction-btn {
-    width: 25%;
-    padding: 16px 24px;
+    width: 140px;
+    padding: 16px 28px;
     cursor: pointer;
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 16px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     color: white;
     font-weight: 600;
+    font-size: 16px;
     text-align: center;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .prediction-btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.25);
     border-color: rgba(255, 255, 255, 0.5);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .prediction-btn:active:not(:disabled) {
@@ -126,120 +136,168 @@
 }
 
 .prediction-btn:disabled {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
     cursor: not-allowed;
     transition: none;
     transform: none;
     box-shadow: none;
-    border-color: rgba(255, 255, 255, 0.2);
-    opacity: 0.6;
+    border-color: rgba(255, 255, 255, 0.15);
+    opacity: 0.5;
 }
 
 .proto-right {
     width: 50%;
     display: flex;
     flex-direction: column;
-    padding: 16px;
+    gap: 24px;
 }
 
 .proto-calendar {
-    flex: 0.5;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    padding: 16px;
-    margin-bottom: 16px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    padding: 24px;
     box-sizing: border-box;
 }
 
 .react-calendar {
     background: transparent !important;
     border: none !important;
+    width: 100% !important;
 }
 
 .react-calendar__navigation {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
+    gap: 8px;
 }
 
 .react-calendar__navigation button {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 10px;
     color: #fff;
-    font-weight: bold;
-    font-size: 16px;
-    padding: 8px 12px;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 10px 16px;
     transition: all 0.3s ease;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .react-calendar__navigation button:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.4);
 }
 
 .react-calendar__month-view__weekdays {
     text-align: center;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    margin-bottom: 8px;
 }
 
 .react-calendar__month-view__weekdays abbr {
     text-decoration: none;
 }
 
+.react-calendar__month-view__days {
+    gap: 6px;
+}
+
+/* 연도/월/10년 선택 뷰 - 3열 레이아웃 */
+.react-calendar__year-view__months,
+.react-calendar__decade-view__years,
+.react-calendar__century-view__decades {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+}
+
+.react-calendar__year-view__months__month,
+.react-calendar__decade-view__years__year,
+.react-calendar__century-view__decades__decade {
+    aspect-ratio: auto !important;
+    padding: 16px 8px !important;
+    max-width: none !important;
+    flex-basis: auto !important;
+}
+
 .react-calendar__tile {
     aspect-ratio: 1 / 1;
-    font-size: 16px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
     text-align: center;
     transition: all 0.3s ease;
     color: #fff;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    margin: 2px;
 }
 
 .react-calendar__tile:enabled:hover {
     background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.4);
+    border-color: rgba(255, 255, 255, 0.35);
     transform: scale(1.05);
 }
 
-.react-calendar__tile--now {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.5);
+/* 선택 불가능한 미래 날짜 */
+.react-calendar__tile:disabled {
+    background: rgba(0, 0, 0, 0.15);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.35);
+    cursor: not-allowed;
+    text-shadow: none;
 }
 
+.react-calendar__tile:disabled:hover {
+    transform: none;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+/* 오늘 날짜 - 특별한 강조 */
+.react-calendar__tile--now {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    font-weight: 700;
+}
+
+.react-calendar__tile--now:enabled:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.25) 100%);
+}
+
+/* 선택된 날짜 */
 .react-calendar__tile--active {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.6);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.2) 100%);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
 }
 
 .marker {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 4px;
 }
 
 .marker-success {
-    font-size: 16px;
+    font-size: 14px;
     color: #74b9ff;
     font-weight: bold;
 }
 
 .marker-fail {
-    font-size: 16px;
+    font-size: 14px;
     color: #ff6b6b;
     font-weight: bold;
 }
@@ -248,34 +306,54 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    margin-top: 8px;
-    gap: 16px;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    padding: 24px;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    padding: 28px;
     box-sizing: border-box;
 }
 
 .stat-row {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
 }
 
 .stats-text {
-    font-size: 24px;
+    font-size: 18px;
     color: #fff;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.stats-text:last-child {
+    font-weight: 600;
 }
 
 /* 태블릿 크기 (768px ~ 1024px) */
 @media (max-width: 1024px) {
     .proto-content {
-        width: 85%;
-        padding: 16px;
+        width: 90%;
+        padding: 24px;
+        gap: 24px;
+    }
+
+    .inform-wrapper {
+        padding: 24px;
+    }
+
+    .proto-calendar {
+        padding: 20px;
+    }
+
+    .proto-stat {
+        padding: 24px;
     }
 }
 
@@ -284,19 +362,14 @@
     .proto-content {
         width: 100%;
         flex-direction: column;
-        padding: 12px;
-        gap: 16px;
+        padding: 16px;
+        gap: 20px;
     }
 
     .proto-left,
     .proto-right {
         width: 100%;
-        padding: 0;
-    }
-
-    .proto-left {
-        border-right: none;
-        padding-bottom: 16px;
+        gap: 20px;
     }
 
     .proto-left > .middle-placeholder {
@@ -304,17 +377,17 @@
     }
 
     .inform-wrapper {
-        padding: 20px;
+        padding: 24px;
     }
 
     .inform-wrapper h1 {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
         margin-bottom: 4px;
     }
 
     .inform-wrapper h4 {
-        font-size: 0.9rem;
-        margin-bottom: 16px;
+        font-size: 0.95rem;
+        margin-bottom: 20px;
     }
 
     .inform-wrapper > .middle-placeholder {
@@ -323,46 +396,49 @@
 
     .inform-box {
         font-size: 16px;
-        margin-bottom: 4px;
+        margin-bottom: 6px;
     }
 
     .inform-value {
-        font-size: 28px;
-        margin-bottom: 0;
+        font-size: 32px;
+        margin-bottom: 24px;
     }
 
     .btn-wrapper {
-        margin-top: 16px;
-        gap: 12px;
+        margin-top: 8px;
+        gap: 16px;
     }
 
     .prediction-btn {
-        width: 45%;
-        padding: 14px 20px;
-        font-size: 16px;
+        width: 130px;
+        padding: 14px 24px;
+        font-size: 15px;
     }
 
     .proto-calendar {
-        margin-bottom: 0;
-        padding: 16px;
+        padding: 20px;
+    }
+
+    .react-calendar__navigation {
+        margin-bottom: 12px;
     }
 
     .react-calendar__navigation button {
-        font-size: 14px;
-        padding: 6px 10px;
+        font-size: 13px;
+        padding: 8px 12px;
     }
 
     .react-calendar__month-view__weekdays {
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .react-calendar__tile {
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .proto-stat {
-        padding: 20px;
-        gap: 12px;
+        padding: 24px;
+        gap: 16px;
     }
 
     .stat-row {
@@ -378,19 +454,26 @@
 /* 작은 모바일 (480px 이하) */
 @media (max-width: 480px) {
     .proto-content {
-        padding: 8px;
+        padding: 12px;
+        gap: 16px;
+    }
+
+    .proto-left,
+    .proto-right {
+        gap: 16px;
     }
 
     .inform-wrapper {
-        padding: 16px;
+        padding: 20px;
     }
 
     .inform-wrapper h1 {
-        font-size: 1.25rem;
+        font-size: 1.4rem;
     }
 
     .inform-wrapper h4 {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
+        margin-bottom: 16px;
     }
 
     .inform-wrapper > .middle-placeholder {
@@ -398,26 +481,31 @@
     }
 
     .inform-box {
-        font-size: 14px;
-    }
-
-    .inform-value {
-        font-size: 24px;
-    }
-
-    .prediction-btn {
-        width: 45%;
-        padding: 12px 16px;
         font-size: 15px;
     }
 
+    .inform-value {
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+
+    .prediction-btn {
+        width: 120px;
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+
     .proto-calendar {
-        padding: 12px;
+        padding: 16px;
+    }
+
+    .react-calendar__navigation {
+        margin-bottom: 10px;
     }
 
     .react-calendar__navigation button {
         font-size: 12px;
-        padding: 5px 8px;
+        padding: 6px 10px;
     }
 
     .react-calendar__month-view__weekdays {
@@ -426,13 +514,15 @@
 
     .react-calendar__tile {
         font-size: 12px;
+        border-radius: 8px;
     }
 
     .proto-stat {
-        padding: 16px;
+        padding: 20px;
+        gap: 14px;
     }
 
     .stats-text {
-        font-size: 14px;
+        font-size: 15px;
     }
 }
