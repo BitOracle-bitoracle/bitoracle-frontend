@@ -7,7 +7,14 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   padding: 20px;
+  padding-top: 40px;
   box-sizing: border-box;
+  height: 100%;
+}
+
+.indicator-panel-wrapper {
+  position: relative;
+  width: 100%;
   height: 100%;
 }
 
@@ -20,6 +27,7 @@
   grid-template-rows: repeat(2, 1fr);
   gap: 12px;
   align-items: stretch;
+  margin-top: 0;
 }
 
 .indicator-card {
@@ -38,6 +46,49 @@
   align-items: center;
   position: relative;
   overflow: hidden;
+}
+
+.indicator-card.fear-greed-card {
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.fear-greed-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+}
+
+.indicator-card.fear-greed-card .indicator-title {
+  margin: 0;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+.indicator-card.fear-greed-card .fear-greed-chart-wrapper {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+.indicator-card.fear-greed-card .fear-greed-chart-wrapper .recharts-wrapper {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 0;
+}
+
+.indicator-card.fear-greed-card .fear-greed-chart-wrapper svg {
+  display: block;
+  margin: 0;
+  padding: 0;
 }
 
 .indicator-card::before {
@@ -72,8 +123,8 @@
 }
 
 .fear-greed-title {
-  margin-top: 10px;
-  margin-bottom: 4px;
+  margin: 0;
+  flex-shrink: 0;
 }
 
 .indicator-card p {
@@ -86,19 +137,26 @@
 .fear-greed-chart-wrapper {
   position: relative;
   width: 130px;
-  height: 130px;
+  height: 85px;
+  /* 차트의 반원 부분만 보이도록 높이 제한 */
   margin: 0 auto;
 }
 
 .fear-greed-center {
   position: absolute;
-  top: 52%;
+  top: 45px;
+  /* 65px(바닥)보다 위로 올려서 아치 안쪽으로 쏙 넣음 */
   left: 50%;
   transform: translate(-50%, -50%);
+  /* 정확한 정중앙 맞춤 */
   text-align: center;
   font-weight: bold;
   color: #fff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  /* 텍스트 가로 정렬 보장 */
+  pointer-events: none;
+  /* 마우스 이벤트가 차트를 가리지 않게 함 */
 }
 
 .fear-greed-center p:first-child {
@@ -117,8 +175,8 @@
 
 .last-update {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: -32px;
+  left: 0;
   font-size: 12px;
   color: rgba(255, 255, 255, 0.8);
   margin: 0;
@@ -128,21 +186,17 @@
   border-radius: 8px;
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
+  pointer-events: none;
 }
 
 /* 태블릿 크기 (768px ~ 1024px) */
 @media (max-width: 1024px) {
   .indicator-panel {
-    margin-top: 0; /* panel의 gap으로 간격 조정 */
-    margin-bottom: 0; /* panel의 gap으로 간격 조정 */
+    padding-top: 36px;
   }
 
   .indicator-grid {
     gap: 10px;
-  }
-
-  .indicator-card {
-    min-height: 150px;
   }
 }
 
@@ -151,6 +205,7 @@
   .indicator-panel {
     margin-top: 0; /* panel의 gap으로 간격 조정 */
     margin-bottom: 0; /* panel의 gap으로 간격 조정 */
+    padding-top: 32px;
   }
 
   .indicator-grid {
@@ -171,7 +226,19 @@
   }
 
   .fear-greed-title {
-    margin-top: 8px;
+    margin: 0;
+  }
+
+  .indicator-card.fear-greed-card .indicator-title {
+    margin-bottom: 14px;
+  }
+
+  .indicator-card.fear-greed-card {
+    padding: 8px;
+  }
+
+  .fear-greed-content {
+    gap: 6px;
   }
 
   .indicator-card p {
@@ -180,7 +247,17 @@
 
   .fear-greed-chart-wrapper {
     width: 100px;
-    height: 100px;
+    height: 65px;
+    /* 차트의 반원 부분만 보이도록 높이 제한 */
+  }
+
+  .fear-greed-center {
+    top: 29px;
+    /* 바닥보다 위로 올려서 아치 안쪽으로 쏙 넣음 */
+    width: 100%;
+    /* 텍스트 가로 정렬 보장 */
+    pointer-events: none;
+    /* 마우스 이벤트가 차트를 가리지 않게 함 */
   }
 
   .fear-greed-center p:first-child {
@@ -193,8 +270,8 @@
 
   .last-update {
     font-size: 10px;
-    top: 4px;
-    left: 4px;
+    top: -28px;
+    left: 0;
   }
 }
 
@@ -217,7 +294,19 @@
   }
 
   .fear-greed-title {
-    margin-top: 8px;
+    margin: 0;
+  }
+
+  .indicator-card.fear-greed-card .indicator-title {
+    margin-bottom: 10px;
+  }
+
+  .indicator-card.fear-greed-card {
+    padding: 6px;
+  }
+
+  .fear-greed-content {
+    gap: 4px;
   }
 
   .indicator-card p {
@@ -226,7 +315,17 @@
 
   .fear-greed-chart-wrapper {
     width: 80px;
-    height: 80px;
+    height: 52px;
+    /* 차트의 반원 부분만 보이도록 높이 제한 */
+  }
+
+  .fear-greed-center {
+    top: 24px;
+    /* 바닥보다 위로 올려서 아치 안쪽으로 쏙 넣음 */
+    width: 100%;
+    /* 텍스트 가로 정렬 보장 */
+    pointer-events: none;
+    /* 마우스 이벤트가 차트를 가리지 않게 함 */
   }
 
   .fear-greed-center p:first-child {
@@ -239,8 +338,8 @@
 
   .last-update {
     font-size: 9px;
-    top: 3px;
-    left: 3px;
+    top: -24px;
+    left: 0;
     padding: 2px 6px;
   }
 }

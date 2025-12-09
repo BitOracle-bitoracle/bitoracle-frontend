@@ -21,6 +21,8 @@ const formatValue = (title, value) => {
 };
 
 const IndicatorPanel = () => {
+  const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+
   const [data, setData] = useState({
     marketCap: null,
     dominance: null,
@@ -31,6 +33,19 @@ const IndicatorPanel = () => {
   const [lastUpdate, setLastUpdate] = useState(null);
 
   useEffect(() => {
+    // 로컬 환경에서 더미 데이터 사용
+    if (isLocalhost) {
+      const dummyData = {
+        marketCap: 2_500_000_000_000, // $2.5T
+        dominance: 52.5,
+        fearGreed: 65,
+        kimchiPremium: 3.2,
+      };
+      setData(dummyData);
+      setLastUpdate(new Date());
+      return;
+    }
+
     // metrics - 시가총액, 도미넌스, 김치프리미엄 포함
     axiosInstance.get("/api/metrics")
       .then(res => {
@@ -79,7 +94,7 @@ const IndicatorPanel = () => {
     return () => {
       client.disconnect();
     };
-  }, []);
+  }, [isLocalhost]);
 
   const getFearGreedLabel = (value) => {
     const num = Number(value);
@@ -107,7 +122,7 @@ const IndicatorPanel = () => {
   ];
 
   return (
-    <>
+    <div className="indicator-panel-wrapper">
       {lastUpdate && (
         <p className="last-update">
           마지막 업데이트: {lastUpdate.toLocaleTimeString()}
@@ -115,47 +130,54 @@ const IndicatorPanel = () => {
       )}
       <div className="indicator-grid">
         {indicators.map((item, index) => (
-          <div key={index} className="indicator-card">
-            <h2 className={item.title === "공포와 탐욕 지수" ? "indicator-title fear-greed-title" : "indicator-title"}>
-              {item.title}
-            </h2>
+          <div key={index} className={`indicator-card ${item.title === "공포와 탐욕 지수" ? "fear-greed-card" : ""}`}>
             {item.title === "공포와 탐욕 지수" && item.value !== "Loading..." ? (
-              <div className="fear-greed-chart-wrapper">
-                <RadialBarChart
-                  width={130}
-                  height={130}
-                  innerRadius="70%"
-                  outerRadius="100%"
-                  data={[{ name: "FearGreed", value: Number(item.value), fill: getFearGreedColor(item.value) }]}
-                  startAngle={180}
-                  endAngle={0}
-                >
-                  <PolarAngleAxis
-                    type="number"
-                    domain={[0, 100]}
-                    angleAxisId={0}
-                    tick={false}
-                  />
-                  <RadialBar
-                    minAngle={15}
-                    background
-                    clockWise
-                    dataKey="value"
-                    cornerRadius={10}
-                  />
-                </RadialBarChart>
-                <div className="fear-greed-center">
-                  <p>{item.value}</p>
-                  <p>{getFearGreedLabel(item.value)}</p>
+              <div className="fear-greed-content">
+                <h2 className="indicator-title fear-greed-title">
+                  {item.title}
+                </h2>
+                <div className="fear-greed-chart-wrapper">
+                  <RadialBarChart
+                    width={130}
+                    height={130}
+                    innerRadius="70%"
+                    outerRadius="100%"
+                    data={[{ name: "FearGreed", value: Number(item.value), fill: getFearGreedColor(item.value) }]}
+                    startAngle={180}
+                    endAngle={0}
+                  >
+                    <PolarAngleAxis
+                      type="number"
+                      domain={[0, 100]}
+                      angleAxisId={0}
+                      tick={false}
+                    />
+                    <RadialBar
+                      minAngle={15}
+                      background
+                      clockWise
+                      dataKey="value"
+                      cornerRadius={10}
+                    />
+                  </RadialBarChart>
+                  <div className="fear-greed-center">
+                    <p>{item.value}</p>
+                    <p>{getFearGreedLabel(item.value)}</p>
+                  </div>
                 </div>
               </div>
             ) : (
-              <p>{item.value}</p>
+              <>
+                <h2 className="indicator-title">
+                  {item.title}
+                </h2>
+                <p>{item.value}</p>
+              </>
             )}
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 };
 
