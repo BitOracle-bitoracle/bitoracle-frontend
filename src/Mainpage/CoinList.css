@@ -60,12 +60,14 @@
     font-size: 0.9em;
 }
 
-.positive {
-    color: #2ecc71;
+.coin-list-table tbody td.positive {
+    color: #4ade80 !important;
+    font-weight: 600;
 }
 
-.negative {
-    color: #e74c3c;
+.coin-list-table tbody td.negative {
+    color: #f87171 !important;
+    font-weight: 600;
 }
 
 .coin-icon {
@@ -173,11 +175,11 @@
     }
 
     .coin-change-mobile.positive {
-        color: #2ecc71;
+        color: #4ade80;
     }
 
     .coin-change-mobile.negative {
-        color: #e74c3c;
+        color: #f87171;
     }
 }
 

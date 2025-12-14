@@ -9,17 +9,42 @@ const staticCoins = [
 ];
 
 const CoinList = () => {
+  const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+  
+  // 더미 데이터 (로컬 환경용)
+  const dummyData = {
+    btc: { price: 98500000, volume24h: 2500000000000, change24h: 2.45 },
+    eth: { price: 48500000, volume24h: 1200000000000, change24h: -1.23 },
+    xrp: { price: 1250, volume24h: 85000000000, change24h: 0.87 }
+  };
+
   const [coins, setCoins] = useState(
-    staticCoins.map(coin => ({
-      ...coin,
-      price: 0,
-      volume24h: 0,
-      change24h: 0,
-      marketCap: 0
-    }))
+    staticCoins.map(coin => {
+      if (isLocalhost && dummyData[coin.id]) {
+        return {
+          ...coin,
+          price: dummyData[coin.id].price,
+          volume24h: dummyData[coin.id].volume24h,
+          change24h: dummyData[coin.id].change24h,
+          marketCap: 0
+        };
+      }
+      return {
+        ...coin,
+        price: 0,
+        volume24h: 0,
+        change24h: 0,
+        marketCap: 0
+      };
+    })
   );
 
   useEffect(() => {
+    // 로컬 환경에서는 STOMP 연결 스킵
+    if (isLocalhost) {
+      return;
+    }
+
     // STOMP 클라이언트 생성 (WebSocket 직접 연결)
     const stompClient = new Client({
       brokerURL: 'wss://api.bitoracle.shop/ws-upbit',
@@ -76,7 +101,7 @@ const CoinList = () => {
       // 언마운트 시 연결 해제
       stompClient.deactivate();
     };
-  }, []);
+  }, [isLocalhost]);
 
   return (
     <div className="coin-list-container">
