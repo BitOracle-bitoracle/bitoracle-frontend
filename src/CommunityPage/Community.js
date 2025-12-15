@@ -12,7 +12,7 @@ import "./Community.css";
 
 const CATEGORIES = ["전체글", "인기글", "칼럼글"];
 const POSTS_PER_PAGE = 20;
-const BASE_URL = "https://api.bitoracle.shop/api/community";
+const BASE_URL = "http://3.36.74.196:8080/api/community";
 
 const CommunityPage = () => {
     const navigate = useNavigate();

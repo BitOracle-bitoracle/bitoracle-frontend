@@ -20,7 +20,7 @@ const LoginModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   const redirectToGoogleLogin = () => {
-    window.location.href = "https://api.bitoracle.shop/oauth2/authorization/google";
+    window.location.href = "http://3.36.74.196:8080/oauth2/authorization/google";
   };
 
   // Portal을 사용해서 body에 직접 렌더링 (blur 영향 받지 않도록)

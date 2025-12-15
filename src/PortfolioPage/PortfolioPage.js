@@ -27,7 +27,7 @@ const PortfolioPage = () => {
 
     // STOMP connection via SockJS, WebSocket transport only
     const socket = new SockJS(
-      `https://api.bitoracle.shop/ws-portfolio?token=Bearer ${token}`,
+      `http://3.36.74.196:8080/ws-portfolio?token=Bearer ${token}`,
       null,
       {
         transports: ["websocket"], // disable JSONP/polling fallback
@@ -112,7 +112,7 @@ const PortfolioPage = () => {
       ...(removedItem.avgPrice && !isNaN(removedItem.avgPrice) && removedItem.avgPrice > 0 && { price: removedItem.avgPrice }),
     };
     console.log("PortfolioPage - removeRow payload:", payload); //디버깅
-    fetch("https://api.bitoracle.shop/api/portfolio/sell", {
+    fetch("http://3.36.74.196:8080/api/portfolio/sell", {
       method: "POST",
       // credentials: "include",                // 쿠키 전송
       headers: {
@@ -205,7 +205,7 @@ const PortfolioPage = () => {
                       quantity: previous.amount,
                       ...(previous.avgPrice && !isNaN(previous.avgPrice) && previous.avgPrice > 0 && { price: previous.avgPrice }),
                     };
-                    await fetch("https://api.bitoracle.shop/api/portfolio/sell", {
+                    await fetch("http://3.36.74.196:8080/api/portfolio/sell", {
                       method: "POST",
                       headers: {
                         "Content-Type": "application/json",
@@ -222,7 +222,7 @@ const PortfolioPage = () => {
                     ...(item.avgPrice && !isNaN(item.avgPrice) && item.avgPrice > 0 && { price: item.avgPrice }),
                   };
                   console.log("PortfolioPage - BUY payload:", buyPayload); //디버깅
-                  const res = await fetch("https://api.bitoracle.shop/api/portfolio/buy", {
+                  const res = await fetch("http://3.36.74.196:8080/api/portfolio/buy", {
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json",

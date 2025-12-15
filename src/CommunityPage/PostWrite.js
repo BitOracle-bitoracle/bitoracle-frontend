@@ -10,7 +10,7 @@ import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-sy
 
 import "./PostWrite.css";
 
-const BASE_URL = "https://api.bitoracle.shop/api/community";
+const BASE_URL = "http://3.36.74.196:8080/api/community";
 
 const PostWrite = () => {
     const navigate = useNavigate();

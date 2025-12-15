@@ -8,7 +8,7 @@ import "./News.css";
 // TODO 페이지네이션 위치 고정하기
 // TODO 요약글 대신 날짜 우측 정렬로 추가
 
-const BASE_URL = "https://api.bitoracle.shop/api/news";
+const BASE_URL = "http://3.36.74.196:8080/api/news";
 const NEWS_PER_PAGE = 10;
 const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
 

@@ -26,7 +26,7 @@ function App() {
         }
 
         const fetchAccessToken = async () => {
-            const url = "https://api.bitoracle.shop/api/auth/init";
+            const url = "http://3.36.74.196:8080/api/auth/init";
             console.log("✅ 요청 URL:", url);
         };
     });

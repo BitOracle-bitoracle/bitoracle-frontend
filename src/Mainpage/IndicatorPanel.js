@@ -72,7 +72,7 @@ const IndicatorPanel = () => {
       .catch(err => console.error("fear-greed API 오류:", err));
 
     // STOMP over WebSocket
-    const ws = new WebSocket("wss://api.bitoracle.shop/ws-metrics");
+    const ws = new WebSocket("wss://3.36.74.196:8080/ws-metrics");
     const client = Stomp.over(ws);
 
     client.connect({}, (frame) => {

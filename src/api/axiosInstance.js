@@ -2,8 +2,8 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://api.bitoracle.shop", // 실제 백엔드 API 도메인
-  // baseURL: 'http://localhost:8000', // 로컬 테스트용
+  //baseURL: "https://api.bitoracle.shop", // 실제 백엔드 API 도메인
+  baseURL: 'http://3.36.74.196:8080', // 로컬 테스트용
   withCredentials: true, // 필요 시 설정 (쿠키 등)
   headers: {
     "Content-Type": "application/json",

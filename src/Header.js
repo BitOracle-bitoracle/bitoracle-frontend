@@ -30,7 +30,7 @@ const Header = () => {
     }
     // 열려 있지 않으면 API 호출
     try {
-      const res = await fetch("https://api.bitoracle.shop/api/community/my-posts", {
+      const res = await fetch("http://3.36.74.196:8080/api/community/my-posts", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access")}`
@@ -47,7 +47,7 @@ const Header = () => {
   };
 
   React.useEffect(() => {
-    fetch("https://api.bitoracle.shop/api/auth/init", {
+    fetch("http://3.36.74.196:8080/api/auth/init", {
       method: "GET",
       credentials: "include",
     })
@@ -93,7 +93,7 @@ const Header = () => {
   // Fetch detailed user info after auth checked and login
   useEffect(() => {
     if (!authChecked || !isLoggedIn) return;
-    fetch("https://api.bitoracle.shop/api/mypage/userinfo", {
+    fetch("http://3.36.74.196:8080/api/mypage/userinfo", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("access")}`,
@@ -123,7 +123,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch("https://api.bitoracle.shop/logout", {
+      await fetch("http://3.36.74.196:8080/logout", {
         method: "POST",
         credentials: "include",
       });

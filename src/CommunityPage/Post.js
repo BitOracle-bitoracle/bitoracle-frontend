@@ -5,7 +5,7 @@ import axios from "axios";
 
 import "./Post.css";
 
-const BASE_URL = "https://api.bitoracle.shop/api/community";
+const BASE_URL = "http://3.36.74.196:8080/api/community";
 
 const Post = () => {
     const { id } = useParams();

@@ -81,8 +81,8 @@ const PredictionChart = () => {
 
       try {
         const [realRes, predictRes] = await Promise.allSettled([
-            axiosInstance.get('/api/price/chart'),
-            axiosInstance.get('/api/predict/chart')
+            axiosInstance.get('http://3.36.74.196:8000/api/price/chart', { withCredentials: false }),
+            axiosInstance.get('http://3.36.74.196:8000/api/predict/chart', { withCredentials: false })
         ]);
 
         const actualRaw = realRes.status === 'fulfilled' 

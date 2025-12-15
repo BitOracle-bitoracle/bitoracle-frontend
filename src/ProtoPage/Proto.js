@@ -4,7 +4,7 @@ import axios from "axios";
 
 import "./Proto.css";
 
-const BASE_URL = "https://api.bitoracle.shop/api/predict";
+const BASE_URL = "http://3.36.74.196:8080/api/predict";
 const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
 
 const Proto = () => {
