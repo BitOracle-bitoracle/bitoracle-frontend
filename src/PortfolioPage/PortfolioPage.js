@@ -13,7 +13,15 @@ const PortfolioPage = () => {
   }, [editMode]);
   // holdings: [{ coin, amount, avgPrice, currentPrice }]
   const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-  const [holdings, setHoldings] = useState([]);
+  
+  // 더미 데이터 (로컬 환경용)
+  const dummyHoldings = [
+    { coin: "BTC", amount: 0.5, avgPrice: 95000000, currentPrice: 98500000 },
+    { coin: "ETH", amount: 2.0, avgPrice: 48000000, currentPrice: 48500000 },
+    { coin: "XRP", amount: 10000, avgPrice: 1200, currentPrice: 1250 }
+  ];
+  
+  const [holdings, setHoldings] = useState(isLocalhost ? dummyHoldings : []);
   const [originalHoldings, setOriginalHoldings] = useState([]);
 
 
@@ -21,6 +29,12 @@ const PortfolioPage = () => {
    // 2. STOMP 연결: "/ws-portfolio" → 구독 "/user/queue/portfolio"
    // -------------------------------
   useEffect(() => {
+    // 로컬 환경에서는 STOMP 연결 스킵
+    if (isLocalhost) {
+      console.log("✅ 로컬 테스트 - STOMP 연결 스킵");
+      return;
+    }
+    
     const token = localStorage.getItem("access");
     console.log("PortfolioPage - STOMP token:", token); //디버깅
     if (!token) return;

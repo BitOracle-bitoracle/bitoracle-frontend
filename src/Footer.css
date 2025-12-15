@@ -94,7 +94,7 @@
 }
 
 .footer-btn {
-    display: inline-block;
+    display: none;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     text-decoration: none;
@@ -102,6 +102,7 @@
     border-radius: 12px;
     font-weight: 600;
     border: none;
+    cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }

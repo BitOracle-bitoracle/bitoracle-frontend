@@ -105,6 +105,12 @@ const CoinIndex = () => {
     const [price, setPrice] = useState(null);
 
     useEffect(() => {
+        // 로컬 환경에서는 더미 데이터 사용
+        if (isLocalhost) {
+            setPrice(98500000);
+            return;
+        }
+
         axios
             .get(`${BASE_URL}/midnight`)
             .then((res) => {
@@ -143,6 +149,24 @@ const StatCalendar = () => {
     };
 
     useEffect(() => {
+        // 로컬 환경에서는 더미 데이터 사용
+        if (isLocalhost) {
+            const today = new Date();
+            const dummyPredictions = {};
+            
+            // 최근 7일간의 더미 예측 결과 생성
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toISOString().slice(0, 10);
+                // 랜덤하게 성공/실패 표시 (70% 성공률)
+                dummyPredictions[dateStr] = Math.random() > 0.3 ? "true" : "false";
+            }
+            
+            setPredictions(dummyPredictions);
+            return;
+        }
+
         const token = localStorage.getItem("access");
 
         if (!token && !isLocalhost) {
@@ -187,6 +211,17 @@ const StatText = () => {
     const [stats, setStats] = useState(null);
 
     useEffect(() => {
+        // 로컬 환경에서는 더미 데이터 사용
+        if (isLocalhost) {
+            const dummyStats = {
+                trial: 15,
+                success: 11,
+                failure: 4
+            };
+            setStats(dummyStats);
+            return;
+        }
+
         const token = localStorage.getItem("access");
 
         if (!token && !isLocalhost) {
@@ -247,8 +282,8 @@ const StatText = () => {
                         <div className="winrate-info">
                             <span className="winrate-label">승률</span>
                             <span className="winrate-value">{winRate}%</span>
-                        </div>
                     </div>
+                </div>
                 </>
             ) : (
                 <div className="stat-empty">

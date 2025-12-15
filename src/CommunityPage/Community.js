@@ -13,6 +13,35 @@ import "./Community.css";
 const CATEGORIES = ["전체글", "인기글", "칼럼글"];
 const POSTS_PER_PAGE = 20;
 const BASE_URL = "https://api.bitoracle.shop/api/community";
+const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+
+// 더미 데이터 (로컬 환경용)
+const dummyPosts = {
+    "전체글": [
+        { id: 1, title: "비트코인 가격 전망에 대한 의견", writer: "코인마스터", likeCount: 42 },
+        { id: 2, title: "이더리움 2.0 업그레이드 분석", writer: "블록체인러버", likeCount: 38 },
+        { id: 3, title: "암호화폐 투자 초보자를 위한 가이드", writer: "투자고수", likeCount: 56 },
+        { id: 4, title: "리플(XRP) 최근 동향 정리", writer: "시장분석가", likeCount: 29 },
+        { id: 5, title: "디파이(DeFi) 프로젝트 추천", writer: "디파이전문가", likeCount: 67 },
+        { id: 6, title: "암호화폐 세금 신고 방법", writer: "세무사", likeCount: 45 },
+        { id: 7, title: "NFT 시장 전망과 투자 전략", writer: "NFT컬렉터", likeCount: 52 },
+        { id: 8, title: "스테이킹으로 수익 얻는 방법", writer: "수익추구자", likeCount: 34 }
+    ],
+    "인기글": [
+        { id: 1, title: "비트코인 가격 전망에 대한 의견", writer: "코인마스터", likeCount: 142 },
+        { id: 2, title: "이더리움 2.0 업그레이드 분석", writer: "블록체인러버", likeCount: 128 },
+        { id: 3, title: "암호화폐 투자 초보자를 위한 가이드", writer: "투자고수", likeCount: 156 },
+        { id: 4, title: "디파이(DeFi) 프로젝트 추천", writer: "디파이전문가", likeCount: 167 },
+        { id: 5, title: "NFT 시장 전망과 투자 전략", writer: "NFT컬렉터", likeCount: 152 }
+    ],
+    "칼럼글": [
+        { id: 1, title: "2024년 암호화폐 시장 전망", writer: "시장전문가", thumbnailUrl: "/news1.jpeg" },
+        { id: 2, title: "블록체인 기술의 미래", writer: "기술분석가", thumbnailUrl: "/news2.jpg" },
+        { id: 3, title: "중앙은행 디지털화폐(CBDC)의 영향", writer: "경제학자", thumbnailUrl: "/news3.jpg" },
+        { id: 4, title: "암호화폐 규제 동향 분석", writer: "법률전문가", thumbnailUrl: "/news1.jpeg" },
+        { id: 5, title: "메타버스와 암호화폐의 만남", writer: "미래학자", thumbnailUrl: "/news2.jpg" }
+    ]
+};
 
 const CommunityPage = () => {
     const navigate = useNavigate();
@@ -27,6 +56,16 @@ const CommunityPage = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [searchOption, setSearchOption] = useState("title");
     const fetchSearchedPosts = async () => {
+        // 로컬 환경에서는 더미 데이터 사용
+        if (isLocalhost) {
+            const filtered = dummyPosts["전체글"].filter(post => 
+                post.title.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            setPosts(filtered);
+            setTotalPages(Math.ceil(filtered.length / POSTS_PER_PAGE));
+            return;
+        }
+
         //ISSUE: 가져오는 글 like 0, 백엔드 문제.
         try {
             const res = await axios.get(`${BASE_URL}/search`, {
@@ -51,12 +90,24 @@ const CommunityPage = () => {
         const queryParams = new URLSearchParams(location.search);
         let page = parseInt(queryParams.get("page"), 10);
         page = isNaN(page) || page <= 0? 0 : page-1;
-        const category = queryParams.get("category");
+        const categoryParam = queryParams.get("category");
+        const selectedCategory = CATEGORIES.includes(categoryParam) ? categoryParam : CATEGORIES[0];
 
         setCurrentPage(page);
-        setCategory(CATEGORIES.includes(category) ? category : CATEGORIES[0]);
+        setCategory(selectedCategory);
 
-        const res = await getPosts(category, {
+        // 로컬 환경에서는 더미 데이터 사용
+        if (isLocalhost) {
+            const categoryPosts = dummyPosts[selectedCategory] || dummyPosts["전체글"];
+            const startIndex = page * POSTS_PER_PAGE;
+            const endIndex = startIndex + POSTS_PER_PAGE;
+            const paginatedPosts = categoryPosts.slice(startIndex, endIndex);
+            setPosts(paginatedPosts);
+            setTotalPages(Math.ceil(categoryPosts.length / POSTS_PER_PAGE));
+            return;
+        }
+
+        const res = await getPosts(selectedCategory, {
             page: page,
             size: POSTS_PER_PAGE,
         });

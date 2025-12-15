@@ -82,7 +82,7 @@ const PortfolioChart = ({ holdings = [] }) => {
       <div className="chart-wrapper">
         <div className="chart-container">
           <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
+        <PieChart>
               <defs>
                 {COLORS.map((color, index) => (
                   <linearGradient key={`gradient-${index}`} id={`gradient-${index}`} x1="0" y1="0" x2="1" y2="1">
@@ -98,22 +98,22 @@ const PortfolioChart = ({ holdings = [] }) => {
                   </feMerge>
                 </filter>
               </defs>
-              <Pie
-                data={chartData}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
+          <Pie
+            data={chartData}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
                 innerRadius="55%"
                 outerRadius="85%"
                 paddingAngle={3}
                 cornerRadius={6}
                 label={renderCustomLabel}
-                labelLine={false}
+            labelLine={false}
                 animationBegin={0}
                 animationDuration={800}
                 animationEasing="ease-out"
-              >
+          >
                 {chartData.map((entry, index) => (
                   <Cell 
                     key={`cell-${index}`} 
@@ -122,11 +122,11 @@ const PortfolioChart = ({ holdings = [] }) => {
                     strokeWidth={1}
                     style={{ filter: 'url(#glow)' }}
                   />
-                ))}
-              </Pie>
+            ))}
+          </Pie>
             <Tooltip content={<CustomTooltip />} />
-          </PieChart>
-        </ResponsiveContainer>
+        </PieChart>
+      </ResponsiveContainer>
       </div>
         
         {/* 범례 */}

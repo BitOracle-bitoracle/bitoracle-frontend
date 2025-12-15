@@ -23,17 +23,17 @@ const PortfolioSummary = ({ summary }) => {
             <span className={`value ${totalProfit >= 0 ? 'red' : 'blue'}`}>
               {totalProfit >= 0 ? '+' : ''}₩{totalProfit.toLocaleString()}
             </span>
-          </div>
+        </div>
           <div className="summary-item">
             <span className="label">총 평가</span>
             <span className="value">₩{totalNow.toLocaleString()}</span>
-          </div>
+        </div>
           <div className="summary-item">
             <span className="label">수익률</span>
             <span className={`value ${totalProfit >= 0 ? 'red' : 'blue'}`}>
               {totalProfit >= 0 ? '+' : ''}{totalRate.toFixed(2)}%
-            </span>
-          </div>
+          </span>
+        </div>
         </div>
       </div>
     </div>
